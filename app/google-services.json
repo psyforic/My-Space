@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "580065363495",
+    "firebase_url": "https://my-space-3a93f.firebaseio.com",
+    "project_id": "my-space-3a93f",
+    "storage_bucket": "my-space-3a93f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:580065363495:android:63905dbd83d9aab4",
+        "android_client_info": {
+          "package_name": "com.metrorez.myspace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "580065363495-g69r2q0fimjme159o1v6sg5hiufn2s5q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.metrorez.myspace",
+            "certificate_hash": "d00b4f18da5d36cf3a6348073fb7a49c7caa7db4"
+          }
+        },
+        {
+          "client_id": "580065363495-m6sann0kjaub6kbmk541mbluu5b218nb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChPf8Kui3l4iyE67kvg-KaEYa1k2FHURU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "580065363495-m6sann0kjaub6kbmk541mbluu5b218nb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
