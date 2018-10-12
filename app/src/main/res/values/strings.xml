@@ -65,6 +65,8 @@
     <string name="date">01-05-2018</string>
     <string name="err_msg_room">Please Enter Room Number</string>
     <string name="err_msg_complaint">Please Enter Complaint</string>
+    <string name="str_extra_price">R 1000</string>
+    <string name="str_extra_name">Extra Name</string>
 
 
     <string-array name="residences">

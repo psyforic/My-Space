@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.model.Extra;
@@ -18,7 +20,7 @@ public class ExtraListAdapter extends RecyclerView.Adapter<ExtraListAdapter.View
     private List<Extra> extras_list;
 
     private Context context;
-    private ComplaintListAdapter.OnItemClickListener mOnItemClickListener;
+    private OnItemClickListener mOnItemClickListener;
     private boolean clicked = false;
 
 
@@ -26,7 +28,7 @@ public class ExtraListAdapter extends RecyclerView.Adapter<ExtraListAdapter.View
         void onItemClick(View view, Extra obj, int position);
     }
 
-    public void setOnItemClickListener(final ComplaintListAdapter.OnItemClickListener mItemClickListener) {
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
@@ -44,8 +46,20 @@ public class ExtraListAdapter extends RecyclerView.Adapter<ExtraListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        final Extra extra = extras_list.get(position);
+        holder.txtExtraName.setText(extra.getExtraName());
+        holder.txtExtraPrice.setText(String.valueOf(extra.getExtraPrice()));
+        holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!clicked && mOnItemClickListener != null) {
+                    clicked = true;
+                    mOnItemClickListener.onItemClick(view, extra, position);
+                }
+            }
+        });
+        clicked = false;
     }
 
     @Override
@@ -59,8 +73,15 @@ public class ExtraListAdapter extends RecyclerView.Adapter<ExtraListAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView txtExtraName;
+        private TextView txtExtraPrice;
+        public LinearLayout lyt_parent;
+
         public ViewHolder(View itemView) {
             super(itemView);
+            txtExtraName = (TextView) itemView.findViewById(R.id.extra_name);
+            txtExtraPrice = (TextView) itemView.findViewById(R.id.extra_price);
+            lyt_parent = (LinearLayout) itemView.findViewById(R.id.lyt_parent);
         }
     }
 }

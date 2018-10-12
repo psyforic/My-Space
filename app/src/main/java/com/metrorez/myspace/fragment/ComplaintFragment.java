@@ -55,9 +55,9 @@ public class ComplaintFragment extends Fragment {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame_content, fragment);
-                    fragmentTransaction.addToBackStack("AddFragment");
+                    //fragmentTransaction.addToBackStack("AddFragment");
                     fragmentTransaction.commit();
-                    fragmentTransaction.addToBackStack("AddFragment");
+                    //fragmentTransaction.addToBackStack("AddFragment");
                 }
             }
         });
