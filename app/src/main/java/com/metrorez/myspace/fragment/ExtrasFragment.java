@@ -100,8 +100,9 @@ public class ExtrasFragment extends Fragment {
             SharedPreferences prefs = getActivity().getSharedPreferences(Constants.USER_ID, Context.MODE_PRIVATE);
             String restoredText = prefs.getString("text", null);
             {
-                if (restoredText != null) {
+                if (restoredText == null) {
                     id = prefs.getString(Constants.USER_KEY, "");
+                    Log.i("USER_ID", id);
                 }
             }
         } catch (Exception ex) {

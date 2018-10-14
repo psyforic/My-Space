@@ -14,12 +14,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
             inputPassword, inputConfirmPassword;
     private Button btnSignUp, btnLogin;
     private View parent_view;
+    private ProgressBar progressBar;
     DatabaseReference usersDatabase;
 
     @Override
@@ -51,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    finish();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 } else {
 
@@ -62,6 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
@@ -97,6 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         inputConfirmPassword = (EditText) findViewById(R.id.input_confirm_password);
         btnSignUp = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_sign_in);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     private void submitForm() {
@@ -129,18 +135,26 @@ public class RegisterActivity extends AppCompatActivity {
         String userEmail, userPassword;
         userEmail = inputEmail.getText().toString().trim();
         userPassword = inputPassword.getText().toString().trim();
-        addUser();
+
+        progressBar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
+                    addUser();
                     Log.d(TAG, "createUserWithEmail:success");
-
                     Snackbar.make(parent_view, "User Account Created", Snackbar.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 } else {
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    Snackbar.make(parent_view, "User Account Registration Failed", Snackbar.LENGTH_LONG).show();
+
+                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                        Snackbar.make(parent_view, "User with this account already registered", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Snackbar.make(parent_view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -192,6 +206,7 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean validatePassword() {
         String password = inputPassword.getText().toString().trim();
         if (password.isEmpty() || password.length() < 8) {
+            inputPassword.setError("Minimum password length must be 8 characters");
             Snackbar.make(parent_view, getString(R.string.err_msg_password), Snackbar.LENGTH_SHORT).show();
             requestFocus(inputPassword);
 
@@ -203,7 +218,7 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean validateConfirmPassword() {
         String confirmPassword = inputConfirmPassword.getText().toString().trim();
         int passwordLength = inputPassword.getText().toString().trim().length();
-        if (confirmPassword.isEmpty() || confirmPassword.length() != passwordLength) {
+        if (confirmPassword.isEmpty() || confirmPassword.length() != passwordLength || !confirmPassword.matches(inputPassword.getText().toString().trim())) {
             Snackbar.make(parent_view, getString(R.string.err_msg_confirm_password), Snackbar.LENGTH_SHORT).show();
 
             return false;

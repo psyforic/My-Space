@@ -1,6 +1,7 @@
 package com.metrorez.myspace;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,11 +101,14 @@ public class MainActivity extends AppCompatActivity {
                     mAuth.signOut();
                     finish();
                 } else {
-                    displayContentView(menuItem.getItemId());
+                    if (menuItem.getItemId() != R.id.nav_logout)
+                        displayContentView(menuItem.getItemId());
                 }
                 return true;
             }
         });
+        onHeaderClicked();
+
     }
 
     @Override
@@ -139,21 +144,18 @@ public class MainActivity extends AppCompatActivity {
         view.setText(count > 0 ? String.valueOf(count) : null);
     }
 
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.nav_logout:
-                mAuth.signOut();
-                finish();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
+    private void onHeaderClicked() {
+        View headerView = navigationView.getHeaderView(0);
+        LinearLayout header = headerView.findViewById(R.id.profile_image);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+    }
 
     private void displayContentView(int id) {
         Fragment fragment = null;
@@ -226,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_drawer, menu);
+        getMenuInflater().inflate(R.menu.default_menu, menu);
         return true;
     }
 }

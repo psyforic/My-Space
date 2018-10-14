@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.metrorez.myspace">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".data.GlobalVariable"
         android:allowBackup="true"
@@ -12,21 +14,21 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".SplashActivity"
             android:windowSoftInputMode="stateHidden">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
-
-        <activity
-            android:name=".RegisterActivity"
-            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

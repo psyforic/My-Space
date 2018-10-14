@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "580065363495-qghcl6q61g6ph36s1meb79kn5dh4epsv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.metrorez.myspace",
+            "certificate_hash": "6e6114642c8362e94698b74d126a2fac4e083779"
+          }
+        },
+        {
           "client_id": "580065363495-m6sann0kjaub6kbmk541mbluu5b218nb.apps.googleusercontent.com",
           "client_type": 3
         }

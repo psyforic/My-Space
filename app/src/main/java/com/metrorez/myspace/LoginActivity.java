@@ -62,11 +62,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
                 submitForm();
+                hideKeyboard();
             }
         });
-        progressBar.setVisibility(View.GONE);
+
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,17 +133,22 @@ public class LoginActivity extends AppCompatActivity {
 
 
         if (!TextUtils.isEmpty(userEmailString) && !TextUtils.isEmpty(userPasswordString)) {
-
+            progressBar.setVisibility(View.VISIBLE);
             mAuth.signInWithEmailAndPassword(userEmailString, userPasswordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         SharedPreferences.Editor editor = getSharedPreferences(Constants.USER_ID, MODE_PRIVATE).edit();
                         editor.putString(Constants.USER_KEY, mAuth.getCurrentUser().getUid());
                         editor.apply();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                     } else {
-                        Snackbar.make(parent_view, "User Login Failed", Snackbar.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                        Snackbar.make(parent_view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
