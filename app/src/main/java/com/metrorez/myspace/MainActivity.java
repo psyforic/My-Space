@@ -19,10 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.metrorez.myspace.data.GlobalVariable;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         onHeaderClicked();
+        loadUserInfo();
 
     }
 
@@ -195,6 +198,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void loadUserInfo() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        View headerView = navigationView.getHeaderView(0);
+        if (user != null) {
+            if (user.getPhotoUrl() != null) {
+                String photoUrl = user.getPhotoUrl().toString();
+                ImageView profileImage = headerView.findViewById(R.id.image_header);
+                Glide.with(this).load(photoUrl).into(profileImage);
+            }
+            if (user.getDisplayName() != null) {
+                String displayName = user.getDisplayName();
+                TextView textView = headerView.findViewById(R.id.header_title_name);
+                textView.setText(displayName);
+            }
+        }
+    }
+
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -230,5 +250,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.default_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.nav_logout) {
+            mAuth.signOut();
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,14 +1,13 @@
 package com.metrorez.myspace;
 
 import android.content.Intent;
-import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
@@ -87,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Snackbar.make(view, "Priofile updated", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, "Profile updated", Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
