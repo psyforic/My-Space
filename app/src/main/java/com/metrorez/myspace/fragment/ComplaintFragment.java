@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.adapter.ComplaintListAdapter;
+import com.metrorez.myspace.data.GlobalVariable;
 import com.metrorez.myspace.model.Complaint;
 
 import java.util.ArrayList;
@@ -36,13 +37,14 @@ public class ComplaintFragment extends Fragment {
     private List<Complaint> complaints;
     private Fragment fragment = null;
 
+    private GlobalVariable global;
     DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
-
+        global = (GlobalVariable) getActivity().getApplication();
         setupUI();
 
         addComplaint.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +85,7 @@ public class ComplaintFragment extends Fragment {
                     complaints.add(complaint);
                 }
                 mAdapter = new ComplaintListAdapter(getActivity(), complaints);
-
+                global.setComplaints(complaints);
                 recyclerView.setAdapter(mAdapter);
             }
 

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/spacing_small"
-        android:background="@drawable/round_shape"
+        android:background="@color/colorAccent"
         android:textColor="@android:color/white"
         android:minWidth="@dimen/spacing_xlarge"
         android:text="20+"

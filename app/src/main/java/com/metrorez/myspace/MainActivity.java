@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.data.GlobalVariable;
 import com.metrorez.myspace.data.Tools;
 import com.metrorez.myspace.fragment.ComplaintFragment;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+        loadUserInfo();
         // for system bar in lollipop
         Tools.systemBarLolipop(this);
     }
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         onHeaderClicked();
-        loadUserInfo();
+
 
     }
 
@@ -191,11 +193,6 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.frame_content, fragment);
             fragmentTransaction.commit();
         }
-    }
-
-
-    private void logout() {
-
     }
 
     private void loadUserInfo() {

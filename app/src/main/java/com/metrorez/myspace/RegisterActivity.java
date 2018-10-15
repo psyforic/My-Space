@@ -240,7 +240,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         if (validateName() && validateEmail() && validateLastName() && validateStudentNo()) {
-            String userId = usersDatabase.push().getKey();
+            String userId = mAuth.getUid();
             User user = new User(userId, firstName, lastName, email, studentNo);
             usersDatabase.child(userId).setValue(user);
         }

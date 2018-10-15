@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.KeyListener;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -16,7 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,13 +27,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.metrorez.myspace.model.Complaint;
+import com.metrorez.myspace.model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int CHOOSE_IMAGE = 101;
     private ImageView profileImage;
@@ -44,13 +56,15 @@ public class ProfileActivity extends AppCompatActivity {
     private String profileImageUrl;
     private View view;
     private FirebaseAuth mAuth;
+    List<User> users;
+    private ImageView btn_editName, btn_editLastName, btn_editEmail, btn_editStudentNo, btn_editPhone, btn_editRoomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         setupUI();
-
+        editButtons();
         mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -67,6 +81,11 @@ public class ProfileActivity extends AppCompatActivity {
                 saveUserInformation();
             }
         });
+        editButtonsClickListeners();
+        if (mAuth.getCurrentUser() != null) {
+            loadUserInfo();
+           // loadExtraInfo();
+        }
 
     }
 
@@ -137,6 +156,21 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void loadUserInfo() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            if (user.getPhotoUrl() != null) {
+                String photoUrl = user.getPhotoUrl().toString();
+                Glide.with(this).load(photoUrl).into(profileImage);
+            }
+            if (user.getDisplayName() != null) {
+                String displayName = user.getDisplayName();
+                TextView textView = findViewById(R.id.name);
+                textView.setText(displayName);
+            }
+        }
+    }
+
     private void showImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -144,12 +178,21 @@ public class ProfileActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Profile Image"), CHOOSE_IMAGE);
     }
 
+    private void editButtons() {
+        btn_editName = findViewById(R.id.edit_name);
+        btn_editLastName = findViewById(R.id.edit_lastName);
+        btn_editEmail = findViewById(R.id.edit_email);
+        btn_editPhone = findViewById(R.id.edit_phone);
+        btn_editRoomName = findViewById(R.id.edit_roomName);
+        btn_editStudentNo = findViewById(R.id.edit_studentNo);
+    }
+
     private void setupUI() {
         toolbar = findViewById(R.id.toolbar);
         profileImage = findViewById(R.id.image);
         cameraImage = findViewById(R.id.profile_camera);
         editTextName = findViewById(R.id.input_name);
-        editTextlastName = findViewById(R.id.input_lastname);
+        editTextlastName = findViewById(R.id.input_lastName);
         editTextEmail = findViewById(R.id.input_email);
         editTextRoom = findViewById(R.id.input_roomName);
         editTextStudentNo = findViewById(R.id.input_studentNo);
@@ -159,6 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btn_update_profile);
         progressBar = findViewById(R.id.progressBar);
         view = findViewById(R.id.lyt_parent);
+        users = new ArrayList<>();
     }
 
     private boolean validateName() {
@@ -182,6 +226,71 @@ public class ProfileActivity extends AppCompatActivity {
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
+    // TODO:
+    private void loadExtraInfo() {
+
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(mAuth.getCurrentUser().getUid());
+
+        userReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // users.clear();
+                for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                    User user = userSnapShot.getValue(User.class);
+                    editTextName.setText(user.getUserFirstName());
+                    editTextlastName.setText(user.getUserLastName());
+                    editTextEmail.setText(user.getUserEmail());
+                    editTextStudentNo.setText(user.getUserStudentNo());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void editButtonsClickListeners() {
+        btn_editName.setOnClickListener(this);
+        btn_editStudentNo.setOnClickListener(this);
+        btn_editRoomName.setOnClickListener(this);
+        btn_editPhone.setOnClickListener(this);
+        btn_editLastName.setOnClickListener(this);
+        btn_editEmail.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.edit_name:
+                editTextName.setEnabled(true);
+                requestFocus(editTextName);
+                break;
+            case R.id.edit_lastName:
+                editTextlastName.setEnabled(true);
+                requestFocus(editTextlastName);
+                break;
+            case R.id.edit_email:
+                editTextEmail.setEnabled(true);
+                requestFocus(editTextEmail);
+                break;
+            case R.id.edit_phone:
+                editTextPhone.setEnabled(true);
+                requestFocus(editTextPhone);
+                break;
+            case R.id.edit_studentNo:
+                editTextStudentNo.setEnabled(true);
+                requestFocus(editTextStudentNo);
+                break;
+            case R.id.edit_roomName:
+                editTextRoom.setEnabled(true);
+                requestFocus(editTextRoom);
+                break;
         }
     }
 
