@@ -37,6 +37,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.model.Complaint;
 import com.metrorez.myspace.model.User;
+import com.metrorez.myspace.widget.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         editButtonsClickListeners();
         if (mAuth.getCurrentUser() != null) {
             loadUserInfo();
-           // loadExtraInfo();
+            loadExtraInfo();
         }
 
     }
@@ -127,6 +129,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), profileUri);
+                //Picasso.with(this).load(bitmap.getGenerationId()).transform(new CircleTransform()).into(profileImage);
                 profileImage.setImageBitmap(bitmap);
 
                 uploadImageToFirebaseStorage();
@@ -161,7 +164,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         if (user != null) {
             if (user.getPhotoUrl() != null) {
                 String photoUrl = user.getPhotoUrl().toString();
-                Glide.with(this).load(photoUrl).into(profileImage);
+                Picasso.with(this).load("https://firebasestorage.googleapis.com/v0/b/my-space-3a93f.appspot.com/o/profilepics%2F1539640847663.jpg?alt=media&token=9ef6943e-5b1f-4646-9a1d-170cb60799c7")
+                        .placeholder(R.drawable.ic_placeholder)
+                        .transform(new CircleTransform())
+                        .into(profileImage);
+                //Glide.with(this).load(photoUrl).into(profileImage);
             }
             if (user.getDisplayName() != null) {
                 String displayName = user.getDisplayName();
@@ -237,14 +244,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // users.clear();
-                for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
-                    User user = userSnapShot.getValue(User.class);
-                    editTextName.setText(user.getUserFirstName());
-                    editTextlastName.setText(user.getUserLastName());
-                    editTextEmail.setText(user.getUserEmail());
-                    editTextStudentNo.setText(user.getUserStudentNo());
-                }
+
+                User user = dataSnapshot.getValue(User.class);
+                editTextName.setText(user.getUserFirstName());
+                editTextlastName.setText(user.getUserLastName());
+                editTextEmail.setText(user.getUserEmail());
+                editTextStudentNo.setText(user.getUserStudentNo());
+
             }
 
             @Override

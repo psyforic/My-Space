@@ -63,6 +63,13 @@ public class ComplaintFragment extends Fragment {
                 }
             }
         });
+
+        mAdapter.setOnDeleteButtonClickListener(new ComplaintListAdapter.OnDeleteButtonClickListener() {
+            @Override
+            public void onItemClick(View view, Complaint obj, int position) {
+
+            }
+        });
         return view;
     }
 
@@ -72,6 +79,7 @@ public class ComplaintFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        mAdapter = new ComplaintListAdapter(getActivity(), complaints);
         addComplaint = (FloatingActionButton) view.findViewById(R.id.fab_add_complaint);
 
         complaintsReference.addValueEventListener(new ValueEventListener() {
@@ -84,7 +92,6 @@ public class ComplaintFragment extends Fragment {
                     Complaint complaint = complaintSnapShot.getValue(Complaint.class);
                     complaints.add(complaint);
                 }
-                mAdapter = new ComplaintListAdapter(getActivity(), complaints);
                 global.setComplaints(complaints);
                 recyclerView.setAdapter(mAdapter);
             }

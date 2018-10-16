@@ -36,6 +36,8 @@ import com.metrorez.myspace.fragment.HelpFragment;
 import com.metrorez.myspace.fragment.NotificationsFragment;
 import com.metrorez.myspace.fragment.ProfileFragment;
 import com.metrorez.myspace.fragment.SettingFragment;
+import com.metrorez.myspace.widget.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -202,7 +204,12 @@ public class MainActivity extends AppCompatActivity {
             if (user.getPhotoUrl() != null) {
                 String photoUrl = user.getPhotoUrl().toString();
                 ImageView profileImage = headerView.findViewById(R.id.image_header);
-                Glide.with(this).load(photoUrl).into(profileImage);
+                Picasso.with(this).load("https://firebasestorage.googleapis.com/v0/b/my-space-3a93f.appspot.com/o/profilepics%2F1539640847663.jpg?alt=media&token=9ef6943e-5b1f-4646-9a1d-170cb60799c7")
+                        .placeholder(R.drawable.ic_placeholder)
+                        .resize(200,200)
+                        .transform(new CircleTransform())
+                        .into(profileImage);
+                //Glide.with(this).load(photoUrl).into(profileImage);
             }
             if (user.getDisplayName() != null) {
                 String displayName = user.getDisplayName();
