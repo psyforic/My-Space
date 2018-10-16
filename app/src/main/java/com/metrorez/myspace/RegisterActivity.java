@@ -81,8 +81,6 @@ public class RegisterActivity extends AppCompatActivity {
         // for system bar in lollipop
         Tools.systemBarLolipop(this);
     }
-
-
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -245,7 +243,6 @@ public class RegisterActivity extends AppCompatActivity {
             usersDatabase.child(userId).setValue(user);
         }
     }
-
 
     @Override
     protected void onStart() {

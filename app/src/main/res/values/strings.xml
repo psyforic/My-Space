@@ -75,7 +75,14 @@
     <string name="dialog_title">Delete Complaint</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
-
+    <string name="str_request">Request</string>
+    <string name="request_title">Request Items</string>
+    <string name="request_message">Are you sure you want to request the selected items?</string>
+    <string name="request_success">Items Requested Successfully</string>
+    <string name="str_nav_checkins">Check-ins</string>
+    <string name="next">Next</string>
+    <string name="skip">Back</string>
+    <string name="start">Done</string>
 
     <string-array name="residences">
         <item>Russell Road</item>
@@ -95,4 +102,18 @@
         <item>Medium</item>
         <item>Low</item>
     </string-array>
+
+    <array name="array_dot_active">
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimary</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dotinactive</item>
+        <item>@color/dotinactive</item>
+        <item>@color/dotinactive</item>
+        <item>@color/dotinactive</item>
+    </array>
 </resources>

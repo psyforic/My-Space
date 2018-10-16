@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.data.GlobalVariable;
 import com.metrorez.myspace.data.Tools;
+import com.metrorez.myspace.fragment.CheckinFragment;
 import com.metrorez.myspace.fragment.ComplaintFragment;
 import com.metrorez.myspace.fragment.ExtrasFragment;
 import com.metrorez.myspace.fragment.HelpFragment;
@@ -186,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_help:
                 fragment = new HelpFragment();
                 break;
+            case R.id.nav_checkin:
+                fragment = new CheckinFragment();
+                break;
 
         }
         fragment.setArguments(bundle);
@@ -206,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 ImageView profileImage = headerView.findViewById(R.id.image_header);
                 Picasso.with(this).load("https://firebasestorage.googleapis.com/v0/b/my-space-3a93f.appspot.com/o/profilepics%2F1539640847663.jpg?alt=media&token=9ef6943e-5b1f-4646-9a1d-170cb60799c7")
                         .placeholder(R.drawable.ic_placeholder)
-                        .resize(200,200)
+                        .resize(200, 200)
                         .transform(new CircleTransform())
                         .into(profileImage);
                 //Glide.with(this).load(photoUrl).into(profileImage);

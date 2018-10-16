@@ -29,6 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SuccessActivity" />
+        <activity android:name=".CheckinActivity"></activity>
     </application>
 
 </manifest>
