@@ -41,7 +41,7 @@
                         android:layout_height="130dp"
                         android:clickable="false"
                         android:padding="@dimen/spacing_medium"
-                        android:src="@drawable/profile" />
+                        android:src="@drawable/ic_placeholder" />
 
                     <ImageView
                         android:id="@+id/profile_camera"

@@ -2,6 +2,7 @@ package com.metrorez.myspace;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,6 +42,7 @@ import com.metrorez.myspace.model.User;
 import com.metrorez.myspace.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null && profileUri != null) {
+        if (user != null && profileImageUrl != null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(displayName)
                     .setPhotoUri(Uri.parse(profileImageUrl))
@@ -141,13 +144,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void uploadImageToFirebaseStorage() {
         final StorageReference profileStorageReference = FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis() + ".jpg");
-        if (profileUri != null) {
+/*        if (profileUri != null) {
             progressBar.setVisibility(View.VISIBLE);
             profileStorageReference.putFile(profileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressBar.setVisibility(View.GONE);
-                    profileImageUrl = profileStorageReference.getDownloadUrl().toString();
+                    profileImageUrl = taskSnapshot.getStorage().getDownloadUrl().toString();
+                    //profileStorageReference.getDownloadUrl().toString();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -156,6 +160,40 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
                 }
             });
+        }*/
+
+        if (profileUri != null) {
+            progressBar.setVisibility(View.VISIBLE);
+
+            Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = profileStorageReference.putBytes(data);
+            uploadTask = profileStorageReference.putFile(profileUri);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
+                        Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
+
+                    return profileStorageReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        profileImageUrl = task.getResult().toString();
+                    } else {
+                        Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            });
+
         }
     }
 
@@ -164,7 +202,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         if (user != null) {
             if (user.getPhotoUrl() != null) {
                 String photoUrl = user.getPhotoUrl().toString();
-                Picasso.with(this).load("https://firebasestorage.googleapis.com/v0/b/my-space-3a93f.appspot.com/o/profilepics%2F1539640847663.jpg?alt=media&token=9ef6943e-5b1f-4646-9a1d-170cb60799c7")
+                Picasso.with(this).load(photoUrl.toString())
                         .placeholder(R.drawable.ic_placeholder)
                         .transform(new CircleTransform())
                         .into(profileImage);

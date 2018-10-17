@@ -11,6 +11,10 @@ public class Inventory {
         this.roomName = roomName;
     }
 
+    public Inventory(String itemName) {
+        this.itemName = itemName;
+    }
+
     public Inventory(String itemName, String roomName) {
         this.itemName = itemName;
         this.roomName = roomName;

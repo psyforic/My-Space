@@ -8,6 +8,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +21,24 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.metrorez.myspace.adapter.InventoryListAdapter;
+import com.metrorez.myspace.model.Inventory;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CheckinActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
+    private RecyclerView recyclerView;
     private int[] layouts;
     private TextView[] dots;
     private Button btnSkip, btnNext;
+    private List<Inventory> currentSelectedItems = new ArrayList<>();
+    private List<Inventory> inventoryList = new ArrayList<>();
+    private InventoryListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +48,59 @@ public class CheckinActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         setContentView(R.layout.activity_checkin);
+
+        inventoryList.add(new Inventory("Bed"));
+        inventoryList.add(new Inventory("Wardrobe"));
+        inventoryList.add(new Inventory("Desk"));
+        inventoryList.add(new Inventory("Lamp"));
+        mAdapter = new InventoryListAdapter(this, inventoryList);
+
+        setupUI();
+        //recyclerView.setAdapter(mAdapter);
+        onClickListeners();
+    }
+
+    private void onClickListeners() {
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // launchHomeScreen();
+            }
+        });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // checking for last page
+                // if last page home screen will be launched
+                int current = getItem(+1);
+                if (current < layouts.length) {
+                    // move to next screen
+                    viewPager.setCurrentItem(current);
+                } else {
+                    //launchHomeScreen();
+                }
+            }
+        });
+        mAdapter = new InventoryListAdapter(inventoryList, new InventoryListAdapter.OnItemCheckListener() {
+            @Override
+            public void onItemCheck(Inventory item) {
+                currentSelectedItems.add(item);
+            }
+
+            @Override
+            public void onItemUncheck(Inventory item) {
+                currentSelectedItems.remove(item);
+            }
+        });
+    }
+
+    private void setupUI() {
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.introslide1, null, true);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setHasFixedSize(true);
+        //recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
@@ -59,27 +125,6 @@ public class CheckinActivity extends AppCompatActivity {
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-        btnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // launchHomeScreen();
-            }
-        });
-
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // checking for last page
-                // if last page home screen will be launched
-                int current = getItem(+1);
-                if (current < layouts.length) {
-                    // move to next screen
-                    viewPager.setCurrentItem(current);
-                } else {
-                    //launchHomeScreen();
-                }
-            }
-        });
     }
 
     private void addBottomDots(int currentPage) {
@@ -161,6 +206,11 @@ public class CheckinActivity extends AppCompatActivity {
 
             View view = layoutInflater.inflate(layouts[position], container, false);
             container.addView(view);
+
+            if (position == 0) {
+                recyclerView = view.findViewById(R.id.recyclerView);
+                recyclerView.setAdapter(mAdapter);
+            }
 
             return view;
         }

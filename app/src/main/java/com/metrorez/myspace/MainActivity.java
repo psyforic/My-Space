@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             if (user.getPhotoUrl() != null) {
                 String photoUrl = user.getPhotoUrl().toString();
                 ImageView profileImage = headerView.findViewById(R.id.image_header);
-                Picasso.with(this).load("https://firebasestorage.googleapis.com/v0/b/my-space-3a93f.appspot.com/o/profilepics%2F1539640847663.jpg?alt=media&token=9ef6943e-5b1f-4646-9a1d-170cb60799c7")
+                Picasso.with(this).load(photoUrl)
                         .placeholder(R.drawable.ic_placeholder)
                         .resize(200, 200)
                         .transform(new CircleTransform())

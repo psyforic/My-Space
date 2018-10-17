@@ -83,6 +83,7 @@
     <string name="next">Next</string>
     <string name="skip">Back</string>
     <string name="start">Done</string>
+    <string name="name">Name</string>
 
     <string-array name="residences">
         <item>Russell Road</item>
