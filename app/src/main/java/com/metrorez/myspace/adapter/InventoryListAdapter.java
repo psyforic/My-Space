@@ -73,7 +73,7 @@ public class InventoryListAdapter extends RecyclerView.Adapter<InventoryListAdap
 
     @Override
     public int getItemCount() {
-        return 0;
+        return inventoryList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

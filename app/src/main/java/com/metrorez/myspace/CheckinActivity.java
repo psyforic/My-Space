@@ -1,43 +1,46 @@
 package com.metrorez.myspace;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.adapter.InventoryListAdapter;
+import com.metrorez.myspace.adapter.PageFragmentAdapter;
+import com.metrorez.myspace.data.Tools;
+import com.metrorez.myspace.fragment.StepOneFragment;
+import com.metrorez.myspace.fragment.StepThreeFragment;
+import com.metrorez.myspace.fragment.StepTwoFragment;
 import com.metrorez.myspace.model.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckinActivity extends AppCompatActivity {
+public class CheckinActivity extends AppCompatActivity implements StepOneFragment.OnInventoryDataListener {
 
     private ViewPager viewPager;
-    private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
-    private RecyclerView recyclerView;
     private int[] layouts;
+    public ActionBar actionBar;
+    private Toolbar toolbar;
     private TextView[] dots;
     private Button btnSkip, btnNext;
-    private List<Inventory> currentSelectedItems = new ArrayList<>();
-    private List<Inventory> inventoryList = new ArrayList<>();
+    private PageFragmentAdapter adapter;
+    private View parentView;
+    List<Inventory> tempList;
+    private StepOneFragment f_stepOne;
+    private StepTwoFragment f_stepTwo;
+    private StepThreeFragment f_stepThree;
+
     private InventoryListAdapter mAdapter;
 
     @Override
@@ -48,16 +51,12 @@ public class CheckinActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         setContentView(R.layout.activity_checkin);
-
-        inventoryList.add(new Inventory("Bed"));
-        inventoryList.add(new Inventory("Wardrobe"));
-        inventoryList.add(new Inventory("Desk"));
-        inventoryList.add(new Inventory("Lamp"));
-        mAdapter = new InventoryListAdapter(this, inventoryList);
-
+        initToolbar();
         setupUI();
-        //recyclerView.setAdapter(mAdapter);
+
         onClickListeners();
+
+        Tools.systemBarLolipop(this);
     }
 
     private void onClickListeners() {
@@ -74,57 +73,70 @@ public class CheckinActivity extends AppCompatActivity {
                 // checking for last page
                 // if last page home screen will be launched
                 int current = getItem(+1);
-                if (current < layouts.length) {
+                if (current < layouts.length && tempList.size() != 0) {
                     // move to next screen
                     viewPager.setCurrentItem(current);
+
                 } else {
                     //launchHomeScreen();
                 }
             }
         });
-        mAdapter = new InventoryListAdapter(inventoryList, new InventoryListAdapter.OnItemCheckListener() {
-            @Override
-            public void onItemCheck(Inventory item) {
-                currentSelectedItems.add(item);
-            }
 
-            @Override
-            public void onItemUncheck(Inventory item) {
-                currentSelectedItems.remove(item);
-            }
-        });
+    }
+
+    private void launchCheckinFragment() {
+
+    }
+
+
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
     }
 
     private void setupUI() {
-        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.introslide1, null, true);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //recyclerView.setHasFixedSize(true);
-        //recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        tempList = new ArrayList<>();
         viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+        setupViewPager(viewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
 
-
+        parentView = findViewById(android.R.id.content);
         // layouts of all welcome sliders
         // add few more layouts if you want
         layouts = new int[]{
-                R.layout.introslide1,
-                R.layout.introslide2,
-                R.layout.introslide3,};
-
+                R.layout.fragment_step_one,
+                R.layout.fragment_step_two,
+                R.layout.fragment_step_three,};
         // adding bottom dots
         addBottomDots(0);
 
-        // making notification bar transparent
-        changeStatusBarColor();
 
-        myViewPagerAdapter = new MyViewPagerAdapter();
-        viewPager.setAdapter(myViewPagerAdapter);
-        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+    }
 
+    private void setupViewPager(ViewPager viewPager) {
+        adapter = new PageFragmentAdapter(getSupportFragmentManager());
+        if (f_stepOne == null) {
+            f_stepOne = new StepOneFragment();
+        }
+        if (f_stepTwo == null) {
+            f_stepTwo = new StepTwoFragment();
+
+        }
+        if (f_stepThree == null) {
+            f_stepThree = new StepThreeFragment();
+        }
+        adapter.addFragment(f_stepOne, getString(R.string.str_check_items));
+        adapter.addFragment(f_stepTwo, getString(R.string.str_inventory_condition));
+        adapter.addFragment(f_stepThree, getString(R.string.str_take_images));
+
+        viewPager.setAdapter(adapter);
     }
 
     private void addBottomDots(int currentPage) {
@@ -156,8 +168,6 @@ public class CheckinActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             addBottomDots(position);
-
-            // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.start));
@@ -180,56 +190,16 @@ public class CheckinActivity extends AppCompatActivity {
         }
     };
 
-    /**
-     * Making notification bar transparent
-     */
-    private void changeStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * View pager adapter
-     */
-    public class MyViewPagerAdapter extends PagerAdapter {
-        private LayoutInflater layoutInflater;
-
-        public MyViewPagerAdapter() {
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View view = layoutInflater.inflate(layouts[position], container, false);
-            container.addView(view);
-
-            if (position == 0) {
-                recyclerView = view.findViewById(R.id.recyclerView);
-                recyclerView.setAdapter(mAdapter);
-            }
-
-            return view;
-        }
-
-        @Override
-        public int getCount() {
-            return layouts.length;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object obj) {
-            return view == obj;
-        }
-
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            View view = (View) object;
-            container.removeView(view);
-        }
+    @Override
+    public void onInventoryDataReceived(ArrayList<Inventory> inventoryData) {
+        String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
+        StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        tempList = inventoryData;
+        fragment.setupRecycler(inventoryData);
     }
 }

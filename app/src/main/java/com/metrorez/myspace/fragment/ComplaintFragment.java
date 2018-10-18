@@ -1,7 +1,6 @@
 package com.metrorez.myspace.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +23,7 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.adapter.ComplaintListAdapter;
 import com.metrorez.myspace.data.GlobalVariable;
 import com.metrorez.myspace.model.Complaint;
+import com.metrorez.myspace.model.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,7 @@ public class ComplaintFragment extends Fragment {
     private View view;
     private List<Complaint> complaints;
     private Fragment fragment = null;
+
 
     private GlobalVariable global;
     DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints");
@@ -102,4 +103,6 @@ public class ComplaintFragment extends Fragment {
             }
         });
     }
+
+
 }

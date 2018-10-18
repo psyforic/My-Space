@@ -84,6 +84,10 @@
     <string name="skip">Back</string>
     <string name="start">Done</string>
     <string name="name">Name</string>
+    <string name="str_check_items">Check Items</string>
+    <string name="str_inventory_condition">Inventory Condition</string>
+    <string name="str_take_images">Take Images</string>
+    <string name="btn_next">Save</string>
 
     <string-array name="residences">
         <item>Russell Road</item>
@@ -117,4 +121,12 @@
         <item>@color/dotinactive</item>
         <item>@color/dotinactive</item>
     </array>
+
+    <string-array name="condition">
+        <item>select condition</item>
+        <item>25%</item>
+        <item>50%</item>
+        <item>75%</item>
+        <item>100%</item>
+    </string-array>
 </resources>

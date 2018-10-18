@@ -23,7 +23,7 @@ import java.util.List;
 
 public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.ViewHolder> {
 
-    private List<Checkin> checkin_list = new ArrayList<>();
+    private List<Checkin> checkin_list;
     private Context ctx;
 
     private OnItemClickListener mOnItemClickListener;

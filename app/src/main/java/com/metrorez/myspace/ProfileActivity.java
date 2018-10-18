@@ -133,6 +133,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), profileUri);
                 //Picasso.with(this).load(bitmap.getGenerationId()).transform(new CircleTransform()).into(profileImage);
+                //Picasso.with(this).load(bitmap.)
                 profileImage.setImageBitmap(bitmap);
 
                 uploadImageToFirebaseStorage();
