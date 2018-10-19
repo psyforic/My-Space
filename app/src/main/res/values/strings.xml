@@ -93,6 +93,11 @@
     <string name="str_notif">Nothing Selected</string>
     <string name="str_home">Home</string>
     <string name="billing_information">Billing Information</string>
+    <string name="tab_complaints">Complaints</string>
+    <string name="tab_requests">Requests</string>
+    <string name="tab_users">Users</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 
     <string-array name="residences">
         <item>Russell Road</item>
