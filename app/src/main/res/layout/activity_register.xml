@@ -88,7 +88,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_people" />
+                        android:src="@drawable/ic_lastname" />
                 </LinearLayout>
 
                 <View
@@ -224,7 +224,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_form_country" />
+                        android:src="@drawable/ic_student_no" />
                 </LinearLayout>
 
                 <View

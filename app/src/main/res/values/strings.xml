@@ -88,6 +88,11 @@
     <string name="str_inventory_condition">Inventory Condition</string>
     <string name="str_take_images">Take Images</string>
     <string name="btn_next">Save</string>
+    <string name="str_header_extra">Choose an item below</string>
+    <string name="str_header_myextra">My Extras</string>
+    <string name="str_notif">Nothing Selected</string>
+    <string name="str_home">Home</string>
+    <string name="billing_information">Billing Information</string>
 
     <string-array name="residences">
         <item>Russell Road</item>

@@ -3,7 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_bg"
     android:orientation="vertical">
+
+    <TextView
+        android:layout_marginBottom="@dimen/spacing_xlarge"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:id="@+id/extras_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_medium"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/str_header_extra"
+        android:textSize="18sp"
+        android:textColor="@color/colorAccent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -14,14 +29,16 @@
     </android.support.v7.widget.RecyclerView>
 
     <Button
-        android:shadowColor="@color/cardview_shadow_end_color"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:layout_gravity="center_horizontal"
         android:id="@+id/btn_request"
-        android:background="@color/colorAccent"
-        android:layout_width="wrap_content"
-        android:textColor="@android:color/white"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="@string/str_request" />
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:background="@color/colorAccent"
+        android:padding="3dp"
+        android:drawableRight="@drawable/ic_check_btn"
+        android:shadowColor="@color/cardview_shadow_end_color"
+        android:text="@string/str_request"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

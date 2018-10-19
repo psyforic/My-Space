@@ -4,6 +4,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_bg"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -26,11 +27,14 @@
 
         </android.support.design.widget.AppBarLayout>
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/extras_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_xlarge"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -39,8 +43,8 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add-extra"
         style="@style/FabStyle"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:clickable="true"
         android:src="@drawable/ic_add"
         android:tint="@android:color/white" />
