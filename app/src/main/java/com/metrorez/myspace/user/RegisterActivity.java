@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.model.Role;
 import com.metrorez.myspace.user.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -39,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnSignUp, btnLogin;
     private View parent_view;
     private ProgressBar progressBar;
-    DatabaseReference usersDatabase;
+    DatabaseReference usersDatabase, rolesDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
         setupUI();
         mAuth = FirebaseAuth.getInstance();
         usersDatabase = FirebaseDatabase.getInstance().getReference("users");
+        rolesDatabase = FirebaseDatabase.getInstance().getReference("roles");
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -80,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         // for system bar in lollipop
         Tools.systemBarLolipop(this);
     }
+
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -240,6 +243,8 @@ public class RegisterActivity extends AppCompatActivity {
             String userId = mAuth.getUid();
             User user = new User(userId, firstName, lastName, email, studentNo);
             usersDatabase.child(userId).setValue(user);
+            Role role = new Role(userId, "ADMIN");
+            rolesDatabase.child(userId).setValue(role);
         }
     }
 

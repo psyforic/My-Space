@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.FragmentAdapter;
+import com.metrorez.myspace.admin.fragment.AdminCheckinsFragment;
 import com.metrorez.myspace.admin.fragment.AdminComplaintsFragment;
 import com.metrorez.myspace.admin.fragment.AdminRequestsFragment;
 import com.metrorez.myspace.admin.fragment.UsersFragment;
@@ -44,12 +45,15 @@ public class AdminActivity extends AppCompatActivity {
     private boolean isSearch = false;
     private AdminComplaintsFragment f_complaints;
     private AdminRequestsFragment f_requests;
-    private UsersFragment f_users;
+    //private AdminCheckinsFragment  f_checkins;
+    private AdminCheckinsFragment f_checkins;
     private View parent_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AdminTheme);
+
         setContentView(R.layout.activity_admin);
 
         parent_view = findViewById(R.id.main_content);
@@ -129,8 +133,8 @@ public class AdminActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
 
-        if (f_users == null) {
-            f_users = new UsersFragment();
+        if (f_checkins == null) {
+            f_checkins = new AdminCheckinsFragment();
         }
         if (f_complaints == null) {
             f_complaints = new AdminComplaintsFragment();
@@ -139,8 +143,7 @@ public class AdminActivity extends AppCompatActivity {
             f_requests = new AdminRequestsFragment();
         }
 
-
-        adapter.addFragment(f_users, getString(R.string.tab_users));
+        adapter.addFragment(f_checkins, getString(R.string.tab_checkins));
         adapter.addFragment(f_complaints, getString(R.string.tab_complaints));
         adapter.addFragment(f_requests, getString(R.string.tab_requests));
 
@@ -252,7 +255,7 @@ public class AdminActivity extends AppCompatActivity {
                             f_requests.mAdapter.getFilter().filter(s);
                             break;
                         case 2:
-                            f_users.mAdapter.getFilter().filter(s);
+                            f_checkins.mAdapter.getFilter().filter(s);
                             break;
                     }
                     return true;

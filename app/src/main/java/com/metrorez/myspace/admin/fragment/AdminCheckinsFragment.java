@@ -12,18 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.adapter.RequestsGridAdapter;
+import com.metrorez.myspace.admin.adapter.CheckinsGridAdapter;
 import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.admin.model.City;
-import com.metrorez.myspace.admin.model.Request;
 import com.metrorez.myspace.user.data.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminRequestsFragment extends Fragment {
+public class AdminCheckinsFragment extends Fragment {
+
     RecyclerView recyclerView;
-    public RequestsGridAdapter mAdapter;
+    public CheckinsGridAdapter mAdapter;
     private ProgressBar progressBar;
     private View view;
     private LinearLayout lyt_not_found;
@@ -33,13 +33,13 @@ public class AdminRequestsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_admin_requests, container, false);
+        getActivity().setTheme(R.style.AdminTheme);
+        view = inflater.inflate(R.layout.fragment_admin_checkins, container, false);
         setupUI();
         return view;
     }
 
     private void setupUI() {
-
         cities = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -55,16 +55,16 @@ public class AdminRequestsFragment extends Fragment {
             lyt_not_found.setVisibility(View.GONE);
         }
 
-        mAdapter = new RequestsGridAdapter(getActivity(), Constants.getCityData(getActivity()));
+        // specify an adapter (see also next example)
+        mAdapter = new CheckinsGridAdapter(getActivity(), Constants.getCityData(getActivity()));
         recyclerView.setAdapter(mAdapter);
 
-        mAdapter.setOnItemClickListener(new RequestsGridAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new CheckinsGridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, City obj, int position) {
 
             }
         });
     }
-
 
 }

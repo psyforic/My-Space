@@ -54,6 +54,7 @@ public class RequestsGridAdapter extends RecyclerView.Adapter<RequestsGridAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final City city = filtered_items.get(position);
         holder.title.setText(city.getName());
+        holder.requests.setText(city.getSnippet());
         Picasso.with(context).load(city.getPhoto()).resize(100, 100).transform(new CircleTransform()).into(holder.image);
 
         // Here you apply the animation when the view is bound
@@ -105,7 +106,7 @@ public class RequestsGridAdapter extends RecyclerView.Adapter<RequestsGridAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public TextView content;
-        public TextView time;
+        public TextView requests;
         public ImageView image;
         public LinearLayout lyt_parent;
 
@@ -113,7 +114,7 @@ public class RequestsGridAdapter extends RecyclerView.Adapter<RequestsGridAdapte
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
             content = (TextView) itemView.findViewById(R.id.content);
-            time = (TextView) itemView.findViewById(R.id.time);
+            requests = (TextView) itemView.findViewById(R.id.time);
             image = (ImageView) itemView.findViewById(R.id.image);
             lyt_parent = (LinearLayout) itemView.findViewById(R.id.lyt_parent);
         }

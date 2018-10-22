@@ -5,9 +5,17 @@
     <color name="colorPrimaryDark">#F57C00</color>
     <color name="colorPrimaryLight">#FFE0B2</color>
 
+    <color name="colorPrimaryAdmin">#512DA8</color>
+    <color name="colorPrimaryDarkAdmin">#311B92</color>
+    <color name="colorPrimaryLightAdmin">#D1C4E9</color>
+
     <color name="colorAccent">#4FA7B5</color>
     <color name="colorAccentDark">#2F8B99</color>
     <color name="colorAccentLight">#6EC0CC</color>
+
+    <color name="colorAccentAdmin">#4FA7B5</color>
+    <color name="colorAccentDarkAdmin">#2F8B99</color>
+    <color name="colorAccentLightAdmin">#6EC0CC</color>
 
     <color name="grey_hard">#96989A</color>
     <color name="grey_medium">#BDBFC1</color>

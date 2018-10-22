@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -24,10 +26,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.AdminActivity;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.model.Role;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
@@ -35,10 +44,12 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin, btnRegister;
     private ProgressBar progressBar;
     private View parent_view;
+    private StringBuilder userRole = new StringBuilder();
 
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
+    DatabaseReference roleReference = FirebaseDatabase.getInstance().getReference("roles");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +64,26 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                userRole.append(getRole());
+                Log.d("UID", user.getUid());
                 if (user != null) {
-                    startActivity(new Intent(getApplicationContext(), AdminActivity.class));
-                } else {
+                    if (userRole.equals("ADMIN")) {
+                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+                    } else {
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                } else
+
+                {
 
                 }
             }
-        };
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        }
+
+        ;
+        btnLogin.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 submitForm();
@@ -68,7 +91,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
@@ -139,14 +164,25 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        progressBar.setVisibility(View.GONE);
+
                         SharedPreferences.Editor editor = getSharedPreferences(Constants.USER_ID, MODE_PRIVATE).edit();
                         editor.putString(Constants.USER_KEY, mAuth.getCurrentUser().getUid());
                         editor.apply();
+
+
+                        if (userRole.equals("ADMIN")) {
+                            getRole();
+                            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        } else {
+                            getRole();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+                        progressBar.setVisibility(View.GONE);
                         finish();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
                     } else {
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(parent_view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
@@ -155,6 +191,32 @@ public class LoginActivity extends AppCompatActivity {
             });
 
         }
+    }
+
+    private String getRole() {
+
+        if (roleReference.child("t5lT5r6V4dRRyIkYeHHIRxzANyz2") != null) {
+
+            roleReference.child("t5lT5r6V4dRRyIkYeHHIRxzANyz2").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Role role = dataSnapshot.getValue(Role.class);
+                    userRole.append(role.getUserRole());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return userRole.toString();
+        } else {
+
+            return null;
+        }
+
+
     }
 
     private void setupUI() {
@@ -236,6 +298,7 @@ public class LoginActivity extends AppCompatActivity {
             //finish();
             super.onPostExecute(s);
         }
+
     }
 
     @Override

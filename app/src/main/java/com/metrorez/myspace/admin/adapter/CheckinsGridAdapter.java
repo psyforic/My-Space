@@ -22,7 +22,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAdapter.ViewHolder> implements Filterable {
+public class CheckinsGridAdapter extends RecyclerView.Adapter<CheckinsGridAdapter.ViewHolder> implements Filterable {
+
     private List<City> original_items = new ArrayList<>();
     private List<City> filtered_items = new ArrayList<>();
     private ItemFilter itemFilter = new ItemFilter();
@@ -42,10 +43,8 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
 
     @NonNull
     @Override
-
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_admin_complaints, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_admin_checkins, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -95,12 +94,6 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
         return itemFilter;
     }
 
-    public ComplaintsGridAdapter(Context context, List<City> items) {
-        this.original_items = items;
-        this.filtered_items = items;
-        this.context = context;
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public TextView content;
@@ -118,6 +111,11 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
         }
     }
 
+    public CheckinsGridAdapter(Context context, List<City> items) {
+        this.original_items = items;
+        this.filtered_items = items;
+        this.context = context;
+    }
 
     private class ItemFilter extends Filter {
         @Override

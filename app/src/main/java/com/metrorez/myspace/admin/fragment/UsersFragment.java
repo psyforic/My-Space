@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
@@ -26,6 +27,7 @@ public class UsersFragment extends Fragment {
     public AdminUserListAdapter mAdapter;
     private ProgressBar progressBar;
     private View view;
+    private LinearLayout lyt_not_found;
     private List<AdminUser> users;
 
     @Override
@@ -42,12 +44,18 @@ public class UsersFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
+        lyt_not_found = view.findViewById(R.id.lyt_not_found);
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
+        if (users.size() == 0) {
+            lyt_not_found.setVisibility(View.VISIBLE);
+        } else {
+            lyt_not_found.setVisibility(View.GONE);
+        }
         // specify an adapter (see also next example)
         mAdapter = new AdminUserListAdapter(getActivity(), users);
         recyclerView.setAdapter(mAdapter);

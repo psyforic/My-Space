@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="city_names">
+        <item>Port Elizabeth</item>
+        <item>Queenstown</item>
+        <item>East London</item>
+    </string-array>
+
+
+    <integer-array name="city_photos">
+        <item>@drawable/ic_city</item>
+        <item>@drawable/ic_city</item>
+        <item>@drawable/ic_city</item>
+    </integer-array>
+
+    <string-array name="city_no_complaints">
+        <item>307</item>
+        <item>99</item>
+        <item>204</item>
+    </string-array>
+</resources>

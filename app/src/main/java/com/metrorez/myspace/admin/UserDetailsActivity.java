@@ -5,12 +5,11 @@ import android.os.Bundle;
 
 import com.metrorez.myspace.R;
 
-public class UsersActivity extends AppCompatActivity {
+public class UserDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AdminTheme);
-        setContentView(R.layout.activity_users);
+        setContentView(R.layout.activity_user_details);
     }
 }

@@ -39,7 +39,11 @@
         <activity android:name=".user.SuccessActivity" />
         <activity android:name=".user.CheckinActivity" />
         <activity android:name=".admin.AdminActivity" />
-        <activity android:name=".admin.UsersActivity"></activity>
+        <activity android:name=".admin.UsersActivity" />
+        <activity android:name=".admin.ComplaintsDetailsActivity" />
+        <activity android:name=".admin.RequestsActivityDetails" />
+        <activity android:name=".admin.UserDetailsActivity" />
+        <activity android:name=".admin.CheckinDetailsActivity"></activity>
     </application>
 
 </manifest>

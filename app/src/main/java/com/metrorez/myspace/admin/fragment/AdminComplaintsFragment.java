@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.ComplaintsGridAdapter;
 import com.metrorez.myspace.admin.model.City;
+import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class AdminComplaintsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTheme(R.style.AdminTheme);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_admin_complaints, container, false);
         setupUI();
@@ -49,14 +51,14 @@ public class AdminComplaintsFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        if (cities.size() == 0) {
+        if (Constants.getCityData(getActivity()).size() == 0) {
             lyt_not_found.setVisibility(View.VISIBLE);
         } else {
             lyt_not_found.setVisibility(View.GONE);
         }
 
         // specify an adapter (see also next example)
-        mAdapter = new ComplaintsGridAdapter(getActivity(), cities);
+        mAdapter = new ComplaintsGridAdapter(getActivity(), Constants.getCityData(getActivity()));
         recyclerView.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener(new ComplaintsGridAdapter.OnItemClickListener() {

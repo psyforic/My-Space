@@ -13,6 +13,13 @@
         <!--<item name="colorControlHighlight">@color/colorAccentLight</item>-->
     </style>
 
+    <style name="AdminTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimaryAdmin</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkAdmin</item>
+        <item name="colorControlHighlight">@color/colorAccentLightAdmin</item>
+        <item name="colorAccent">@color/colorAccentAdmin</item>
+    </style>
+
     <style name="DrawerStyle" parent="BaseTheme">
         <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
