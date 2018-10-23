@@ -141,23 +141,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void uploadImageToFirebaseStorage() {
         final StorageReference profileStorageReference = FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis() + ".jpg");
-/*        if (profileUri != null) {
-            progressBar.setVisibility(View.VISIBLE);
-            profileStorageReference.putFile(profileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressBar.setVisibility(View.GONE);
-                    profileImageUrl = taskSnapshot.getStorage().getDownloadUrl().toString();
-                    //profileStorageReference.getDownloadUrl().toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressBar.setVisibility(View.GONE);
-                    Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                }
-            });
-        }*/
 
         if (profileUri != null) {
             progressBar.setVisibility(View.VISIBLE);

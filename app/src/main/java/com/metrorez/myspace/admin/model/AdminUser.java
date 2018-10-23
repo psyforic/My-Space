@@ -1,6 +1,8 @@
 package com.metrorez.myspace.admin.model;
 
-public class AdminUser {
+import java.io.Serializable;
+
+public class AdminUser implements Serializable{
 
     private String adminUserId;
     private String adminUserName;

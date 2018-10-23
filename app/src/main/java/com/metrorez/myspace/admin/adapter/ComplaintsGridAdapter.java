@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.model.City;
+import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 

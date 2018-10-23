@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.model.Request;
+import com.metrorez.myspace.user.model.Checkin;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
@@ -24,25 +24,19 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequestsListAdapter.ViewHolder> implements Filterable {
+public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinListAdapter.ViewHolder>  implements Filterable{
+
     private Context context;
-    private List<Extra> requestList;
-    private List<Extra> filtered_items;
+    private List<Checkin> checkins;
+    private List<Checkin> filtered_items;
     private List<User> users;
     private ItemFilter mFilter = new ItemFilter();
-
-    public AdminRequestsListAdapter(Context context, List<Extra> requests, List<User> users) {
-        this.context = context;
-        this.requestList = requests;
-        this.filtered_items = requests;
-        this.users = users;
-    }
 
     private OnItemClickListener mOnItemClickListener;
     private boolean clicked = false;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Extra obj, int position);
+        void onItemClick(View view, Checkin obj, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -53,28 +47,40 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
     private OnItemLongClickListener mOnItemLongClickListener;
 
     public interface OnItemLongClickListener {
-        void onItemClick(View view, Extra obj, int position);
+        void onItemClick(View view, Checkin obj, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mOnItemLongClickListener) {
         this.mOnItemLongClickListener = mOnItemLongClickListener;
     }
 
+    public AdminCheckinListAdapter(Context context, List<Checkin> checkins, List<User> users) {
+        this.context = context;
+        this.checkins = checkins;
+        this.filtered_items = checkins;
+        this.users = users;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_requests_user, parent, false);
+    public AdminCheckinListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_checkin_user, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        final Extra request = filtered_items.get(position);
+    public void onBindViewHolder(@NonNull AdminCheckinListAdapter.ViewHolder holder, final int position) {
+        final Checkin checkin = filtered_items.get(position);
         final User user = users.get(position);
         holder.name.setText(user.getUserFirstName().concat(" ").concat(user.getUserLastName()));
-        holder.city.setText(request.getExtraName());
+        holder.city.setText(checkin.getCity());
         Picasso.with(context).load(R.drawable.unknown_avatar).resize(100, 100)
                 .placeholder(R.drawable.unknown_avatar)
                 .transform(new CircleTransform())
@@ -87,25 +93,16 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
             public void onClick(View view) {
                 if (!clicked && mOnItemClickListener != null) {
                     clicked = true;
-                    mOnItemClickListener.onItemClick(view, request, position);
+                    mOnItemClickListener.onItemClick(view, checkin, position);
                 }
             }
         });
         clicked = false;
     }
 
-    private Extra getComplaint(int position) {
-        return filtered_items.get(position);
-    }
-
     @Override
     public int getItemCount() {
         return filtered_items.size();
-    }
-
-    @Override
-    public Filter getFilter() {
-        return mFilter;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -142,11 +139,11 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
             String query = constraint.toString().toLowerCase();
 
             FilterResults results = new FilterResults();
-            final List<Extra> list = requestList;
-            final List<Extra> result_list = new ArrayList<>(list.size());
+            final List<Checkin> list = checkins;
+            final List<Checkin> result_list = new ArrayList<>(list.size());
 
             for (int i = 0; i < list.size(); i++) {
-                String str_title = list.get(i).getExtraName();
+                String str_title = list.get(i).getDate();
                 if (str_title.toLowerCase().contains(query)) {
                     result_list.add(list.get(i));
                 }
@@ -160,7 +157,7 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filtered_items = (List<Extra>) results.values;
+            filtered_items = (List<Checkin>) results.values;
             notifyDataSetChanged();
         }
     }

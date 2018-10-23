@@ -1,4 +1,6 @@
 package com.metrorez.myspace.user.model;
 
-public class Notification {
+import java.io.Serializable;
+
+public class Notification implements Serializable{
 }

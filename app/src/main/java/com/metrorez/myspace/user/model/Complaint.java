@@ -1,7 +1,9 @@
 package com.metrorez.myspace.user.model;
 
 
-public class Complaint {
+import java.io.Serializable;
+
+public class Complaint implements Serializable {
     private String complaintId;
     private String complaintCategory;
     private String complaintComment;

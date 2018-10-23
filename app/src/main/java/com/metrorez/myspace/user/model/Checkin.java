@@ -8,12 +8,23 @@ public class Checkin implements Serializable {
     private String date;
     private String snippet;
     private int photo;
+    private String city;
 
+    public Checkin() {
+    }
     public Checkin(long id, String date, String snippet, int photo) {
         this.id = id;
         this.date = date;
         this.snippet = snippet;
         this.photo = photo;
+    }
+
+    public Checkin(long id, String date, String snippet, int photo, String city) {
+        this.id = id;
+        this.date = date;
+        this.snippet = snippet;
+        this.photo = photo;
+        this.city = city;
     }
 
     public long getId() {
@@ -30,5 +41,11 @@ public class Checkin implements Serializable {
 
     public int getPhoto() {
         return photo;
+    }
+
+
+
+    public String getCity() {
+        return city;
     }
 }

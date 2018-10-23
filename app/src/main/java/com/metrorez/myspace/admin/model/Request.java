@@ -1,4 +1,6 @@
 package com.metrorez.myspace.admin.model;
 
-public class Request {
+import java.io.Serializable;
+
+public class Request implements Serializable {
 }

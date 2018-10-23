@@ -1,6 +1,8 @@
 package com.metrorez.myspace.user.model;
 
-public class Inventory {
+import java.io.Serializable;
+
+public class Inventory implements Serializable {
     private String inventoryId;
     private String itemName;
     private String roomName;

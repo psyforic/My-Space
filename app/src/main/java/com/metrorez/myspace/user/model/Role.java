@@ -1,6 +1,8 @@
 package com.metrorez.myspace.user.model;
 
-public class Role {
+import java.io.Serializable;
+
+public class Role implements Serializable{
     private String userId;
     private String UserRole;
 

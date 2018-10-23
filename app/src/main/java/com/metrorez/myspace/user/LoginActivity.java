@@ -31,6 +31,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.AdminActivity;
@@ -38,13 +39,17 @@ import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Role;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private TextInputLayout inputLayoutEmail, inputLayoutPassword;
     private Button btnLogin, btnRegister;
     private ProgressBar progressBar;
     private View parent_view;
-    private StringBuilder userRole = new StringBuilder();
+    private String userRole;
+    private List<Role> roles;
 
 
     FirebaseAuth mAuth;
@@ -64,13 +69,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                userRole.append(getRole());
-                Log.d("UID", user.getUid());
+                Log.i("UUI", roleReference.child(mAuth.getCurrentUser().getUid()).toString());
                 if (user != null) {
-                    if (userRole.equals("ADMIN")) {
+                    if ((userRole != null) && (userRole.equals("ADMIN"))) {
                         startActivity(new Intent(getApplicationContext(), AdminActivity.class));
                     } else {
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
                     }
                 } else
 
@@ -193,33 +197,31 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private String getRole() {
-
-        if (roleReference.child("t5lT5r6V4dRRyIkYeHHIRxzANyz2") != null) {
-
-            roleReference.child("t5lT5r6V4dRRyIkYeHHIRxzANyz2").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Role role = dataSnapshot.getValue(Role.class);
-                    userRole.append(role.getUserRole());
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-            return userRole.toString();
-        } else {
-
-            return null;
-        }
-
-
+    private void getRole() {
+        Query userRole = roleReference.child(mAuth.getUid());
+        userRole.addListenerForSingleValueEvent(valueEventListener);
     }
 
+    ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            if (dataSnapshot.exists()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Role role = snapshot.getValue(Role.class);
+                    roles.add(role);
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
     private void setupUI() {
+        roles = new ArrayList<>();
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
         inputEmail = (EditText) findViewById(R.id.input_email);

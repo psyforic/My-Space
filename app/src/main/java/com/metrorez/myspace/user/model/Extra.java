@@ -1,6 +1,8 @@
 package com.metrorez.myspace.user.model;
 
-public class Extra {
+import java.io.Serializable;
+
+public class Extra  implements Serializable{
     private String extraId;
     private String extraName;
     private double extraPrice;

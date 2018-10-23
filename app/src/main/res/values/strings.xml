@@ -100,6 +100,7 @@
     <string name="drawer_close">Close</string>
     <string name="tab_checkins">Check-ins</string>
     <string name="str_nav_users">Users</string>
+    <string name="str_complaints">Complaints</string>
 
     <string-array name="residences">
         <item>Russell Road</item>

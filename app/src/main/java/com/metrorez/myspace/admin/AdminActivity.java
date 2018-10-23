@@ -45,7 +45,6 @@ public class AdminActivity extends AppCompatActivity {
     private boolean isSearch = false;
     private AdminComplaintsFragment f_complaints;
     private AdminRequestsFragment f_requests;
-    //private AdminCheckinsFragment  f_checkins;
     private AdminCheckinsFragment f_checkins;
     private View parent_view;
 
@@ -78,14 +77,14 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch (viewPager.getCurrentItem()) {
                     case 0:
-                        Snackbar.make(parent_view, "Add Friend Clicked", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(parent_view, "Add Check-in City Clicked", Snackbar.LENGTH_SHORT).show();
                         break;
                     case 1:
                         Intent i = new Intent(getApplicationContext(), UsersActivity.class);
                         startActivity(i);
                         break;
                     case 2:
-                        Snackbar.make(parent_view, "Add Group Clicked", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(parent_view, "Add Requests City Clicked", Snackbar.LENGTH_SHORT).show();
                         break;
                 }
             }

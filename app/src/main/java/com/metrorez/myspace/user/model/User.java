@@ -1,6 +1,8 @@
 package com.metrorez.myspace.user.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
     private String userId;
     private String userFirstName;
     private String userLastName;
@@ -9,6 +11,7 @@ public class User {
     private String userCity;
     private String userResidence;
     private String userRoom;
+    private int photo;
 
     public User() {
     }
@@ -30,6 +33,29 @@ public class User {
         this.userCity = userCity;
         this.userResidence = userResidence;
         this.userRoom = userRoom;
+    }
+
+    public User(String userId, String userFirstName, String userLastName, String userEmail, String userStudentNo, String userCity, String userResidence, String userRoom, int photo) {
+        this.userId = userId;
+        this.userFirstName = userFirstName;
+        this.userLastName = userLastName;
+        this.userEmail = userEmail;
+        this.userStudentNo = userStudentNo;
+        this.userCity = userCity;
+        this.userResidence = userResidence;
+        this.userRoom = userRoom;
+        this.photo = photo;
+    }
+
+    public User(String userFirstName, String userLastName, String userEmail, String userStudentNo, String userCity, String userResidence, String userRoom, int photo) {
+        this.userFirstName = userFirstName;
+        this.userLastName = userLastName;
+        this.userEmail = userEmail;
+        this.userStudentNo = userStudentNo;
+        this.userCity = userCity;
+        this.userResidence = userResidence;
+        this.userRoom = userRoom;
+        this.photo = photo;
     }
 
     public String getUserId() {
@@ -62,5 +88,9 @@ public class User {
 
     public String getUserRoom() {
         return userRoom;
+    }
+
+    public int getPhoto() {
+        return photo;
     }
 }

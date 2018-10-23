@@ -1,4 +1,6 @@
 package com.metrorez.myspace.admin.model;
 
-public class AdminNotification {
+import java.io.Serializable;
+
+public class AdminNotification implements Serializable{
 }
