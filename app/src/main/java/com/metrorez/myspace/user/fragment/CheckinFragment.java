@@ -1,12 +1,15 @@
 package com.metrorez.myspace.user.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.user.CheckinActivity;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.CheckinListAdapter;
@@ -30,11 +38,11 @@ public class CheckinFragment extends Fragment {
     public CheckinListAdapter mAdapter;
     private ProgressBar progressBar;
     private View view;
-    private List<Checkin> checkins = new ArrayList<>();
+    private List<Checkin> checkins;
     private LinearLayout lyt_not_found;
     private FirebaseAuth mAuth;
 
-//    private DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference("chekins").child(mAuth.getCurrentUser().getUid());
+    private DatabaseReference checkinReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,8 +50,10 @@ public class CheckinFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_checkin, container, false);
         mAuth = FirebaseAuth.getInstance();
-        //getCheckins();
+        checkinReference = FirebaseDatabase.getInstance().getReference("checkins");
+        getCheckins();
         setupUI();
+
         addCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +62,15 @@ public class CheckinFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        //getCheckins();
     }
 
     private void setupUI() {
@@ -69,21 +87,25 @@ public class CheckinFragment extends Fragment {
         } else {
             lyt_not_found.setVisibility(View.GONE);
         }
-        mAdapter = new CheckinListAdapter(getActivity(), checkins);
-        recyclerView.setAdapter(mAdapter);
+
+
     }
 
-   /* private void getCheckins() {
+    private void getCheckins() {
         checkins = new ArrayList<>();
         if (checkinReference != null) {
             checkinReference.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
                     checkins.clear();
                     for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
                         Checkin checkin = checkinSnapShot.getValue(Checkin.class);
                         checkins.add(checkin);
                     }
+
+                    mAdapter = new CheckinListAdapter(getActivity(), checkins);
+                    recyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -92,6 +114,18 @@ public class CheckinFragment extends Fragment {
                 }
             });
         }
-    }*/
+    }
 
+    @Override
+    public void onResume() {
+        // mAdapter.notifyDataSetChanged();
+        super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        //getCheckins();
+        super.onStart();
+
+    }
 }

@@ -3,6 +3,7 @@ package com.metrorez.myspace.user;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -89,6 +90,10 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
 
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);

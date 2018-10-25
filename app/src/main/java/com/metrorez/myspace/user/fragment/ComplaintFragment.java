@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +35,7 @@ public class ComplaintFragment extends Fragment {
     private View view;
     private List<Complaint> complaints;
     private Fragment fragment = null;
+    private ProgressBar progressBar;
 
 
     private GlobalVariable global;
@@ -56,9 +58,8 @@ public class ComplaintFragment extends Fragment {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame_content, fragment);
-                    //fragmentTransaction.addToBackStack("AddFragment");
                     fragmentTransaction.commit();
-                    //fragmentTransaction.addToBackStack("AddFragment");
+
                 }
             }
         });
@@ -74,6 +75,7 @@ public class ComplaintFragment extends Fragment {
 
     private void setupUI() {
         complaints = new ArrayList<>();
+        progressBar = view.findViewById(R.id.progressBar);
         recyclerView = (RecyclerView) view.findViewById(R.id.complaint_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
@@ -82,17 +84,17 @@ public class ComplaintFragment extends Fragment {
         addComplaint = (FloatingActionButton) view.findViewById(R.id.fab_add_complaint);
 
         complaintsReference.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 complaints.clear();
-
+                progressBar.setVisibility(View.VISIBLE);
                 for (DataSnapshot complaintSnapShot : dataSnapshot.getChildren()) {
                     Complaint complaint = complaintSnapShot.getValue(Complaint.class);
                     complaints.add(complaint);
                 }
                 global.setComplaints(complaints);
                 recyclerView.setAdapter(mAdapter);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

@@ -101,6 +101,9 @@
     <string name="tab_checkins">Check-ins</string>
     <string name="str_nav_users">Users</string>
     <string name="str_complaints">Complaints</string>
+    <string name="channel_Id">MY_SPACE_CH_01</string>
+    <string name="channel_description">MY_SPACE_CH_DESC</string>
+    <string name="tab_notifications">Notifications</string>
 
     <string-array name="residences">
         <item>Russell Road</item>

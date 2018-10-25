@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,9 +49,10 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complaints_details);
+        initComponent();
         populateAdapter();
         initToolbar();
-        initComponent();
+
 
         Tools.systemBarLolipop(this);
     }
@@ -67,7 +69,6 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         complaints = new ArrayList<>();
         users = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
-
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -80,7 +81,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
 
             }
         });
-        recyclerView.setAdapter(mAdapter);
+
     }
 
     private void populateAdapter() {
@@ -93,6 +94,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
                     Complaint complaint = complaintsSnapshot.getValue(Complaint.class);
                     complaints.add(complaint);
                 }
+
             }
 
             @Override
@@ -109,6 +111,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
                     User user = userSnapshot.getValue(User.class);
                     users.add(user);
                 }
+
             }
 
             @Override
@@ -116,7 +119,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
 
             }
         });
-//        recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     public void initToolbar() {
@@ -157,7 +160,6 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_search: {
-
                 supportInvalidateOptionsMenu();
                 return true;
             }
@@ -165,4 +167,9 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //mAdapter.notifyDataSetChanged();
+    }
 }

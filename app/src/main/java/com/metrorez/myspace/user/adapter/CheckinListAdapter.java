@@ -50,7 +50,7 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
         holder.time.setText(checkin.getDate());
         holder.content.setText(checkin.getSnippet());
 
-        Picasso.with(ctx).load(checkin.getPhoto()).resize(100, 100)
+        Picasso.with(ctx).load(R.drawable.ic_checkin).resize(100, 100)
                 .transform(new CircleTransform())
                 .into(holder.image);
         setAnimation(holder.itemView, position);
@@ -81,7 +81,7 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
 
     @Override
     public int getItemCount() {
-        return 0;
+        return checkin_list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

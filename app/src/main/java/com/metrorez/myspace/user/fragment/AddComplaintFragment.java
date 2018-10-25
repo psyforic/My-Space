@@ -15,10 +15,13 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.Complaint;
+import com.metrorez.myspace.user.model.Notification;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,16 +37,18 @@ public class AddComplaintFragment extends Fragment {
     private CheckBox attachImage;
     private ImageButton cameraButton;
     private boolean checked = false;
-
+    private FirebaseAuth mAuth;
     private View view;
+    private DatabaseReference notificationsReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_complaint, container, false);
-
+        mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("complaints");
+        notificationsReference = FirebaseDatabase.getInstance().getReference("notifications");
         setupUI();
 
         fileComplaint.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +110,7 @@ public class AddComplaintFragment extends Fragment {
             Complaint complaint = new Complaint(id, category, complainTxt, date, city, residence, room);
 
             databaseReference.child(id).setValue(complaint);
+            sendNotification("Complaint", Constants.COMPLAINT_TYPE);
 
             Toast.makeText(getActivity(), "Complaint Filed Successfully", Toast.LENGTH_LONG).show();
         } else {
@@ -138,6 +144,17 @@ public class AddComplaintFragment extends Fragment {
         if (view.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
+    }
+
+    private void sendNotification(String content, String type) {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        String date = dateFormat.format(today);
+        String id = notificationsReference.push().getKey();
+        String typeId = databaseReference.push().getKey();
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId);
+        notificationsReference.child(id).setValue(notification);
     }
 
 }

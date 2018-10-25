@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:background="@color/grey_bg"
     android:layout_height="match_parent"
+    android:background="@color/grey_bg"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -39,10 +38,17 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_complaint"
         style="@style/FabStyle"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:clickable="true"
         android:src="@drawable/ic_add"
         android:tint="@android:color/white" />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -2,5 +2,62 @@ package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
 
-public class Notification implements Serializable{
+public class Notification implements Serializable {
+
+    private String notif_id;
+    private String fromUserId;
+    private String date;
+    private String content;
+    private String userName;
+    private String type;
+    private String typeId;
+
+    public Notification() {
+    }
+
+    public Notification(String notif_id, String fromUserId, String userName, String date, String content) {
+        this.notif_id = notif_id;
+        this.fromUserId = fromUserId;
+        this.date = date;
+        this.content = content;
+        this.userName = userName;
+    }
+
+    public Notification(String notif_id, String fromUserId, String date, String content, String userName, String type, String typeId) {
+        this.notif_id = notif_id;
+        this.fromUserId = fromUserId;
+        this.date = date;
+        this.content = content;
+        this.userName = userName;
+        this.type = type;
+        this.typeId = typeId;
+    }
+
+    public String getNotif_id() {
+        return notif_id;
+    }
+
+    public String getFromUserId() {
+        return fromUserId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getContent() {
+        return "<b>" + "New " + content + " from" + userName + "</b>";
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getTypeId() {
+        return typeId;
+    }
 }

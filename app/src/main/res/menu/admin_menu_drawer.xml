@@ -4,12 +4,6 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_notifications"
-            android:icon="@drawable/bell"
-            android:title="@string/str_nav_notifications"
-            app:actionLayout="@layout/menu_counter" />
-
-        <item
             android:id="@+id/nav_users"
             android:icon="@drawable/ic_people"
             android:title="@string/str_nav_users" />

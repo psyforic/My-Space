@@ -96,6 +96,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
                     Extra extra = complaintsSnapshot.getValue(Extra.class);
                     requests.add(extra);
                 }
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -112,6 +113,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
                     User user = userSnapshot.getValue(User.class);
                     users.add(user);
                 }
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override

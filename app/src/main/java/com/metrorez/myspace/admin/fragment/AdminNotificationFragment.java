@@ -1,21 +1,19 @@
-package com.metrorez.myspace.user.fragment;
+package com.metrorez.myspace.admin.fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,47 +23,50 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.adapter.NotificationListAdapter;
-import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.admin.adapter.AdminNotificationListAdapter;
 import com.metrorez.myspace.user.model.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class NotificationsFragment extends Fragment {
+public class AdminNotificationFragment extends Fragment {
 
 
     private RecyclerView recyclerView;
     private View view;
-    private NotificationListAdapter mAdapter;
+    private AdminNotificationListAdapter mAdapter;
     private List<Notification> notifications = new ArrayList<>();
     private String userId;
     private FirebaseAuth mAuth;
+    private LinearLayout lyt_not_found;
+    private ProgressBar progressBar;
     private DatabaseReference noticationReference = FirebaseDatabase.getInstance().getReference("notifications");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTheme(R.style.AdminTheme);
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_notifications, container, false);
+        view = inflater.inflate(R.layout.fragment_admin_notification, container, false);
         setHasOptionsMenu(true);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
+
         getNotifications();
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        lyt_not_found = view.findViewById(R.id.lyt_not_found);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new NotificationListAdapter(getActivity(), notifications);
+        mAdapter = new AdminNotificationListAdapter(getActivity(), notifications);
         recyclerView.setAdapter(mAdapter);
-        //set data and list adapter
-
         return view;
     }
 
     private void getNotifications() {
-
+        progressBar.setVisibility(View.VISIBLE);
         Query query = noticationReference.orderByChild("fromUserId").equalTo(userId);
         query.addValueEventListener(valueEventListener);
     }
@@ -79,12 +80,19 @@ public class NotificationsFragment extends Fragment {
                 notifications.add(notification);
             }
             mAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
+            if (notifications.size() == 0) {
+                lyt_not_found.setVisibility(View.VISIBLE);
+            } else {
+                lyt_not_found.setVisibility(View.GONE);
+            }
         }
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
 
         }
+
     };
 
     @Override
@@ -102,4 +110,5 @@ public class NotificationsFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

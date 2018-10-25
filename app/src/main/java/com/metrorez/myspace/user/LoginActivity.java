@@ -22,10 +22,12 @@ import android.widget.ProgressBar;
 import android.text.TextWatcher;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +42,9 @@ import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Role;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
@@ -55,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference roleReference = FirebaseDatabase.getInstance().getReference("roles");
+    DatabaseReference tokenReference = FirebaseDatabase.getInstance().getReference("tokens");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +178,19 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(Constants.USER_KEY, mAuth.getCurrentUser().getUid());
                         editor.apply();
 
+                        mAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                            @Override
+                            public void onSuccess(GetTokenResult getTokenResult) {
+                                String token_Id = getTokenResult.getToken();
+                                String current_Id = mAuth.getCurrentUser().getUid();
+
+                                Map<String, Object> tokenMap = new HashMap<>();
+
+                                tokenMap.put("tokenId", token_Id);
+
+                                tokenReference.child(current_Id).setValue(tokenMap);
+                            }
+                        });
 
                         if (userRole.equals("ADMIN")) {
                             getRole();
@@ -181,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                         } else {
                             getRole();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         }

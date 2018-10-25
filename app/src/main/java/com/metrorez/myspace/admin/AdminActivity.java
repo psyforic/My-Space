@@ -27,9 +27,12 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.FragmentAdapter;
 import com.metrorez.myspace.admin.fragment.AdminCheckinsFragment;
 import com.metrorez.myspace.admin.fragment.AdminComplaintsFragment;
+import com.metrorez.myspace.admin.fragment.AdminNotificationFragment;
 import com.metrorez.myspace.admin.fragment.AdminRequestsFragment;
 import com.metrorez.myspace.admin.fragment.UsersFragment;
 import com.metrorez.myspace.user.data.Tools;
+
+import static android.view.View.GONE;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -38,9 +41,11 @@ public class AdminActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private DrawerLayout drawerLayout;
+    private TabLayout tabLayout;
     public FloatingActionButton fab;
     private Toolbar searchToolbar;
     private ViewPager viewPager;
+    private AdminNotificationFragment f_notifications;
 
     private boolean isSearch = false;
     private AdminComplaintsFragment f_complaints;
@@ -56,6 +61,7 @@ public class AdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
 
         parent_view = findViewById(R.id.main_content);
+
         setupDrawerLayout();
         initComponent();
 
@@ -64,12 +70,13 @@ public class AdminActivity extends AppCompatActivity {
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
-
+        tabLayout.setupWithViewPager(viewPager);
         initAction();
-
+        setupTabIcons();
         // for system bar in lollipop
         Tools.systemBarLolipop(this);
     }
+
 
     private void initAction() {
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,13 +105,13 @@ public class AdminActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(tab.getPosition());
                 switch (tab.getPosition()) {
                     case 0:
-                        fab.setImageResource(R.drawable.ic_create);
+                        fab.setVisibility(GONE);
                         break;
                     case 1:
-                        fab.setImageResource(R.drawable.ic_create);
+                        fab.setVisibility(GONE);
                         break;
                     case 2:
-                        fab.setImageResource(R.drawable.ic_create);
+                        fab.setVisibility(GONE);
                         break;
                 }
             }
@@ -122,6 +129,7 @@ public class AdminActivity extends AppCompatActivity {
 
 
     private void initComponent() {
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         toolbar = (Toolbar) findViewById(R.id.toolbar_viewpager);
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         searchToolbar = (Toolbar) findViewById(R.id.toolbar_search);
@@ -142,12 +150,21 @@ public class AdminActivity extends AppCompatActivity {
             f_requests = new AdminRequestsFragment();
         }
 
+        if (f_notifications == null) {
+            f_notifications = new AdminNotificationFragment();
+        }
         adapter.addFragment(f_checkins, getString(R.string.tab_checkins));
         adapter.addFragment(f_complaints, getString(R.string.tab_complaints));
         adapter.addFragment(f_requests, getString(R.string.tab_requests));
+        adapter.addFragment(f_notifications, "");
 
 
         viewPager.setAdapter(adapter);
+    }
+
+    private void setupTabIcons() {
+
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_notification);
     }
 
     private void prepareActionBar(Toolbar toolbar) {
@@ -224,7 +241,6 @@ public class AdminActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(isSearch ? R.menu.menu_search_toolbar : R.menu.menu_main, menu);
         if (isSearch) {
-            //Toast.makeText(getApplicationContext(), "Search " + isSearch, Toast.LENGTH_SHORT).show();
             final SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
             search.setIconified(false);
             switch (viewPager.getCurrentItem()) {
@@ -286,9 +302,6 @@ public class AdminActivity extends AppCompatActivity {
             case android.R.id.home:
                 closeSearch();
                 return true;
-            case R.id.action_notif: {
-                Snackbar.make(parent_view, "Notifications Clicked", Snackbar.LENGTH_SHORT).show();
-            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -303,7 +316,7 @@ public class AdminActivity extends AppCompatActivity {
                 //f_contact.mAdapter.getFilter().filter("");
             }
             prepareActionBar(toolbar);
-            searchToolbar.setVisibility(View.GONE);
+            searchToolbar.setVisibility(GONE);
             supportInvalidateOptionsMenu();
         }
     }

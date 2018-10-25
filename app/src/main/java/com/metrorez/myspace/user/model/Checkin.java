@@ -4,30 +4,31 @@ import java.io.Serializable;
 
 public class Checkin implements Serializable {
 
-    private long id;
+    private String id;
     private String date;
     private String snippet;
-    private int photo;
+    private String url;
     private String city;
 
     public Checkin() {
     }
-    public Checkin(long id, String date, String snippet, int photo) {
+
+    public Checkin(String id, String date, String snippet, String url) {
         this.id = id;
         this.date = date;
         this.snippet = snippet;
-        this.photo = photo;
+        this.url = url;
     }
 
-    public Checkin(long id, String date, String snippet, int photo, String city) {
+    public Checkin(String id, String date, String snippet, String url, String city) {
         this.id = id;
         this.date = date;
         this.snippet = snippet;
-        this.photo = photo;
+        this.url = url;
         this.city = city;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -39,10 +40,9 @@ public class Checkin implements Serializable {
         return snippet;
     }
 
-    public int getPhoto() {
-        return photo;
+    public String getPhoto() {
+        return url;
     }
-
 
 
     public String getCity() {
