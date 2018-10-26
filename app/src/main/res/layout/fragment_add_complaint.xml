@@ -2,9 +2,9 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
-    android:background="@color/grey_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_bg"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -53,8 +53,8 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/spacing_large"
                     android:text="@string/str_complaint_text"
-                    android:textColor="@color/colorAccent"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -62,37 +62,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/spacing_mlarge"
-                    android:paddingBottom="@dimen/spacing_mlarge">
+                    android:paddingBottom="@dimen/spacing_mlarge"
+                    android:paddingTop="@dimen/spacing_mlarge">
 
                     <Spinner
                         android:id="@+id/spinner_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/city" />
+                        android:spinnerMode="dialog" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/spacing_mlarge"
-                    android:paddingBottom="@dimen/spacing_mlarge">
+                    android:paddingBottom="@dimen/spacing_mlarge"
+                    android:paddingTop="@dimen/spacing_mlarge">
 
                     <Spinner
 
                         android:id="@+id/spinner_residence"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/residences" />
+                        android:spinnerMode="dialog" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
                     android:layout_marginBottom="@dimen/spacing_medium"
+                    android:layout_marginTop="@dimen/spacing_medium"
                     android:orientation="horizontal">
 
                     <android.support.design.widget.TextInputLayout
@@ -134,14 +134,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/spacing_mlarge"
-                    android:paddingBottom="@dimen/spacing_mlarge">
+                    android:paddingBottom="@dimen/spacing_mlarge"
+                    android:paddingTop="@dimen/spacing_mlarge">
 
                     <Spinner
                         android:id="@+id/spinner_priority"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/priorities" />
+                        android:spinnerMode="dialog" />
 
                 </LinearLayout>
 
@@ -186,9 +186,9 @@
                             android:id="@+id/btn_send_comment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="3dp"
-                            android:drawableRight="@drawable/ic_complaint_2"
                             android:background="@drawable/selector"
+                            android:drawableRight="@drawable/ic_complaint_2"
+                            android:padding="3dp"
                             android:text="@string/btn_send_comment"
                             android:textColor="@android:color/white" />
 

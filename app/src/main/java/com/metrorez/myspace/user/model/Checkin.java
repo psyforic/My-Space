@@ -48,4 +48,8 @@ public class Checkin implements Serializable {
     public String getCity() {
         return city;
     }
+
+    public String getUrl() {
+        return url;
+    }
 }

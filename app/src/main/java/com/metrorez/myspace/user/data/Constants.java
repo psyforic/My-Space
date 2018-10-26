@@ -6,7 +6,10 @@ public class Constants {
     public static final String COMPLAINT_TYPE = "COMPLAINT";
     public static final String REQUEST_TYPE = "REQUEST";
     public static final String CHECKIN_TYPE = "CHECKIN";
+    public static final String STRING_EXTRA = "EXTRA";
 
     public Constants() {
     }
+
+
 }

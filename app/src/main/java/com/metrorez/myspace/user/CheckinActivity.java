@@ -110,6 +110,8 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
         setupViewPager(viewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
+
+        btnSkip.setVisibility(View.GONE);
         btnNext = (Button) findViewById(R.id.btn_next);
 
         parentView = findViewById(android.R.id.content);

@@ -7,18 +7,18 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_marginBottom="@dimen/spacing_xlarge"
-        android:layout_marginTop="@dimen/spacing_large"
         android:id="@+id/extras_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_medium"
-        android:textAlignment="center"
-        android:gravity="center"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/spacing_xlarge"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:gravity="center"
+        android:padding="@dimen/spacing_medium"
         android:text="@string/str_header_extra"
-        android:textSize="18sp"
-        android:textColor="@color/colorAccent" />
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -35,10 +35,17 @@
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginTop="@dimen/spacing_xlarge"
         android:background="@color/colorAccent"
-        android:padding="3dp"
         android:drawableRight="@drawable/ic_check_btn"
+        android:padding="3dp"
         android:shadowColor="@color/cardview_shadow_end_color"
         android:text="@string/str_request"
         android:textColor="@android:color/white" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </LinearLayout>

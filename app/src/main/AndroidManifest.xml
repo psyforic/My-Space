@@ -18,7 +18,7 @@
     -->
     <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
-        android:resource="@drawable/ic_notif" />
+        android:resource="@drawable/ic_notification" />
     <!--
          Set color used with incoming notification messages. This is used when no color is set for the incoming
          notification message. See README(https://goo.gl/6BKBk7) for more.
@@ -60,10 +60,9 @@
         <activity android:name=".admin.RequestsActivityDetails" />
         <activity android:name=".admin.UserDetailsActivity" />
         <activity android:name=".admin.CheckinDetailsActivity" />
-        <activity android:name=".user.ViewNotificationActivity" >
+        <activity android:name=".user.ViewNotificationActivity">
             <intent-filter>
-                <action android:name="myspace.metrorez.NOTIFICATIONS">
-                </action>
+                <action android:name="myspace.metrorez.NOTIFICATIONS"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>

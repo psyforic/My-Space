@@ -85,15 +85,16 @@ public class ExtraListAdapter extends RecyclerView.Adapter<ExtraListAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtExtraName;
         private TextView txtExtraPrice;
-        public LinearLayout lyt_parent;
+        //public LinearLayout lyt_parent;
         public CheckBox isAdded;
 
         public ViewHolder(View itemView) {
             super(itemView);
             txtExtraName = (TextView) itemView.findViewById(R.id.extra_name);
             txtExtraPrice = (TextView) itemView.findViewById(R.id.extra_price);
-            lyt_parent = (LinearLayout) itemView.findViewById(R.id.lyt_parent);
+            //lyt_parent = (LinearLayout) itemView.findViewById(R.id.lyt_parent);
             isAdded = (CheckBox) itemView.findViewById(R.id.checkbox);
+            isAdded.setClickable(false);
         }
         public void setOnClickListener(View.OnClickListener onClickListener) {
             itemView.setOnClickListener(onClickListener);

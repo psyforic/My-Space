@@ -19,4 +19,49 @@
         <item>99</item>
         <item>204</item>
     </string-array>
+
+
+    <string-array name="residences">
+        <item>Select Residence</item>
+        <item>Russell Road</item>
+        <item>At Mr. Price</item>
+        <item>Hallack Street</item>
+    </string-array>
+
+    <string-array name="city">
+        <item>Select City</item>
+        <item>Port Elizabeth</item>
+        <item>East London</item>
+        <item>Queenstown</item>
+    </string-array>
+
+    <string-array name="priorities">
+        <item>Select Priority</item>
+        <item>Urgent</item>
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
+
+    <array name="array_dot_active">
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimary</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dotinactive</item>
+        <item>@color/dotinactive</item>
+        <item>@color/dotinactive</item>
+        <item>@color/dotinactive</item>
+    </array>
+
+    <string-array name="condition">
+        <item>select condition</item>
+        <item>25%</item>
+        <item>50%</item>
+        <item>75%</item>
+        <item>100%</item>
+    </string-array>
 </resources>

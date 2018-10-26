@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Role;
@@ -143,10 +145,20 @@ public class RegisterActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     addUser();
-                    Log.d(TAG, "createUserWithEmail:success");
-                    Snackbar.make(parent_view, "User Account Created", Snackbar.LENGTH_LONG).show();
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+
+                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                    String userId = mAuth.getUid();
+                    usersDatabase.child(userId).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "createUserWithEmail:success");
+                            Snackbar.make(parent_view, "User Account Created", Snackbar.LENGTH_LONG).show();
+
+                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                            finish();
+                        }
+                    });
+
                 } else {
 
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {

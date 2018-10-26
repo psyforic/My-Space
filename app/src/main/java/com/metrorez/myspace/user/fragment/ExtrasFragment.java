@@ -15,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,18 +37,20 @@ public class ExtrasFragment extends Fragment {
     private MyExtrasListAdapter mAdapter;
     private View view;
     private List<Extra> extras;
-    private String id = "";
+    private LinearLayout lyt_not_found;
+    //private String id = "";
     private Fragment fragment = null;
+    private FirebaseAuth mAuth;
 
 
-    DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference("extras").child(id);
+    DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_extras, container, false);
-        retrieveUserId();
+        mAuth = FirebaseAuth.getInstance();
         setupUI();
 
         addExtra.setOnClickListener(new View.OnClickListener() {
@@ -68,13 +72,14 @@ public class ExtrasFragment extends Fragment {
 
     private void setupUI() {
         extras = new ArrayList<>();
+        lyt_not_found = view.findViewById(R.id.lyt_not_found);
         recyclerView = (RecyclerView) view.findViewById(R.id.extras_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         addExtra = (FloatingActionButton) view.findViewById(R.id.fab_add_extra);
 
-        extrasReference.addValueEventListener(new ValueEventListener() {
+        extrasReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 extras.clear();
@@ -84,6 +89,12 @@ public class ExtrasFragment extends Fragment {
                 }
                 mAdapter = new MyExtrasListAdapter(getActivity(), extras);
                 recyclerView.setAdapter(mAdapter);
+
+                if (extras.size() == 0) {
+                    lyt_not_found.setVisibility(View.VISIBLE);
+                } else {
+                    lyt_not_found.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -91,22 +102,8 @@ public class ExtrasFragment extends Fragment {
 
             }
         });
-    }
 
-    private void retrieveUserId() {
-        try {
-            SharedPreferences prefs = getActivity().getSharedPreferences(Constants.USER_ID, Context.MODE_PRIVATE);
-            String restoredText = prefs.getString("text", null);
-            {
-                if (restoredText == null) {
-                    id = prefs.getString(Constants.USER_KEY, "");
-                    Log.i("USER_ID", id);
-                }
-            }
-        } catch (Exception ex) {
-            Log.d("PREF_ERROR", ex.getMessage());
-        }
-    }
 
+    }
 
 }

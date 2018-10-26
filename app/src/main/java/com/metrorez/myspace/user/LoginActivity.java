@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.AdminActivity;
 import com.metrorez.myspace.user.data.Constants;
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference roleReference = FirebaseDatabase.getInstance().getReference("roles");
-    DatabaseReference tokenReference = FirebaseDatabase.getInstance().getReference("tokens");
+    DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                Log.i("UUI", roleReference.child(mAuth.getCurrentUser().getUid()).toString());
+                //mapLog.i("UUI", roleReference.child(mAuth.getCurrentUser().getUid()).toString());
                 if (user != null) {
                     if ((userRole != null) && (userRole.equals("ADMIN"))) {
                         startActivity(new Intent(getApplicationContext(), AdminActivity.class));
@@ -178,33 +179,23 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(Constants.USER_KEY, mAuth.getCurrentUser().getUid());
                         editor.apply();
 
-                        mAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                        String currentId = mAuth.getCurrentUser().getUid();
+                        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
+                        userReference.child(currentId).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(GetTokenResult getTokenResult) {
-                                String token_Id = getTokenResult.getToken();
-                                String current_Id = mAuth.getCurrentUser().getUid();
+                            public void onSuccess(Void aVoid) {
 
-                                Map<String, Object> tokenMap = new HashMap<>();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
 
-                                tokenMap.put("tokenId", token_Id);
-
-                                tokenReference.child(current_Id).setValue(tokenMap);
+                                progressBar.setVisibility(View.GONE);
+                                finish();
                             }
                         });
 
-                        if (userRole.equals("ADMIN")) {
-                            getRole();
-                            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                        } else {
-                            getRole();
-                            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                        }
-                        progressBar.setVisibility(View.GONE);
-                        finish();
+
                     } else {
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(parent_view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();

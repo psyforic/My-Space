@@ -37,6 +37,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.model.Inventory;
+import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.UploadInfo;
 
 import java.io.ByteArrayOutputStream;
@@ -57,10 +58,12 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String profileImageUrl;
     private List<Inventory> inventoryList;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+    private DatabaseReference notificationsReference;
 
 
     private DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference("checkins");
+
     private StorageReference imageReference;
 
     @Override
@@ -70,6 +73,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         view = inflater.inflate(R.layout.fragment_step_three, container, false);
         setupUI();
         mAuth = FirebaseAuth.getInstance();
+        notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
         cameraButton();
         return view;
     }
@@ -177,8 +181,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
-            UploadTask uploadTask = imageReference.putBytes(data);
-            uploadTask = imageReference.putFile(imageUri);
+            UploadTask uploadTask = imageReference.putFile(imageUri);
 
             final Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -219,11 +222,22 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     }
 
     private void saveCheckinInfo(String name, String url, String userId, String date) {
-
+        String Id = mAuth.getCurrentUser().getUid();
         UploadInfo info = new UploadInfo(name, url, userId, date);
         String key = checkinReference.push().getKey();
-        checkinReference.child(key).setValue(info);
+        checkinReference.child(Id).child(key).setValue(info);
+    }
 
+    private void sendNotification(String content, String type) {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        String date = dateFormat.format(today);
+        String id = notificationsReference.push().getKey();
+        String typeId = checkinReference.push().getKey();
+        String userId = mAuth.getCurrentUser().getUid();
+        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId);
+        notificationsReference.child(userId).child(id).setValue(notification);
     }
 
 }

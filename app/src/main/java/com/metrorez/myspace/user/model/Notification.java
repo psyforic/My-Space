@@ -11,19 +11,21 @@ public class Notification implements Serializable {
     private String userName;
     private String type;
     private String typeId;
+    private String userId;
 
     public Notification() {
     }
 
-    public Notification(String notif_id, String fromUserId, String userName, String date, String content) {
+    public Notification(String userId, String notif_id, String fromUserId, String userName, String date, String content) {
         this.notif_id = notif_id;
         this.fromUserId = fromUserId;
         this.date = date;
         this.content = content;
         this.userName = userName;
+        this.userId = userId;
     }
 
-    public Notification(String notif_id, String fromUserId, String date, String content, String userName, String type, String typeId) {
+    public Notification(String userId, String notif_id, String fromUserId, String date, String content, String userName, String type, String typeId) {
         this.notif_id = notif_id;
         this.fromUserId = fromUserId;
         this.date = date;
@@ -31,6 +33,7 @@ public class Notification implements Serializable {
         this.userName = userName;
         this.type = type;
         this.typeId = typeId;
+        this.userId = userId;
     }
 
     public String getNotif_id() {
@@ -46,7 +49,7 @@ public class Notification implements Serializable {
     }
 
     public String getContent() {
-        return "<b>" + "New " + content + " from" + userName + "</b>";
+        return "<b>" + "New " + content + " from " + userName + "</b>";
     }
 
     public String getUserName() {
@@ -59,5 +62,9 @@ public class Notification implements Serializable {
 
     public String getTypeId() {
         return typeId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

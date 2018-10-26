@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 drawer.closeDrawers();
                 actionBar.setTitle(menuItem.getTitle());
                 if (menuItem.getItemId() == R.id.nav_logout) {
-                    mAuth.signOut();
+                    logout();
                     finish();
                 } else {
                     if (menuItem.getItemId() != R.id.nav_logout)
@@ -267,5 +267,12 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        mAuth.getInstance().signOut();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

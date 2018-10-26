@@ -26,14 +26,14 @@
             android:id="@+id/image_header"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/profile" />
+            android:src="@drawable/unknown_avatar" />
 
         <TextView
             android:id="@+id/header_title_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_middle"
-            android:text="@string/me_mail"
+            android:text=""
             android:textColor="@color/material_grey_800" />
     </LinearLayout>
 

@@ -104,45 +104,8 @@
     <string name="channel_Id">MY_SPACE_CH_01</string>
     <string name="channel_description">MY_SPACE_CH_DESC</string>
     <string name="tab_notifications">Notifications</string>
+    <string name="str_complaint_message">Complaint Filed Successfully</string>
+    <string name="str_extra_message">Request Successful, Will get back to you soon</string>
 
-    <string-array name="residences">
-        <item>Russell Road</item>
-        <item>At Mr. Price</item>
-        <item>Hallack Street</item>
-    </string-array>
 
-    <string-array name="city">
-        <item>Port Elizabeth</item>
-        <item>East London</item>
-        <item>Queenstown</item>
-    </string-array>
-
-    <string-array name="priorities">
-        <item>Urgent</item>
-        <item>High</item>
-        <item>Medium</item>
-        <item>Low</item>
-    </string-array>
-
-    <array name="array_dot_active">
-        <item>@color/colorPrimary</item>
-        <item>@color/colorPrimary</item>
-        <item>@color/colorPrimary</item>
-        <item>@color/colorPrimary</item>
-    </array>
-
-    <array name="array_dot_inactive">
-        <item>@color/dotinactive</item>
-        <item>@color/dotinactive</item>
-        <item>@color/dotinactive</item>
-        <item>@color/dotinactive</item>
-    </array>
-
-    <string-array name="condition">
-        <item>select condition</item>
-        <item>25%</item>
-        <item>50%</item>
-        <item>75%</item>
-        <item>100%</item>
-    </string-array>
 </resources>

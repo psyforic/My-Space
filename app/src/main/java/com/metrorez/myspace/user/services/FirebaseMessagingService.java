@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.text.Html;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.metrorez.myspace.R;
@@ -18,12 +19,12 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         super.onMessageReceived(remoteMessage);
 
         String messageTitle = remoteMessage.getNotification().getTitle();
-        String messageBody = remoteMessage.getNotification().getBody();
+        String messageBody = Html.fromHtml(remoteMessage.getNotification().getBody()).toString();
 
         String click_action = remoteMessage.getNotification().getClickAction();
         createNotificationChannel();
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.channel_Id))
-                .setSmallIcon(R.drawable.ic_notif)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(messageTitle)
                 .setContentText(messageBody)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);

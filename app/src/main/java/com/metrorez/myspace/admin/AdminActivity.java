@@ -59,14 +59,10 @@ public class AdminActivity extends AppCompatActivity {
         setTheme(R.style.AdminTheme);
 
         setContentView(R.layout.activity_admin);
-
         parent_view = findViewById(R.id.main_content);
-
         setupDrawerLayout();
         initComponent();
-
         prepareActionBar(toolbar);
-
         if (viewPager != null) {
             setupViewPager(viewPager);
         }

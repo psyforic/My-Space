@@ -50,7 +50,7 @@ public class CheckinFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_checkin, container, false);
         mAuth = FirebaseAuth.getInstance();
-        checkinReference = FirebaseDatabase.getInstance().getReference("checkins");
+        checkinReference = FirebaseDatabase.getInstance().getReference().child("checkins");
         getCheckins();
         setupUI();
 
@@ -82,19 +82,13 @@ public class CheckinFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        if (checkins.size() == 0) {
-            lyt_not_found.setVisibility(View.VISIBLE);
-        } else {
-            lyt_not_found.setVisibility(View.GONE);
-        }
-
 
     }
 
     private void getCheckins() {
         checkins = new ArrayList<>();
         if (checkinReference != null) {
-            checkinReference.addValueEventListener(new ValueEventListener() {
+            checkinReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     checkins.clear();
@@ -106,6 +100,13 @@ public class CheckinFragment extends Fragment {
                     mAdapter = new CheckinListAdapter(getActivity(), checkins);
                     recyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
+
+
+                    if (checkins.size() == 0) {
+                        lyt_not_found.setVisibility(View.VISIBLE);
+                    } else {
+                        lyt_not_found.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override

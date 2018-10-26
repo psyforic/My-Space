@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,16 +37,17 @@ public class ComplaintFragment extends Fragment {
     private List<Complaint> complaints;
     private Fragment fragment = null;
     private ProgressBar progressBar;
-
+    private FirebaseAuth mAuth;
 
     private GlobalVariable global;
-    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints");
+    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("complaints");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
         global = (GlobalVariable) getActivity().getApplication();
+        mAuth = FirebaseAuth.getInstance();
         setupUI();
 
         addComplaint.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +85,7 @@ public class ComplaintFragment extends Fragment {
         mAdapter = new ComplaintListAdapter(getActivity(), complaints);
         addComplaint = (FloatingActionButton) view.findViewById(R.id.fab_add_complaint);
 
-        complaintsReference.addValueEventListener(new ValueEventListener() {
+        complaintsReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 complaints.clear();

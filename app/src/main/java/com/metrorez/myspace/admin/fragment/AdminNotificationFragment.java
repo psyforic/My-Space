@@ -38,9 +38,8 @@ public class AdminNotificationFragment extends Fragment {
     private List<Notification> notifications = new ArrayList<>();
     private String userId;
     private FirebaseAuth mAuth;
-    private LinearLayout lyt_not_found;
     private ProgressBar progressBar;
-    private DatabaseReference noticationReference = FirebaseDatabase.getInstance().getReference("notifications");
+    private DatabaseReference noticationReference = FirebaseDatabase.getInstance().getReference().child("notifications");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +53,6 @@ public class AdminNotificationFragment extends Fragment {
         userId = mAuth.getCurrentUser().getUid();
 
         getNotifications();
-        lyt_not_found = view.findViewById(R.id.lyt_not_found);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -81,11 +79,6 @@ public class AdminNotificationFragment extends Fragment {
             }
             mAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
-            if (notifications.size() == 0) {
-                lyt_not_found.setVisibility(View.VISIBLE);
-            } else {
-                lyt_not_found.setVisibility(View.GONE);
-            }
         }
 
         @Override
