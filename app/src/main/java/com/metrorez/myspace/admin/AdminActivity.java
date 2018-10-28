@@ -2,6 +2,7 @@ package com.metrorez.myspace.admin;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -16,13 +17,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.FragmentAdapter;
 import com.metrorez.myspace.admin.fragment.AdminCheckinsFragment;
@@ -30,6 +36,7 @@ import com.metrorez.myspace.admin.fragment.AdminComplaintsFragment;
 import com.metrorez.myspace.admin.fragment.AdminNotificationFragment;
 import com.metrorez.myspace.admin.fragment.AdminRequestsFragment;
 import com.metrorez.myspace.admin.fragment.UsersFragment;
+import com.metrorez.myspace.user.LoginActivity;
 import com.metrorez.myspace.user.data.Tools;
 
 import static android.view.View.GONE;
@@ -52,14 +59,25 @@ public class AdminActivity extends AppCompatActivity {
     private AdminRequestsFragment f_requests;
     private AdminCheckinsFragment f_checkins;
     private View parent_view;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(R.style.AdminTheme);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            getWindow().setEnterTransition(new Slide());
+            getWindow().setExitTransition(new Fade());
+        } else {
+            // Swap without transition
+        }
         setContentView(R.layout.activity_admin);
+
+
         parent_view = findViewById(R.id.main_content);
+        mAuth = FirebaseAuth.getInstance();
         setupDrawerLayout();
         initComponent();
         prepareActionBar(toolbar);
@@ -210,7 +228,13 @@ public class AdminActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
                 drawerLayout.closeDrawers();
-                Snackbar.make(parent_view, menuItem.getTitle() + " Clicked ", Snackbar.LENGTH_SHORT).show();
+                if (menuItem.getItemId() == R.id.nav_logout) {
+                    logout();
+                    finish();
+                } else {
+                    Snackbar.make(parent_view, menuItem.getTitle() + " Clicked ", Snackbar.LENGTH_SHORT).show();
+                }
+
                 return true;
             }
         });
@@ -334,4 +358,12 @@ public class AdminActivity extends AppCompatActivity {
         doExitApp();
     }
 
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 }
+

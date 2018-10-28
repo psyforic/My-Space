@@ -2,6 +2,7 @@ package com.metrorez.myspace.user;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,9 +16,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -106,10 +110,15 @@ public class MainActivity extends AppCompatActivity {
                 if (menuItem.getItemId() == R.id.nav_logout) {
                     logout();
                     finish();
+                }
+                if (menuItem.getItemId() == R.id.nav_billing) {
+                    startActivity(new Intent(MainActivity.this, BillingActivity.class));
                 } else {
-                    if (menuItem.getItemId() != R.id.nav_logout)
+                    if (menuItem.getItemId() != (R.id.nav_logout))
                         displayContentView(menuItem.getItemId());
                 }
+
+
                 return true;
             }
         });

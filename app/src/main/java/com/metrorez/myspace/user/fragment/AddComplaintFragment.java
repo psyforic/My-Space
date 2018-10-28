@@ -211,7 +211,7 @@ public class AddComplaintFragment extends Fragment {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date today = Calendar.getInstance().getTime();
             String date = dateFormat.format(today);
-            Complaint complaint = new Complaint(id, category, complainTxt, date, city, residence, room);
+            Complaint complaint = new Complaint(mAuth.getCurrentUser().getUid(), id, category, complainTxt, date, city, residence, room);
             progressBar.setVisibility(View.VISIBLE);
             databaseReference.child(userId).child(id).setValue(complaint).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override

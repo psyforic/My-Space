@@ -28,6 +28,7 @@ import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.GlobalVariable;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Notification;
+import com.metrorez.myspace.user.model.Request;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -80,7 +81,7 @@ public class AddRequestFragment extends Fragment {
 
             @Override
             public void onItemUncheck(Extra item) {
-                selected.add(item);
+                selected.remove(item);
             }
         });
         recyclerView.setAdapter(mAdapter);
@@ -124,32 +125,31 @@ public class AddRequestFragment extends Fragment {
 
     private void addRequest() {
         String userId = mAuth.getCurrentUser().getUid();
-        for (Extra extra : selected) {
-            String extraName = extra.getExtraName();
-            double extraPrice = extra.getExtraPrice();
-            String id = extrasReference.push().getKey();
+        String id = extrasReference.push().getKey();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        String date = dateFormat.format(today);
+        Constants constants=new Constants();
+        Request newRequest = new Request(id, date, userId, selected, "Port Elizabeth", "0245");
+        extrasReference.child(userId).child(id).setValue(newRequest).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                progressBar.setVisibility(View.GONE);
+                sendNotification("Request", Constants.REQUEST_TYPE);
+                progressBar.setVisibility(View.GONE);
 
-            Extra newExtra = new Extra(id, extraName, extraPrice, true);
-            extrasReference.child(userId).child(id).setValue(newExtra).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    progressBar.setVisibility(View.GONE);
-                    sendNotification("Request", Constants.REQUEST_TYPE);
-                    progressBar.setVisibility(View.GONE);
+                Intent intent = new Intent(getActivity(), SuccessActivity.class);
+                intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_extra_message));
+                startActivity(intent);
+                getActivity().finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
-                    Intent intent = new Intent(getActivity(), SuccessActivity.class);
-                    intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_extra_message));
-                    startActivity(intent);
-                    getActivity().finish();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
-
-        }
     }
 
     private void sendNotification(String content, String type) {

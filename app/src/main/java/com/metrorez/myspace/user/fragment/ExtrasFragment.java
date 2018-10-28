@@ -27,6 +27,7 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.MyExtrasListAdapter;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.Extra;
+import com.metrorez.myspace.user.model.Request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,6 @@ public class ExtrasFragment extends Fragment {
     private View view;
     private List<Extra> extras;
     private LinearLayout lyt_not_found;
-    //private String id = "";
     private Fragment fragment = null;
     private FirebaseAuth mAuth;
 
@@ -83,17 +83,31 @@ public class ExtrasFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 extras.clear();
-                for (DataSnapshot extrasSnapShot : dataSnapshot.getChildren()) {
-                    Extra extra = extrasSnapShot.getValue(Extra.class);
-                    extras.add(extra);
-                }
-                mAdapter = new MyExtrasListAdapter(getActivity(), extras);
-                recyclerView.setAdapter(mAdapter);
+                if (dataSnapshot.exists()) {
 
-                if (extras.size() == 0) {
-                    lyt_not_found.setVisibility(View.VISIBLE);
+
+                    for (DataSnapshot extrasSnapShot : dataSnapshot.getChildren()) {
+                        Request request = extrasSnapShot.getValue(Request.class);
+
+                        for (Extra extra : request.getExtras()) {
+                            extras.add(extra);
+                        }
+
+                    }
+                    mAdapter = new MyExtrasListAdapter(getActivity(), extras);
+                    recyclerView.setAdapter(mAdapter);
+
+                    if (extras.size() == 0) {
+                        lyt_not_found.setVisibility(View.VISIBLE);
+                    } else {
+                        lyt_not_found.setVisibility(View.GONE);
+                    }
                 } else {
-                    lyt_not_found.setVisibility(View.GONE);
+                    if (extras.size() == 0) {
+                        lyt_not_found.setVisibility(View.VISIBLE);
+                    } else {
+                        lyt_not_found.setVisibility(View.GONE);
+                    }
                 }
             }
 

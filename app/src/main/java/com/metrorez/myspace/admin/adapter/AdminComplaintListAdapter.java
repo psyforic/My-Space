@@ -75,8 +75,13 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final Complaint complaint = filtered_items.get(position);
-        final User user = users.get(position);
-        holder.name.setText(user.getUserFirstName().concat(" ").concat(user.getUserLastName()));
+        User newUser = null;
+        for (User user : users) {
+            if (user.getUserId() == complaint.getUserId()) {
+                newUser = user;
+            }
+        }
+        holder.name.setText(newUser.getUserFirstName().concat(" ").concat(newUser.getUserLastName()));
         holder.city.setText(complaint.getComplaintCity());
         Picasso.with(context).load(R.drawable.unknown_avatar).resize(100, 100)
                 .placeholder(R.drawable.unknown_avatar)

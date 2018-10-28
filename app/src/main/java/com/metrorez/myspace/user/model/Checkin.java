@@ -9,23 +9,26 @@ public class Checkin implements Serializable {
     private String snippet;
     private String url;
     private String city;
+    private String userId;
 
     public Checkin() {
     }
 
-    public Checkin(String id, String date, String snippet, String url) {
+    public Checkin(String userId, String id, String date, String snippet, String url) {
         this.id = id;
         this.date = date;
         this.snippet = snippet;
         this.url = url;
+        this.userId = userId;
     }
 
-    public Checkin(String id, String date, String snippet, String url, String city) {
+    public Checkin(String userId, String id, String date, String snippet, String url, String city) {
         this.id = id;
         this.date = date;
         this.snippet = snippet;
         this.url = url;
         this.city = city;
+        this.userId = userId;
     }
 
     public String getId() {
@@ -51,5 +54,9 @@ public class Checkin implements Serializable {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

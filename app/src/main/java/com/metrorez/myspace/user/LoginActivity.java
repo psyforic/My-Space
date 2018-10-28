@@ -1,9 +1,11 @@
 package com.metrorez.myspace.user;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -12,8 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -53,9 +58,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin, btnRegister;
     private ProgressBar progressBar;
     private View parent_view;
-    private String userRole;
-    private List<Role> roles;
-
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
@@ -65,23 +67,28 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            getWindow().setExitTransition(new Fade());
+        } else {
+            // Swap without transition
+        }
         setContentView(R.layout.activity_login);
         parent_view = findViewById(android.R.id.content);
 
         setupUI();
 
         mAuth = FirebaseAuth.getInstance();
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                //mapLog.i("UUI", roleReference.child(mAuth.getCurrentUser().getUid()).toString());
                 if (user != null) {
-                    if ((userRole != null) && (userRole.equals("ADMIN"))) {
-                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
-                    } else {
-                        startActivity(new Intent(getApplicationContext(), AdminActivity.class));
-                    }
+                    getRole();
+                    //finish();
                 } else
 
                 {
@@ -185,13 +192,9 @@ public class LoginActivity extends AppCompatActivity {
                         userReference.child(currentId).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-
+                                getRole();
                                 progressBar.setVisibility(View.GONE);
-                                finish();
+                                //finish();
                             }
                         });
 
@@ -206,31 +209,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void getRole() {
-        Query userRole = roleReference.child(mAuth.getUid());
-        userRole.addListenerForSingleValueEvent(valueEventListener);
-    }
-
-    ValueEventListener valueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-            if (dataSnapshot.exists()) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Role role = snapshot.getValue(Role.class);
-                    roles.add(role);
-                }
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    };
-
     private void setupUI() {
-        roles = new ArrayList<>();
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
         inputEmail = (EditText) findViewById(R.id.input_email);
@@ -323,4 +302,40 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
+
+    private void getRole() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        roleReference.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Role role = dataSnapshot.getValue(Role.class);
+                    if ((role.getUserRole().equals("ADMIN")) && (role.getUserRole() != null)) {
+                        Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                } else {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        progressBar.setVisibility(View.GONE);
+    }
 }
+

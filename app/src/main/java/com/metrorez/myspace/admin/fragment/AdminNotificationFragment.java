@@ -65,7 +65,7 @@ public class AdminNotificationFragment extends Fragment {
 
     private void getNotifications() {
         progressBar.setVisibility(View.VISIBLE);
-        Query query = noticationReference.orderByChild("fromUserId").equalTo(userId);
+        Query query = noticationReference;
         query.addValueEventListener(valueEventListener);
     }
 

@@ -11,27 +11,30 @@ public class Complaint implements Serializable {
     private String complaintCity;
     private String complaintResidence;
     private String complaintRoom;
+    private String userId;
     private byte[] imagePath;
 
     public Complaint() {
     }
 
-    public Complaint(String complaintId, String complaintCategory, String complaintComment, String complaintDate, byte[] imagePath) {
+    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, byte[] imagePath) {
         this.complaintId = complaintId;
         this.complaintCategory = complaintCategory;
         this.complaintComment = complaintComment;
         this.complaintDate = complaintDate;
         this.imagePath = imagePath;
+        this.userId = userId;
     }
 
-    public Complaint(String complaintId, String complaintCategory, String complaintComment, String complaintDate) {
+    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate) {
         this.complaintId = complaintId;
         this.complaintCategory = complaintCategory;
         this.complaintComment = complaintComment;
         this.complaintDate = complaintDate;
+        this.userId = userId;
     }
 
-    public Complaint(String complaintId, String complaintCategory, String complaintComment, String complaintDate, String complaintCity, String complaintResidence, String complaintRoom) {
+    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String complaintCity, String complaintResidence, String complaintRoom) {
         this.complaintId = complaintId;
         this.complaintCategory = complaintCategory;
         this.complaintComment = complaintComment;
@@ -39,6 +42,7 @@ public class Complaint implements Serializable {
         this.complaintCity = complaintCity;
         this.complaintResidence = complaintResidence;
         this.complaintRoom = complaintRoom;
+        this.userId = userId;
     }
 
     public String getComplaintId() {
@@ -67,5 +71,9 @@ public class Complaint implements Serializable {
 
     public String getComplaintRoom() {
         return complaintRoom;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

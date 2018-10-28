@@ -2,7 +2,7 @@ package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
 
-public class Extra  implements Serializable{
+public class Extra implements Serializable {
     private String extraId;
     private String extraName;
     private double extraPrice;
@@ -15,6 +15,7 @@ public class Extra  implements Serializable{
         this.extraName = extraName;
         this.extraPrice = extraPrice;
         this.extraId = extraId;
+
     }
 
     public String getExtraName() {
@@ -29,11 +30,12 @@ public class Extra  implements Serializable{
         return extraId;
     }
 
-    public Extra(String extraId, String extraName, double extraPrice, boolean isAdded) {
+    public Extra( String extraId, String extraName, double extraPrice, boolean isAdded) {
         this.extraId = extraId;
         this.extraName = extraName;
         this.extraPrice = extraPrice;
         this.isAdded = isAdded;
+
     }
 
     public boolean isAdded() {
@@ -44,5 +46,6 @@ public class Extra  implements Serializable{
         this.extraName = extraName;
         this.extraPrice = extraPrice;
         this.isAdded = isAdded;
+
     }
 }

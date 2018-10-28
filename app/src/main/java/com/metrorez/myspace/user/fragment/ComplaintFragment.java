@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,7 @@ public class ComplaintFragment extends Fragment {
     private Fragment fragment = null;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
+    private LinearLayout lyt_not_found;
 
     private GlobalVariable global;
     DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("complaints");
@@ -79,6 +81,7 @@ public class ComplaintFragment extends Fragment {
         complaints = new ArrayList<>();
         progressBar = view.findViewById(R.id.progressBar);
         recyclerView = (RecyclerView) view.findViewById(R.id.complaint_list);
+        lyt_not_found = (LinearLayout) view.findViewById(R.id.lyt_not_found);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -89,14 +92,29 @@ public class ComplaintFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 complaints.clear();
-                progressBar.setVisibility(View.VISIBLE);
-                for (DataSnapshot complaintSnapShot : dataSnapshot.getChildren()) {
-                    Complaint complaint = complaintSnapShot.getValue(Complaint.class);
-                    complaints.add(complaint);
+                if (dataSnapshot.exists()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    for (DataSnapshot complaintSnapShot : dataSnapshot.getChildren()) {
+                        Complaint complaint = complaintSnapShot.getValue(Complaint.class);
+                        complaints.add(complaint);
+                    }
+                    global.setComplaints(complaints);
+                    recyclerView.setAdapter(mAdapter);
+                    progressBar.setVisibility(View.GONE);
+
+
+                    if (complaints.size() == 0) {
+                        lyt_not_found.setVisibility(View.VISIBLE);
+                    } else {
+                        lyt_not_found.setVisibility(View.GONE);
+                    }
+                } else {
+                    if (complaints.size() == 0) {
+                        lyt_not_found.setVisibility(View.VISIBLE);
+                    } else {
+                        lyt_not_found.setVisibility(View.GONE);
+                    }
                 }
-                global.setComplaints(complaints);
-                recyclerView.setAdapter(mAdapter);
-                progressBar.setVisibility(View.GONE);
             }
 
             @Override

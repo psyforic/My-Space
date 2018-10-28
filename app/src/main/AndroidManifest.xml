@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <!--
          Set custom default icon. This is used when no icon is set for incoming notification messages.
          See README(https://goo.gl/l4GJaQ) for more.
@@ -54,16 +53,29 @@
         </activity>
         <activity android:name=".user.SuccessActivity" />
         <activity android:name=".user.CheckinActivity" />
-        <activity android:name=".admin.AdminActivity" />
-        <activity android:name=".admin.UsersActivity" />
-        <activity android:name=".admin.ComplaintsDetailsActivity" />
-        <activity android:name=".admin.RequestsActivityDetails" />
-        <activity android:name=".admin.UserDetailsActivity" />
-        <activity android:name=".admin.CheckinDetailsActivity" />
+        <activity
+            android:name=".admin.AdminActivity"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />
+        <activity
+            android:name=".admin.UsersActivity"
+            android:theme="@style/AdminTheme" />
+        <activity
+            android:name=".admin.ComplaintsDetailsActivity"
+            android:theme="@style/AdminTheme" />
+        <activity
+            android:name=".admin.RequestsActivityDetails"
+            android:theme="@style/AdminTheme" />
+        <activity
+            android:name=".admin.UserDetailsActivity"
+            android:theme="@style/AdminTheme" />
+        <activity
+            android:name=".admin.CheckinDetailsActivity"
+            android:theme="@style/AdminTheme" />
         <activity android:name=".user.ViewNotificationActivity">
             <intent-filter>
-                <action android:name="myspace.metrorez.NOTIFICATIONS"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
+                <action android:name="myspace.metrorez.NOTIFICATIONS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -72,6 +84,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".user.BillingActivity"></activity>
     </application>
 
 </manifest>

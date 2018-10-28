@@ -92,20 +92,28 @@ public class CheckinFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     checkins.clear();
-                    for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
-                        Checkin checkin = checkinSnapShot.getValue(Checkin.class);
-                        checkins.add(checkin);
-                    }
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
+                            Checkin checkin = checkinSnapShot.getValue(Checkin.class);
+                            checkins.add(checkin);
+                        }
 
-                    mAdapter = new CheckinListAdapter(getActivity(), checkins);
-                    recyclerView.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                        mAdapter = new CheckinListAdapter(getActivity(), checkins);
+                        recyclerView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
 
 
-                    if (checkins.size() == 0) {
-                        lyt_not_found.setVisibility(View.VISIBLE);
+                        if (checkins.size() == 0) {
+                            lyt_not_found.setVisibility(View.VISIBLE);
+                        } else {
+                            lyt_not_found.setVisibility(View.GONE);
+                        }
                     } else {
-                        lyt_not_found.setVisibility(View.GONE);
+                        if (checkins.size() == 0) {
+                            lyt_not_found.setVisibility(View.VISIBLE);
+                        } else {
+                            lyt_not_found.setVisibility(View.GONE);
+                        }
                     }
                 }
 

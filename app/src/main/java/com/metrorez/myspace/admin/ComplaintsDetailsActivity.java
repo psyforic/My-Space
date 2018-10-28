@@ -42,8 +42,8 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
     private List<User> users;
     private SearchView search;
 
-    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints");
-    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
+    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("complaints");
+    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,40 +86,40 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
 
     private void populateAdapter() {
 
-        complaintsReference.addValueEventListener(new ValueEventListener() {
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                complaints.clear();
-                for (DataSnapshot complaintsSnapshot : dataSnapshot.getChildren()) {
-                    Complaint complaint = complaintsSnapshot.getValue(Complaint.class);
+                for (DataSnapshot complaintsSnapShot : dataSnapshot.getChildren()) {
+                    Complaint complaint = complaintsSnapShot.getValue(Complaint.class);
                     complaints.add(complaint);
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-
-        usersReference.addValueEventListener(new ValueEventListener() {
+        };
+        ValueEventListener userValueEntListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                users.clear();
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
+                for (DataSnapshot userSnapShot : dataSnapshot.getChildren()) {
+                    User user = userSnapShot.getValue(User.class);
                     users.add(user);
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+
+        complaintsReference.addValueEventListener(valueEventListener);
+        usersReference.addValueEventListener(userValueEntListener);
         mAdapter.notifyDataSetChanged();
+
     }
 
     public void initToolbar() {
