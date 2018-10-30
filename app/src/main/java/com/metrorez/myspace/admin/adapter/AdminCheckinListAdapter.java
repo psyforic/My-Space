@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinListAdapter.ViewHolder>  implements Filterable{
+public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinListAdapter.ViewHolder> implements Filterable {
 
     private Context context;
     private List<Checkin> checkins;
@@ -78,7 +78,12 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
     @Override
     public void onBindViewHolder(@NonNull AdminCheckinListAdapter.ViewHolder holder, final int position) {
         final Checkin checkin = filtered_items.get(position);
-        final User user = users.get(position);
+        User user = new User();
+        for (User newUser : users) {
+            if (user.getUserId().equals(checkin.getUserId())) {
+                user = newUser;
+            }
+        }
         holder.name.setText(user.getUserFirstName().concat(" ").concat(user.getUserLastName()));
         holder.city.setText(checkin.getCity());
         Picasso.with(context).load(R.drawable.unknown_avatar).resize(100, 100)

@@ -3,6 +3,7 @@ package com.metrorez.myspace.admin;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -25,10 +26,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.FragmentAdapter;
 import com.metrorez.myspace.admin.fragment.AdminCheckinsFragment;
@@ -38,6 +42,8 @@ import com.metrorez.myspace.admin.fragment.AdminRequestsFragment;
 import com.metrorez.myspace.admin.fragment.UsersFragment;
 import com.metrorez.myspace.user.LoginActivity;
 import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.widget.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import static android.view.View.GONE;
 
@@ -53,13 +59,14 @@ public class AdminActivity extends AppCompatActivity {
     private Toolbar searchToolbar;
     private ViewPager viewPager;
     private AdminNotificationFragment f_notifications;
-
+    private NavigationView view;
     private boolean isSearch = false;
     private AdminComplaintsFragment f_complaints;
     private AdminRequestsFragment f_requests;
     private AdminCheckinsFragment f_checkins;
     private View parent_view;
     private FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +82,17 @@ public class AdminActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_admin);
 
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
 
+                } else {
+                    //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                }
+            }
+        };
         parent_view = findViewById(R.id.main_content);
         mAuth = FirebaseAuth.getInstance();
         setupDrawerLayout();
@@ -84,6 +101,7 @@ public class AdminActivity extends AppCompatActivity {
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
+        loadUserInfo();
         tabLayout.setupWithViewPager(viewPager);
         initAction();
         setupTabIcons();
@@ -222,7 +240,7 @@ public class AdminActivity extends AppCompatActivity {
     private void setupDrawerLayout() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        NavigationView view = (NavigationView) findViewById(R.id.nav_view);
+        view = (NavigationView) findViewById(R.id.nav_view);
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -364,6 +382,45 @@ public class AdminActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+
+    private void loadUserInfo() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        View headerView = view.getHeaderView(0);
+        if (user != null) {
+            if (user.getPhotoUrl() != null) {
+                String photoUrl = user.getPhotoUrl().toString();
+                ImageView profileImage = headerView.findViewById(R.id.avatar);
+                Picasso.with(this).load(photoUrl)
+                        .placeholder(R.drawable.unknown_avatar)
+                        .resize(200, 200)
+                        .transform(new CircleTransform())
+                        .into(profileImage);
+            }
+            if (user.getDisplayName() != null) {
+                String displayName = user.getDisplayName();
+                TextView textView = headerView.findViewById(R.id.username);
+                textView.setText(displayName);
+            }
+            if (user.getEmail() != null) {
+                String email = user.getEmail();
+                TextView textView = headerView.findViewById(R.id.email);
+                textView.setText(email);
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 }
 

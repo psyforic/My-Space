@@ -36,7 +36,7 @@ public class AdminNotificationFragment extends Fragment {
     private View view;
     private AdminNotificationListAdapter mAdapter;
     private List<Notification> notifications = new ArrayList<>();
-    private String userId;
+    //private String userId;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private DatabaseReference noticationReference = FirebaseDatabase.getInstance().getReference().child("notifications");
@@ -50,43 +50,42 @@ public class AdminNotificationFragment extends Fragment {
         setHasOptionsMenu(true);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mAuth = FirebaseAuth.getInstance();
-        userId = mAuth.getCurrentUser().getUid();
-
-        getNotifications();
-
+        //userId = mAuth.getCurrentUser().getUid();
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new AdminNotificationListAdapter(getActivity(), notifications);
-        recyclerView.setAdapter(mAdapter);
+
+        getNotifications();
         return view;
     }
 
     private void getNotifications() {
         progressBar.setVisibility(View.VISIBLE);
-        Query query = noticationReference;
-        query.addValueEventListener(valueEventListener);
-    }
+        noticationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot notifSnapShot : dataSnapshot.getChildren()) {
+                    Iterable<DataSnapshot> children = notifSnapShot.getChildren();
+                    for (DataSnapshot snapshot: children){
+                        Notification notification =snapshot.getValue(Notification.class);
+                        notifications.add(notification);
+                    }
 
-    ValueEventListener valueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            notifications.clear();
-            for (DataSnapshot notifSnapShot : dataSnapshot.getChildren()) {
-                Notification notification = notifSnapShot.getValue(Notification.class);
-                notifications.add(notification);
+                }
+                recyclerView.setAdapter(mAdapter);
+                progressBar.setVisibility(View.GONE);
+
             }
-            mAdapter.notifyDataSetChanged();
-            progressBar.setVisibility(View.GONE);
-        }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
-
-    };
+            }
+        });
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

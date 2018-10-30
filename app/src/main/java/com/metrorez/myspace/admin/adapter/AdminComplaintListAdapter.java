@@ -75,9 +75,9 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final Complaint complaint = filtered_items.get(position);
-        User newUser = null;
+        User newUser = new User();
         for (User user : users) {
-            if (user.getUserId() == complaint.getUserId()) {
+            if (user.getUserId().equals(complaint.getUserId())) {
                 newUser = user;
             }
         }
@@ -97,9 +97,11 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
                     clicked = true;
                     mOnItemClickListener.onItemClick(view, complaint, position);
                 }
+
             }
         });
         clicked = false;
+        //clicked = false;
     }
 
     private Complaint getComplaint(int position) {

@@ -47,10 +47,6 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
         setContentView(R.layout.activity_checkin);
         initToolbar();
         setupUI();
@@ -83,6 +79,7 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
                 }
             }
         });
+
 
     }
 
@@ -208,5 +205,11 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
         StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
         tempList = inventoryData;
         fragment.setupRecycler(inventoryData);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

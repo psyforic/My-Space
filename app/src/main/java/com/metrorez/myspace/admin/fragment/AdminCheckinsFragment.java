@@ -2,6 +2,7 @@ package com.metrorez.myspace.admin.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.CheckinDetailsActivity;
 import com.metrorez.myspace.admin.adapter.CheckinsGridAdapter;
 import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.admin.model.City;
@@ -62,7 +64,7 @@ public class AdminCheckinsFragment extends Fragment {
         mAdapter.setOnItemClickListener(new CheckinsGridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, City obj, int position) {
-
+                CheckinDetailsActivity.navigate((AppCompatActivity) getActivity(), view.findViewById(R.id.lyt_parent), obj);
             }
         });
     }

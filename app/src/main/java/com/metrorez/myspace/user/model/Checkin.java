@@ -1,34 +1,35 @@
 package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Checkin implements Serializable {
 
     private String id;
     private String date;
-    private String snippet;
-    private String url;
+    private List<String> urls;
     private String city;
     private String userId;
+    private List<Inventory> inventoryList;
 
     public Checkin() {
     }
 
-    public Checkin(String userId, String id, String date, String snippet, String url) {
+    public Checkin(String userId, String id, String date, List<String> urls, List<Inventory> inventoryList) {
         this.id = id;
         this.date = date;
-        this.snippet = snippet;
-        this.url = url;
+        this.urls = urls;
         this.userId = userId;
+        this.inventoryList = inventoryList;
     }
 
-    public Checkin(String userId, String id, String date, String snippet, String url, String city) {
+    public Checkin(String userId, String id, String date, List<String> urls, String city, List<Inventory> inventoryList) {
         this.id = id;
         this.date = date;
-        this.snippet = snippet;
-        this.url = url;
+        this.urls = urls;
         this.city = city;
         this.userId = userId;
+        this.inventoryList = inventoryList;
     }
 
     public String getId() {
@@ -39,24 +40,19 @@ public class Checkin implements Serializable {
         return date;
     }
 
-    public String getSnippet() {
-        return snippet;
-    }
-
-    public String getPhoto() {
-        return url;
-    }
-
-
     public String getCity() {
         return city;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public String getUserId() {
         return userId;
+    }
+
+    public List<Inventory> getInventoryList() {
+        return inventoryList;
+    }
+
+    public List<String> getUrls() {
+        return urls;
     }
 }

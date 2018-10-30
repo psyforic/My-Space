@@ -47,6 +47,7 @@ public class BillingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Billing Information");
         mAuth = FirebaseAuth.getInstance();
         getData();
         //bindUI();

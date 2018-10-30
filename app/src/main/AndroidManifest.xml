@@ -85,7 +85,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".user.BillingActivity"></activity>
+        <activity android:name=".user.BillingActivity" />
+        <activity android:name=".user.ViewComplaintActivity" />
+        <activity android:name=".user.ViewCheckinActivity"></activity>
     </application>
 
 </manifest>

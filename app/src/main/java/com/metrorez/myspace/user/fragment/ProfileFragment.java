@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,11 +16,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.MainActivity;
+import com.metrorez.myspace.user.ProfileActivity;
 import com.metrorez.myspace.user.model.User;
 
 public class ProfileFragment extends Fragment {
     private TextView name, lastname, email, studentNo;
     private View view;
+    private Button editButton;
     private FirebaseAuth mAuth;
 
     @Override
@@ -30,10 +34,18 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         setupUI();
         loadExtraInfo();
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProfileActivity.navigate((MainActivity) getActivity());
+            }
+        });
         return view;
     }
 
     private void setupUI() {
+        editButton = view.findViewById(R.id.btn_edit);
         name = view.findViewById(R.id.name);
         lastname = view.findViewById(R.id.surname);
         email = view.findViewById(R.id.email);

@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +38,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.user.model.Checkin;
 import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.UploadInfo;
@@ -59,6 +63,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     private String profileImageUrl;
     private List<Inventory> inventoryList;
     private FirebaseAuth mAuth;
+
     private DatabaseReference notificationsReference;
 
 
@@ -80,7 +85,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
 
     @Override
     public void onInventoryDataReceived(ArrayList<Inventory> inventoryData) {
-
+        inventoryList = inventoryData;
     }
 
     @Override
@@ -199,11 +204,14 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
                     progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
                         profileImageUrl = task.getResult().toString();
+                        List<String> urls = new ArrayList<>();
+                        urls.add(profileImageUrl);
                         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         Date today = Calendar.getInstance().getTime();
                         String date = dateFormat.format(today);
 
-                        saveCheckinInfo(name, imageReference.getDownloadUrl().toString(), mAuth.getCurrentUser().getUid(), date);
+                        saveCheckinInfo(urls, mAuth.getCurrentUser().getUid(), date);
+
 
                     } else {
                         Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
@@ -221,11 +229,21 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         }
     }
 
-    private void saveCheckinInfo(String name, String url, String userId, String date) {
+    private void saveCheckinInfo(List<String> url, String userId, String date) {
         String Id = mAuth.getCurrentUser().getUid();
-        UploadInfo info = new UploadInfo(name, url, userId, date);
         String key = checkinReference.push().getKey();
-        checkinReference.child(Id).child(key).setValue(info);
+        Checkin checkin = new Checkin(userId, key, date, url, inventoryList);
+        checkinReference.child(Id).child(key).setValue(checkin).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                sendNotification("Checkin", Constants.CHECKIN_TYPE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
     private void sendNotification(String content, String type) {

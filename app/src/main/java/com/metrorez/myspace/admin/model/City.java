@@ -9,6 +9,9 @@ public class City implements Serializable {
     private String snippet;
     private int photo;
 
+    public City() {
+    }
+
     public City(String id, String name, String snippet, int photo) {
         this.id = id;
         this.name = name;

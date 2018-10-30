@@ -53,7 +53,6 @@ public class StepTwoFragment extends Fragment {
 
     public void setupRecycler(List<Inventory> inventoryList) {
         mAdapter = new ConditionListAdapter(getActivity(), inventoryList);
-
         recyclerView.setAdapter(mAdapter);
     }
 

@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.AdminActivity;
+import com.metrorez.myspace.admin.CheckinDetailsActivity;
+import com.metrorez.myspace.admin.RequestsActivityDetails;
 import com.metrorez.myspace.admin.adapter.RequestsGridAdapter;
 import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.admin.model.City;
@@ -61,7 +64,7 @@ public class AdminRequestsFragment extends Fragment {
         mAdapter.setOnItemClickListener(new RequestsGridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, City obj, int position) {
-
+                RequestsActivityDetails.navigate((AdminActivity) getActivity(), view, obj);
             }
         });
     }

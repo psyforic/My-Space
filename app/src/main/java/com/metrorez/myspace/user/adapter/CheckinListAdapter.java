@@ -2,6 +2,7 @@ package com.metrorez.myspace.user.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,6 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
 
     private List<Checkin> checkin_list;
     private Context ctx;
-
     private OnItemClickListener mOnItemClickListener;
     private boolean clicked = false;
 
@@ -48,24 +48,24 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
         final Checkin checkin = checkin_list.get(position);
         holder.title.setText(checkin.getDate());
         holder.time.setText(checkin.getDate());
-        holder.content.setText(checkin.getSnippet());
 
         Picasso.with(ctx).load(R.drawable.ic_checkin).resize(100, 100)
                 .transform(new CircleTransform())
                 .into(holder.image);
         setAnimation(holder.itemView, position);
 
-        holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
+        holder.card_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!clicked && mOnItemClickListener != null) {
                     clicked = true;
                     mOnItemClickListener.onItemClick(view, checkin, position);
                 }
+                clicked = false;
             }
         });
 
-        clicked = false;
+
     }
 
     private int lastPosition = -1;
@@ -90,7 +90,7 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
         public TextView content;
         public TextView time;
         public ImageView image;
-        public LinearLayout lyt_parent;
+        public CardView card_parent;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -98,7 +98,7 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
             content = (TextView) itemView.findViewById(R.id.content);
             time = (TextView) itemView.findViewById(R.id.time);
             image = (ImageView) itemView.findViewById(R.id.image);
-            lyt_parent = (LinearLayout) itemView.findViewById(R.id.lyt_parent);
+            card_parent = (CardView) itemView.findViewById(R.id.cardParent);
         }
     }
 

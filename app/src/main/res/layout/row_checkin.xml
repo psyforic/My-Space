@@ -8,6 +8,7 @@
     android:padding="5dp">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/cardParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
@@ -45,7 +46,7 @@
                     android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/ic_checkin"
-                    android:tint="@color/colorAccent"/>
+                    android:tint="@color/colorAccent" />
 
                 <TextView
                     android:id="@+id/time"

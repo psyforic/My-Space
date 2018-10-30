@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.model.Request;
+import com.metrorez.myspace.user.model.Request;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
@@ -26,12 +26,12 @@ import java.util.List;
 
 public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequestsListAdapter.ViewHolder> implements Filterable {
     private Context context;
-    private List<Extra> requestList;
-    private List<Extra> filtered_items;
+    private List<Request> requestList;
+    private List<Request> filtered_items;
     private List<User> users;
     private ItemFilter mFilter = new ItemFilter();
 
-    public AdminRequestsListAdapter(Context context, List<Extra> requests, List<User> users) {
+    public AdminRequestsListAdapter(Context context, List<Request> requests, List<User> users) {
         this.context = context;
         this.requestList = requests;
         this.filtered_items = requests;
@@ -42,7 +42,7 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
     private boolean clicked = false;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Extra obj, int position);
+        void onItemClick(View view, Request obj, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -71,10 +71,15 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        final Extra request = filtered_items.get(position);
-        final User user = users.get(position);
+        final Request request = filtered_items.get(position);
+        User user = new User();
+        for (User newUser : users) {
+            if (user.getUserId().equals(request.getUserId())) {
+                user = newUser;
+            }
+        }
         holder.name.setText(user.getUserFirstName().concat(" ").concat(user.getUserLastName()));
-        holder.city.setText(request.getExtraName());
+        holder.city.setText(request.getCity());
         Picasso.with(context).load(R.drawable.unknown_avatar).resize(100, 100)
                 .placeholder(R.drawable.unknown_avatar)
                 .transform(new CircleTransform())
@@ -94,7 +99,7 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
         clicked = false;
     }
 
-    private Extra getComplaint(int position) {
+    private Request getComplaint(int position) {
         return filtered_items.get(position);
     }
 
@@ -142,11 +147,11 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
             String query = constraint.toString().toLowerCase();
 
             FilterResults results = new FilterResults();
-            final List<Extra> list = requestList;
-            final List<Extra> result_list = new ArrayList<>(list.size());
+            final List<Request> list = requestList;
+            final List<Request> result_list = new ArrayList<>(list.size());
 
             for (int i = 0; i < list.size(); i++) {
-                String str_title = list.get(i).getExtraName();
+                String str_title = list.get(i).getCity();
                 if (str_title.toLowerCase().contains(query)) {
                     result_list.add(list.get(i));
                 }
@@ -160,7 +165,7 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filtered_items = (List<Extra>) results.values;
+            filtered_items = (List<Request>) results.values;
             notifyDataSetChanged();
         }
     }

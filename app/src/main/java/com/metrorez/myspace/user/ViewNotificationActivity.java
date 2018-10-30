@@ -16,6 +16,7 @@ import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.Checkin;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Extra;
+import com.metrorez.myspace.user.model.Request;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ViewNotificationActivity extends AppCompatActivity {
     private String type;
     private String userId;
     private List<Complaint> complaints;
-    private List<Extra> extras;
+    private List<Request> extras;
     private List<Checkin> checkins;
 
     @Override
@@ -42,12 +43,12 @@ public class ViewNotificationActivity extends AppCompatActivity {
 
         switch (type) {
             case Constants.CHECKIN_TYPE:
-                databaseReference = FirebaseDatabase.getInstance().getReference("checkins");
+                databaseReference = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("checkins").addValueEventListener(valueEventListener);
                 break;
             case Constants.COMPLAINT_TYPE:
-                databaseReference = FirebaseDatabase.getInstance().getReference("complaints");
+                databaseReference = FirebaseDatabase.getInstance().getReference().child("complaints");
             case Constants.REQUEST_TYPE:
-                databaseReference = FirebaseDatabase.getInstance().getReference("request");
+                databaseReference = FirebaseDatabase.getInstance().getReference().child("request");
                 break;
         }
     }
@@ -56,8 +57,17 @@ public class ViewNotificationActivity extends AppCompatActivity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if (databaseReference != null) {
-                switch (type){
+                switch (type) {
 
+                    case Constants.CHECKIN_TYPE:
+                        valueEventListener = queryCheckins();
+                        break;
+                    case Constants.COMPLAINT_TYPE:
+                        valueEventListener = queryComplainst();
+                        break;
+                    case Constants.REQUEST_TYPE:
+                        valueEventListener = queryRequests();
+                        break;
                 }
             }
         }
@@ -67,4 +77,60 @@ public class ViewNotificationActivity extends AppCompatActivity {
 
         }
     };
+
+    private ValueEventListener queryCheckins() {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
+
+                    Checkin checkin = checkinSnapShot.getValue(Checkin.class);
+                    checkins.add(checkin);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        return valueEventListener;
+    }
+
+    private ValueEventListener queryComplainst() {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
+
+                    Complaint complaint = checkinSnapShot.getValue(Complaint.class);
+                    complaints.add(complaint);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        return valueEventListener;
+    }
+
+    private ValueEventListener queryRequests() {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
+                    Request request = checkinSnapShot.getValue(Request.class);
+                    extras.add(request);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        return valueEventListener;
+    }
 }

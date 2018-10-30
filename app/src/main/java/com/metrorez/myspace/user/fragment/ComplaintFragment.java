@@ -1,5 +1,6 @@
 package com.metrorez.myspace.user.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.MainActivity;
+import com.metrorez.myspace.user.ViewComplaintActivity;
 import com.metrorez.myspace.user.adapter.ComplaintListAdapter;
+import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.GlobalVariable;
 import com.metrorez.myspace.user.model.Complaint;
 
@@ -40,6 +45,7 @@ public class ComplaintFragment extends Fragment {
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private LinearLayout lyt_not_found;
+
 
     private GlobalVariable global;
     DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("complaints");
@@ -72,6 +78,12 @@ public class ComplaintFragment extends Fragment {
             @Override
             public void onItemClick(View view, Complaint obj, int position) {
 
+            }
+        });
+        mAdapter.setOnItemClickListener(new ComplaintListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, Complaint obj, int position) {
+                ViewComplaintActivity.navigate((MainActivity) getActivity(), view, obj);
             }
         });
         return view;
@@ -122,7 +134,7 @@ public class ComplaintFragment extends Fragment {
 
             }
         });
+
+
     }
-
-
 }

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -70,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Update Profile");
         cameraImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,8 +94,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void saveUserInformation() {
+        progressBar.setVisibility(View.VISIBLE);
         String displayName = editTextName.getText().toString() + " " + editTextlastName.getText().toString();
         if (!validateName() || !validateLastName()) {
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
@@ -110,6 +115,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
             });
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -321,6 +327,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void saveOtherInfo() {
         //DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(mAuth.getCurrentUser().getUid());
 
+    }
+
+    public static void navigate(AppCompatActivity activity) {
+        Intent intent = new Intent(activity, ProfileActivity.class);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity);
+        ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
 }

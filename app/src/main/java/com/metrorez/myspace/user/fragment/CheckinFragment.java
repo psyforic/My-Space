@@ -24,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.user.CheckinActivity;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.MainActivity;
+import com.metrorez.myspace.user.ViewCheckinActivity;
 import com.metrorez.myspace.user.adapter.CheckinListAdapter;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Checkin;
@@ -51,7 +53,7 @@ public class CheckinFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_checkin, container, false);
         mAuth = FirebaseAuth.getInstance();
         checkinReference = FirebaseDatabase.getInstance().getReference().child("checkins");
-        getCheckins();
+        //getCheckins();
         setupUI();
 
         addCheckin.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +65,12 @@ public class CheckinFragment extends Fragment {
             }
         });
 
-
+        mAdapter.setOnItemClickListener(new CheckinListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, Checkin obj, int position) {
+                ViewCheckinActivity.navigate((MainActivity) getActivity(), view, obj);
+            }
+        });
         return view;
     }
 
@@ -74,19 +81,20 @@ public class CheckinFragment extends Fragment {
     }
 
     private void setupUI() {
+        checkins = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         lyt_not_found = (LinearLayout) view.findViewById(R.id.lyt_not_found);
         addCheckin = view.findViewById(R.id.fab_add_checkin);
+        mAdapter = new CheckinListAdapter(getActivity(), checkins);
         LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), Tools.getGridSpanCount(getActivity()));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
-
-
+        getCheckins();
     }
 
     private void getCheckins() {
-        checkins = new ArrayList<>();
+
         if (checkinReference != null) {
             checkinReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -97,17 +105,14 @@ public class CheckinFragment extends Fragment {
                             Checkin checkin = checkinSnapShot.getValue(Checkin.class);
                             checkins.add(checkin);
                         }
-
-                        mAdapter = new CheckinListAdapter(getActivity(), checkins);
                         recyclerView.setAdapter(mAdapter);
                         mAdapter.notifyDataSetChanged();
-
-
                         if (checkins.size() == 0) {
                             lyt_not_found.setVisibility(View.VISIBLE);
                         } else {
                             lyt_not_found.setVisibility(View.GONE);
                         }
+
                     } else {
                         if (checkins.size() == 0) {
                             lyt_not_found.setVisibility(View.VISIBLE);
@@ -115,6 +120,7 @@ public class CheckinFragment extends Fragment {
                             lyt_not_found.setVisibility(View.GONE);
                         }
                     }
+
                 }
 
                 @Override
@@ -123,6 +129,7 @@ public class CheckinFragment extends Fragment {
                 }
             });
         }
+
     }
 
     @Override

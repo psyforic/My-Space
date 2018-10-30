@@ -25,7 +25,7 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.AdminComplaintListAdapter;
 import com.metrorez.myspace.admin.adapter.AdminRequestsListAdapter;
 import com.metrorez.myspace.admin.model.City;
-import com.metrorez.myspace.admin.model.Request;
+import com.metrorez.myspace.user.model.Request;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Extra;
@@ -40,19 +40,19 @@ public class RequestsActivityDetails extends AppCompatActivity {
     private ActionBar actionBar;
     private RecyclerView recyclerView;
     private AdminRequestsListAdapter mAdapter;
-    private List<Extra> requests;
+    private List<Request> requests;
     private List<User> users;
     private SearchView search;
 
-    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("requests");
-    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
+    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("requests");
+    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requests_details);
-        populateAdapter();
         initToolbar();
+        populateAdapter();
         initComponent();
 
         Tools.systemBarLolipop(this);
@@ -79,11 +79,10 @@ public class RequestsActivityDetails extends AppCompatActivity {
         mAdapter = new AdminRequestsListAdapter(this, requests, users);
         mAdapter.setOnItemClickListener(new AdminRequestsListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, Extra obj, int position) {
+            public void onItemClick(View view, Request obj, int position) {
 
             }
         });
-        recyclerView.setAdapter(mAdapter);
     }
 
     private void populateAdapter() {
@@ -93,10 +92,10 @@ public class RequestsActivityDetails extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 requests.clear();
                 for (DataSnapshot complaintsSnapshot : dataSnapshot.getChildren()) {
-                    Extra extra = complaintsSnapshot.getValue(Extra.class);
-                    requests.add(extra);
+                    Request request = complaintsSnapshot.getValue(Request.class);
+                    requests.add(request);
                 }
-                mAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -113,6 +112,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
                     User user = userSnapshot.getValue(User.class);
                     users.add(user);
                 }
+                recyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -129,7 +129,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.str_complaints));
+        getSupportActionBar().setTitle(getString(R.string.str_request));
     }
 
     @Override

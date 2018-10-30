@@ -42,8 +42,8 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     private List<User> users;
     private SearchView search;
 
-    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("checkins");
-    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
+    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("checkins");
+    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,6 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         checkins = new ArrayList<>();
         users = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
-
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -81,7 +80,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
 
             }
         });
-        recyclerView.setAdapter(mAdapter);
+        //recyclerView.setAdapter(mAdapter);
     }
 
     private void populateAdapter() {
@@ -110,6 +109,9 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                     User user = userSnapshot.getValue(User.class);
                     users.add(user);
                 }
+
+                recyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -126,7 +128,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.str_complaints));
+        getSupportActionBar().setTitle(getString(R.string.str_nav_checkins));
     }
 
     @Override
