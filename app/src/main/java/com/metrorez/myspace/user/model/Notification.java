@@ -49,7 +49,7 @@ public class Notification implements Serializable {
     }
 
     public String getContent() {
-        return content;
+        return content + " from " + userName;
     }
 
     public String getUserName() {

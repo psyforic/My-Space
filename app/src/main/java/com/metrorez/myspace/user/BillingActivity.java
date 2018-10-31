@@ -50,7 +50,6 @@ public class BillingActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Billing Information");
         mAuth = FirebaseAuth.getInstance();
         getData();
-        //bindUI();
     }
 
     private void getData() {
@@ -67,6 +66,7 @@ public class BillingActivity extends AppCompatActivity {
 
                 }
                 bindUI();
+
             }
 
             @Override

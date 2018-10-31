@@ -41,7 +41,7 @@
                         android:layout_height="130dp"
                         android:clickable="false"
                         android:padding="@dimen/spacing_medium"
-                        android:src="@drawable/ic_placeholder" />
+                        android:src="@drawable/unknown_avatar" />
 
                     <ImageView
                         android:id="@+id/profile_camera"
@@ -419,7 +419,7 @@
 
                 <Button
                     android:id="@+id/btn_update_profile"
-                    android:layout_width="wrap_content"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@color/colorPrimary"

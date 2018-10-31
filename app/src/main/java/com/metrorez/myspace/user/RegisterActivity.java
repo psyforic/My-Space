@@ -2,6 +2,7 @@ package com.metrorez.myspace.user;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -145,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     addUser();
-
+                    saveUserInformation();
                     String deviceToken = FirebaseInstanceId.getInstance().getToken();
                     String userId = mAuth.getUid();
                     usersDatabase.child(userId).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -255,8 +257,26 @@ public class RegisterActivity extends AppCompatActivity {
             String userId = mAuth.getUid();
             User user = new User(userId, firstName, lastName, email, studentNo);
             usersDatabase.child(userId).setValue(user);
-            Role role = new Role(userId, "ADMIN");
+            Role role = new Role(userId, "NORMAL_USER");
             rolesDatabase.child(userId).setValue(role);
+        }
+    }
+
+    private void saveUserInformation() {
+
+        String displayName = inputName.getText().toString() + " " + inputLastName.getText().toString();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(displayName)
+                    .build();
+            user.updateProfile(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                }
+            });
+            progressBar.setVisibility(View.GONE);
         }
     }
 

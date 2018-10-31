@@ -67,8 +67,6 @@ public class AdminComplaintsFragment extends Fragment {
         mAdapter.setOnItemClickListener(new ComplaintsGridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, City obj, int position) {
-                //startActivity(new Intent(getActivity(), ComplaintsDetailsActivity.class));
-
                 ComplaintsDetailsActivity.navigate((AppCompatActivity) getActivity(), view.findViewById(R.id.lyt_parent), obj);
             }
         });

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,38 +32,33 @@ import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComplaintsDetailsActivity extends AppCompatActivity {
-    public static String KEY_CITY = "com.app.sample.chatting.CITY";
+    public static String KEY_CITY = "CITY";
     private ActionBar actionBar;
     private RecyclerView recyclerView;
     private AdminComplaintListAdapter mAdapter;
     private SearchView search;
-
-    //private ListUsers
-
-    private List<Complaint> complaints;
-    private List<User> users;
-
-    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints");
-    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
+    private List<Complaint> complaints = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private View parent_view;
+    private LinearLayout lyt_not_found;
+    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("complaints");
+    DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complaints_details);
-        initComponent();
+        parent_view = findViewById(android.R.id.content);
+
+        // animation transition
+        ViewCompat.setTransitionName(parent_view, KEY_CITY);
         initToolbar();
-
-        mAdapter.setOnItemClickListener(new AdminComplaintListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, Complaint obj, int position) {
-
-            }
-        });
+        initComponent();
+        getData();
         Tools.systemBarLolipop(this);
     }
 
@@ -74,61 +69,8 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
-    private void initComponent() {
-
-        recyclerView = findViewById(R.id.recyclerView);
-        // use a linear layout manager
-        users = new ArrayList<>();
-        complaints = new ArrayList<>();
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        mAdapter = new AdminComplaintListAdapter(ComplaintsDetailsActivity.this, complaints, users);
-        complaintsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot complaintsSnapShot : dataSnapshot.getChildren()) {
-                    Iterable<DataSnapshot> children = complaintsSnapShot.getChildren();
-                    for (DataSnapshot snapshot : children) {
-                        Complaint complaint = snapshot.getValue(Complaint.class);
-                        complaints.add(complaint);
-                    }
-
-                }
-                Log.i("COMPLAINTS", String.valueOf(complaints.size()));
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("RETRIEVEFAILER", databaseError.getMessage());
-            }
-        });
-        usersReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-
-                    User user = userSnapshot.getValue(User.class);
-                    users.add(user);
-                }
-                recyclerView.setAdapter(mAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("RETRIEVEFAILER", databaseError.getMessage());
-            }
-        });
-        mAdapter.notifyDataSetChanged();
-    }
-
     public void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -157,6 +99,61 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         return true;
     }
 
+    private void getData() {
+        usersReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                users.clear();
+                complaints.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    users.add(user);
+                    complaintsReference.child(user.getUserId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            users.clear();
+//                            complaints.clear();
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot complaintSnapShot : dataSnapshot.getChildren()) {
+                                    Complaint complaint = complaintSnapShot.getValue(Complaint.class);
+                                    complaints.add(complaint);
+                                }
+                                mAdapter = new AdminComplaintListAdapter(ComplaintsDetailsActivity.this, complaints, users);
+                                recyclerView.setAdapter(mAdapter);
+                            }
+
+                            bindView();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
+    }
+
+    private void initComponent() {
+        lyt_not_found = findViewById(R.id.lyt_not_found);
+        recyclerView = findViewById(R.id.recyclerView);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mAdapter = new AdminComplaintListAdapter(ComplaintsDetailsActivity.this, complaints, users);
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -171,8 +168,52 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         return false;
     }
 
+    private void bindView() {
+        try {
+            mAdapter.setOnItemClickListener(new AdminComplaintListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, Complaint obj, int position) {
+
+                    final User[] user = new User[1];
+                    usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            user[0] = dataSnapshot.getValue(User.class);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, user[0], obj.getComplaintComment(), obj.getComplaintDate());
+                }
+            });
+
+            Log.d("DATA_ITEMS", String.valueOf(recyclerView.getAdapter().getItemCount()));
+            if ((complaints.size() == 0) && (users.size() == 0)) {
+                lyt_not_found.setVisibility(View.VISIBLE);
+            } else {
+                lyt_not_found.setVisibility(View.GONE);
+            }
+
+
+        } catch (Exception e) {
+
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getData();
+        initComponent();
+
     }
 }

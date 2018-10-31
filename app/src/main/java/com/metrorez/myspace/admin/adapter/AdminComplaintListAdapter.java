@@ -93,15 +93,14 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!clicked && mOnItemClickListener != null) {
-                    clicked = true;
+                if (mOnItemClickListener != null) {
+                    //clicked = true;
                     mOnItemClickListener.onItemClick(view, complaint, position);
                 }
 
             }
         });
-        clicked = false;
-        //clicked = false;
+        // clicked = false;
     }
 
     private Complaint getComplaint(int position) {

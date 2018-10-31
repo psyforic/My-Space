@@ -87,7 +87,8 @@
 
         <activity android:name=".user.BillingActivity" />
         <activity android:name=".user.ViewComplaintActivity" />
-        <activity android:name=".user.ViewCheckinActivity"></activity>
+        <activity android:name=".user.ViewCheckinActivity" />
+        <activity android:name=".admin.ResponseActivity"></activity>
     </application>
 
 </manifest>

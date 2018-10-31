@@ -64,14 +64,14 @@ public class RequestsGridAdapter extends RecyclerView.Adapter<RequestsGridAdapte
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!clicked && mOnItemClickListener != null) {
-                    clicked = true;
+                if (mOnItemClickListener != null) {
+                    //clicked = true;
                     mOnItemClickListener.onItemClick(view, city, position);
                 }
             }
         });
 
-        clicked = false;
+        // clicked = false;
     }
 
     private int lastPosition = -1;

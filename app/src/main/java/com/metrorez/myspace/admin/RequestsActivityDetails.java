@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,15 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestsActivityDetails extends AppCompatActivity {
-    public static String KEY_CITY = "com.app.sample.chatting.CITY";
+    public static String KEY_CITY = "CITY";
     private ActionBar actionBar;
     private RecyclerView recyclerView;
     private AdminRequestsListAdapter mAdapter;
     private List<Request> requests;
     private List<User> users;
     private SearchView search;
+    private LinearLayout lyt_not_found;
 
-    DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("requests");
+    DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference().child("requests");
     DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
@@ -52,9 +54,8 @@ public class RequestsActivityDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requests_details);
         initToolbar();
-        populateAdapter();
         initComponent();
-
+        populateAdapter();
         Tools.systemBarLolipop(this);
     }
 
@@ -70,7 +71,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
         requests = new ArrayList<>();
         users = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
-
+        lyt_not_found = findViewById(R.id.lyt_not_found);
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -81,39 +82,62 @@ public class RequestsActivityDetails extends AppCompatActivity {
             @Override
             public void onItemClick(View view, Request obj, int position) {
 
+                final User[] user = new User[1];
+                usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        user[0] = dataSnapshot.getValue(User.class);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                int size = obj.getExtras().size();
+                List<String> items = new ArrayList<>();
+                for (Extra item : obj.getExtras()) {
+                    items.add(item.getExtraName());
+                }
+                String request = obj.getCity() + "\n" + size + " Items" + "\n" + items;
+                ResponseActivity.navigate(RequestsActivityDetails.this, view, user[0], request, obj.getRequestDate());
+
             }
         });
     }
 
     private void populateAdapter() {
 
-        complaintsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                requests.clear();
-                for (DataSnapshot complaintsSnapshot : dataSnapshot.getChildren()) {
-                    Request request = complaintsSnapshot.getValue(Request.class);
-                    requests.add(request);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         usersReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                users.clear();
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
                     users.add(user);
+
+                    requestsReference.child(user.getUserId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                                Request request = requestSnapshot.getValue(Request.class);
+                                requests.add(request);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 recyclerView.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+
+                if (requests.size() == 0&& users.size() == 0) {
+                    lyt_not_found.setVisibility(View.VISIBLE);
+                } else {
+                    lyt_not_found.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -121,6 +145,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
 
             }
         });
+        mAdapter.notifyDataSetChanged();
     }
 
     public void initToolbar() {

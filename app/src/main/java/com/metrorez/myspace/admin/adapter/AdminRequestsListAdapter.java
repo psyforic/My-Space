@@ -31,13 +31,13 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
     private List<User> users;
     private ItemFilter mFilter = new ItemFilter();
 
+
     public AdminRequestsListAdapter(Context context, List<Request> requests, List<User> users) {
         this.context = context;
         this.requestList = requests;
         this.filtered_items = requests;
         this.users = users;
     }
-
     private OnItemClickListener mOnItemClickListener;
     private boolean clicked = false;
 
@@ -48,7 +48,6 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
-
     // for item long click listener
     private OnItemLongClickListener mOnItemLongClickListener;
 
@@ -59,7 +58,6 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
     public void setOnItemLongClickListener(final OnItemLongClickListener mOnItemLongClickListener) {
         this.mOnItemLongClickListener = mOnItemLongClickListener;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -68,7 +66,6 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
 
         return viewHolder;
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final Request request = filtered_items.get(position);
@@ -98,7 +95,6 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
         });
         clicked = false;
     }
-
     private Request getComplaint(int position) {
         return filtered_items.get(position);
     }
@@ -140,7 +136,6 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
             lastPosition = position;
         }
     }
-
     private class ItemFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
