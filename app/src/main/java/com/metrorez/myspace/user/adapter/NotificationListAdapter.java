@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -18,9 +19,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.AdminActivity;
+import com.metrorez.myspace.admin.ResponseActivity;
 import com.metrorez.myspace.user.ViewNotificationActivity;
+import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.user.model.Checkin;
+import com.metrorez.myspace.user.model.Complaint;
+import com.metrorez.myspace.user.model.Extra;
+import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.Notification;
+import com.metrorez.myspace.user.model.Request;
+import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -35,6 +51,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     private ItemFilter mFilter = new ItemFilter();
     public static final String USER_ID = "USER_ID";
     public static final String TYPE = "TYPE";
+    private DatabaseReference userRefence = FirebaseDatabase.getInstance().getReference().child("users");
+    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
     public NotificationListAdapter(Context context, List<Notification> notifications) {
 
@@ -69,6 +87,77 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Notification n = filtered_items.get(position);
+        final List<User> user = new ArrayList<>();
+        final StringBuilder snippet = new StringBuilder("");
+        userRefence.child(n.getFromUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User newUser = dataSnapshot.getValue(User.class);
+                user.add(newUser);
+
+                switch (n.getType()) {
+                    case Constants.COMPLAINT_TYPE:
+                        reference.child("complaints").child(n.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Complaint complaint = dataSnapshot.getValue(Complaint.class);
+                                snippet.append(complaint.getComplaintComment() + "\n" + "PRIORITY: " + complaint.getComplaintCategory() + "\n" + complaint.getComplaintResidence() + "\n"
+                                        + "ROOM NO. : " + complaint.getComplaintRoom());
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        break;
+                    case Constants.CHECKIN_TYPE:
+                        reference.child("checkins").child(n.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Checkin checkin = dataSnapshot.getValue(Checkin.class);
+                                List<String> items = new ArrayList<>();
+                                for (Inventory item : checkin.getInventoryList()) {
+                                    items.add(item.getItemName());
+                                }
+                                snippet.append("ITEMS CHECKED IN " + "\n" + items.toString());
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        break;
+                    case Constants.REQUEST_TYPE:
+                        reference.child("extras").child(n.getFromUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Request request = dataSnapshot.getValue(Request.class);
+                                int size = request.getExtras().size();
+                                List<String> items = new ArrayList<>();
+                                for (Extra item : request.getExtras()) {
+                                    items.add(item.getExtraName());
+                                }
+                                snippet.append(request.getCity() + "\n" + size + " Items" + "\n" + items + "\n");
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         holder.content.setText(Html.fromHtml(n.getContent()));
         holder.date.setText(n.getDate());
         Picasso.with(context).load(R.drawable.ic_bell)
@@ -81,10 +170,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ViewNotificationActivity.class);
-                intent.putExtra(USER_ID, n.getFromUserId());
-                intent.putExtra(TYPE, n.getType());
-                context.startActivity(intent);
+                ResponseActivity.navigate((AppCompatActivity)context, view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), n.getDate());
             }
         });
     }
@@ -130,10 +216,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                     result_list.add(list.get(i));
                 }
             }
-
             results.values = result_list;
             results.count = result_list.size();
-
             return results;
         }
 
