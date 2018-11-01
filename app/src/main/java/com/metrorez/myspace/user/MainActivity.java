@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 if (menuItem.getItemId() == R.id.nav_billing) {
                     startActivity(new Intent(MainActivity.this, BillingActivity.class));
                 } else {
-                    if (menuItem.getItemId() != (R.id.nav_logout))
+                    if (menuItem.getItemId() != R.id.nav_logout)
                         displayContentView(menuItem.getItemId());
                 }
 

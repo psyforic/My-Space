@@ -166,7 +166,7 @@ public class AdminActivity extends AppCompatActivity {
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         searchToolbar = (Toolbar) findViewById(R.id.toolbar_search);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.admin_viewpager);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -240,7 +240,7 @@ public class AdminActivity extends AppCompatActivity {
     private void setupDrawerLayout() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        view = (NavigationView) findViewById(R.id.nav_view);
+        view = (NavigationView) findViewById(R.id.admin_nav_view);
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -250,7 +250,7 @@ public class AdminActivity extends AppCompatActivity {
                     logout();
                     finish();
                 } else {
-                    Snackbar.make(parent_view, menuItem.getTitle() + " Clicked ", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(parent_view, menuItem.getTitle() + " Coming Soon ", Snackbar.LENGTH_SHORT).show();
                 }
 
                 return true;
@@ -283,7 +283,7 @@ public class AdminActivity extends AppCompatActivity {
             search.setIconified(false);
             switch (viewPager.getCurrentItem()) {
                 case 0:
-                    search.setQueryHint("Search users...");
+                    search.setQueryHint("Search check-ins...");
                     break;
                 case 1:
                     search.setQueryHint("Search complaints...");

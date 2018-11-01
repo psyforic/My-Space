@@ -39,7 +39,7 @@ public class ViewCheckinActivity extends AppCompatActivity {
     private List<Inventory> items = new ArrayList<>();
     private RecyclerView recyclerView;
     private CheckinItemAdapter mAdapter;
-    private DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("checkins");
+    private DatabaseReference checkinsReference = FirebaseDatabase.getInstance().getReference("checkins");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class ViewCheckinActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("View Complaint");
+        getSupportActionBar().setTitle("View Check-in");
     }
 
     private void setupUi() {
@@ -67,7 +67,7 @@ public class ViewCheckinActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        complaintsReference.child(mAuth.getCurrentUser().getUid()).child(checkinId).addValueEventListener(new ValueEventListener() {
+        checkinsReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

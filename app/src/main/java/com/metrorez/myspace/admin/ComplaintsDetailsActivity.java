@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +45,8 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
     private List<Complaint> complaints = new ArrayList<>();
     private List<User> users = new ArrayList<>();
     private View parent_view;
+    private ProgressBar progressBar;
+    private List<User> sendTo = new ArrayList<>();
     private LinearLayout lyt_not_found;
     DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference().child("complaints");
     DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -51,6 +54,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AdminTheme);
         setContentView(R.layout.activity_complaints_details);
         parent_view = findViewById(android.R.id.content);
 
@@ -100,6 +104,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
     }
 
     private void getData() {
+        progressBar.setVisibility(View.VISIBLE);
         usersReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -111,8 +116,6 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
                     complaintsReference.child(user.getUserId()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            users.clear();
-//                            complaints.clear();
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot complaintSnapShot : dataSnapshot.getChildren()) {
                                     Complaint complaint = complaintSnapShot.getValue(Complaint.class);
@@ -121,37 +124,34 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
                                 mAdapter = new AdminComplaintListAdapter(ComplaintsDetailsActivity.this, complaints, users);
                                 recyclerView.setAdapter(mAdapter);
                             }
-
                             bindView();
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
-
-
                 }
-
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressBar.setVisibility(View.GONE);
             }
         });
-
-
     }
 
     private void initComponent() {
         lyt_not_found = findViewById(R.id.lyt_not_found);
         recyclerView = findViewById(R.id.recyclerView);
+        progressBar = findViewById(R.id.progressBar);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mAdapter = new AdminComplaintListAdapter(ComplaintsDetailsActivity.this, complaints, users);
-
     }
 
     @Override
@@ -172,13 +172,18 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         try {
             mAdapter.setOnItemClickListener(new AdminComplaintListAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(View view, Complaint obj, int position) {
+                public void onItemClick(final View view, final Complaint obj, int position) {
 
-                    final User[] user = new User[1];
-                    usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
+                    usersReference.child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            user[0] = dataSnapshot.getValue(User.class);
+
+                            User user = dataSnapshot.getValue(User.class);
+                            sendTo.add(user);
+
+                            String complaint = obj.getComplaintComment() + "\n" + "PRIORITY: " + obj.getComplaintCategory() + "\n" + obj.getComplaintResidence() + "\n"
+                                    + "ROOM NO. : " + obj.getComplaintRoom();
+                            ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, sendTo.get(0), complaint, obj.getComplaintDate());
                         }
 
                         @Override
@@ -186,11 +191,9 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
 
                         }
                     });
-                    ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, user[0], obj.getComplaintComment(), obj.getComplaintDate());
                 }
             });
 
-            Log.d("DATA_ITEMS", String.valueOf(recyclerView.getAdapter().getItemCount()));
             if ((complaints.size() == 0) && (users.size() == 0)) {
                 lyt_not_found.setVisibility(View.VISIBLE);
             } else {
@@ -212,8 +215,6 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        getData();
-        initComponent();
 
     }
 }

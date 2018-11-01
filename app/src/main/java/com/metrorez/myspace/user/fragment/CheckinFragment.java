@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -68,7 +69,7 @@ public class CheckinFragment extends Fragment {
         mAdapter.setOnItemClickListener(new CheckinListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, Checkin obj, int position) {
-                ViewCheckinActivity.navigate((MainActivity) getActivity(), view, obj);
+                ViewCheckinActivity.navigate((AppCompatActivity) getActivity(), view, obj);
             }
         });
         return view;
@@ -107,6 +108,7 @@ public class CheckinFragment extends Fragment {
                         }
                         recyclerView.setAdapter(mAdapter);
                         mAdapter.notifyDataSetChanged();
+
                         if (checkins.size() == 0) {
                             lyt_not_found.setVisibility(View.VISIBLE);
                         } else {
@@ -120,6 +122,12 @@ public class CheckinFragment extends Fragment {
                             lyt_not_found.setVisibility(View.GONE);
                         }
                     }
+                    mAdapter.setOnItemClickListener(new CheckinListAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, Checkin obj, int position) {
+                            ViewCheckinActivity.navigate((AppCompatActivity) getActivity(), view, obj);
+                        }
+                    });
 
                 }
 

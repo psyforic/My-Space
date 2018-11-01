@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,18 +42,24 @@ public class RequestsActivityDetails extends AppCompatActivity {
     private ActionBar actionBar;
     private RecyclerView recyclerView;
     private AdminRequestsListAdapter mAdapter;
-    private List<Request> requests;
-    private List<User> users;
+    private List<Request> requests = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
     private SearchView search;
+    private View parent_view;
     private LinearLayout lyt_not_found;
-
-    DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference().child("requests");
+    private List<User> sendTo = new ArrayList<>();
+    DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference().child("extras");
     DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AdminTheme);
         setContentView(R.layout.activity_requests_details);
+        parent_view = findViewById(android.R.id.content);
+
+        // animation transition
+        ViewCompat.setTransitionName(parent_view, KEY_CITY);
         initToolbar();
         initComponent();
         populateAdapter();
@@ -68,8 +75,6 @@ public class RequestsActivityDetails extends AppCompatActivity {
 
     private void initComponent() {
 
-        requests = new ArrayList<>();
-        users = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
         lyt_not_found = findViewById(R.id.lyt_not_found);
         // use a linear layout manager
@@ -77,33 +82,8 @@ public class RequestsActivityDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        mAdapter = new AdminRequestsListAdapter(this, requests, users);
-        mAdapter.setOnItemClickListener(new AdminRequestsListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, Request obj, int position) {
+        mAdapter = new AdminRequestsListAdapter(RequestsActivityDetails.this, requests, users);
 
-                final User[] user = new User[1];
-                usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        user[0] = dataSnapshot.getValue(User.class);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-                int size = obj.getExtras().size();
-                List<String> items = new ArrayList<>();
-                for (Extra item : obj.getExtras()) {
-                    items.add(item.getExtraName());
-                }
-                String request = obj.getCity() + "\n" + size + " Items" + "\n" + items;
-                ResponseActivity.navigate(RequestsActivityDetails.this, view, user[0], request, obj.getRequestDate());
-
-            }
-        });
     }
 
     private void populateAdapter() {
@@ -111,6 +91,8 @@ public class RequestsActivityDetails extends AppCompatActivity {
         usersReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                users.clear();
+                requests.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
@@ -119,10 +101,15 @@ public class RequestsActivityDetails extends AppCompatActivity {
                     requestsReference.child(user.getUserId()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                                Request request = requestSnapshot.getValue(Request.class);
-                                requests.add(request);
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                                    Request request = requestSnapshot.getValue(Request.class);
+                                    requests.add(request);
+                                }
+                                mAdapter = new AdminRequestsListAdapter(RequestsActivityDetails.this, requests, users);
+                                recyclerView.setAdapter(mAdapter);
                             }
+                            bindView();
                         }
 
                         @Override
@@ -131,13 +118,6 @@ public class RequestsActivityDetails extends AppCompatActivity {
                         }
                     });
                 }
-                recyclerView.setAdapter(mAdapter);
-
-                if (requests.size() == 0&& users.size() == 0) {
-                    lyt_not_found.setVisibility(View.VISIBLE);
-                } else {
-                    lyt_not_found.setVisibility(View.GONE);
-                }
             }
 
             @Override
@@ -145,7 +125,43 @@ public class RequestsActivityDetails extends AppCompatActivity {
 
             }
         });
-        mAdapter.notifyDataSetChanged();
+    }
+
+    private void bindView() {
+        try {
+            mAdapter.setOnItemClickListener(new AdminRequestsListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(final View view, final Request obj, int position) {
+                    usersReference.child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            User user = dataSnapshot.getValue(User.class);
+                            sendTo.add(user);
+                            int size = obj.getExtras().size();
+                            List<String> items = new ArrayList<>();
+                            for (Extra item : obj.getExtras()) {
+                                items.add(item.getExtraName());
+                            }
+                            String request = obj.getCity() + "\n" + size + " Items" + "\n" + items + "\n";
+                            ResponseActivity.navigate(RequestsActivityDetails.this, view, sendTo.get(0), request, obj.getRequestDate());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            });
+            if ((requests.size()) == 0 && (users.size() == 0)) {
+                lyt_not_found.setVisibility(View.VISIBLE);
+            } else {
+                lyt_not_found.setVisibility(View.GONE);
+            }
+        } catch (Exception ex) {
+
+        }
     }
 
     public void initToolbar() {

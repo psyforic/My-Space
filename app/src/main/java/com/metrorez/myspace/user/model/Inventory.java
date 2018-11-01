@@ -7,6 +7,9 @@ public class Inventory implements Serializable {
     private String itemName;
     private String roomName;
 
+    public Inventory() {
+    }
+
     public Inventory(String inventoryId, String itemName, String roomName) {
         this.inventoryId = inventoryId;
         this.itemName = itemName;

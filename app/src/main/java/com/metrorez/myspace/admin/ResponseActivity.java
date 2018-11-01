@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,21 +21,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.ResponseDetailsListAdapter;
 import com.metrorez.myspace.admin.model.ResponseDetails;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.User;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ResponseActivity extends AppCompatActivity {
     public static final String KEY_USER = "USER";
     public static final String KEY_DATA = "DATA";
     public static final String KEY_DATE = "DATE";
-
+    private FirebaseAuth mAuth;
+    private DatabaseReference notificationsReference = FirebaseDatabase.getInstance().getReference("notifications");
 
     public static void navigate(AppCompatActivity activity, View transitionImage, User obj, String snippet, String date) {
         Intent intent = new Intent(activity, ResponseActivity.class);
@@ -59,15 +69,17 @@ public class ResponseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AdminTheme);
         setContentView(R.layout.activity_response);
         parent_view = findViewById(android.R.id.content);
-
+        mAuth = FirebaseAuth.getInstance();
         // animation transition
         ViewCompat.setTransitionName(parent_view, KEY_USER);
         // initialize conversation data
         Intent intent = getIntent();
         user = (User) intent.getExtras().getSerializable(KEY_USER);
         String snippet = intent.getStringExtra(KEY_DATA);
+        //String snippet = Html.fromHtml(data).toString();
         String date = intent.getStringExtra(KEY_DATE);
 
         initToolbar();
@@ -91,10 +103,9 @@ public class ResponseActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        if(user!=null) {
-            actionBar.setTitle(user.getUserFirstName());
-        }
-        else{
+        if (user != null) {
+            actionBar.setTitle(user.getUserFirstName() + " " + user.getUserLastName());
+        } else {
             actionBar.setTitle("LUNDI");
         }
     }
@@ -117,7 +128,8 @@ public class ResponseActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 items.add(items.size(), new ResponseDetails(items.size(), Constants.formatTime(System.currentTimeMillis()), user, et_content.getText().toString(), true));
-                items.add(items.size(), new ResponseDetails(items.size(), Constants.formatTime(System.currentTimeMillis()), user, et_content.getText().toString(), false));
+                //items.add(items.size(), new ResponseDetails(items.size(), Constants.formatTime(System.currentTimeMillis()), user, et_content.getText().toString(), false));
+                sendNotification(et_content.getText().toString(), Constants.ADMIN_COMPLAINT_RESPONSE, user.getUserId());
                 et_content.setText("");
                 bindView();
                 hideKeyboard();
@@ -185,6 +197,18 @@ public class ResponseActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void sendNotification(String content, String type, String userId) {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        String date = dateFormat.format(today);
+        String id = notificationsReference.push().getKey();
+        String typeId = notificationsReference.push().getKey();
+
+        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, "ADMIN", type, typeId);
+        notificationsReference.child(userId).child(id).setValue(notification);
     }
 
     @Override

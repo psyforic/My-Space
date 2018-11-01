@@ -17,16 +17,18 @@ import android.widget.TextView;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.adapter.PageFragmentAdapter;
+import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.fragment.StepOneFragment;
 import com.metrorez.myspace.user.fragment.StepThreeFragment;
 import com.metrorez.myspace.user.fragment.StepTwoFragment;
+import com.metrorez.myspace.user.model.Checkin;
 import com.metrorez.myspace.user.model.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckinActivity extends AppCompatActivity implements StepOneFragment.OnInventoryDataListener {
+public class CheckinActivity extends AppCompatActivity implements StepOneFragment.OnInventoryDataListener, StepTwoFragment.OnInventoryDataSender {
 
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
@@ -176,6 +178,14 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
                 // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.start));
                 btnSkip.setVisibility(View.GONE);
+                btnNext.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String tag = "android:switcher:" + R.id.view_pager + ":" + 2;
+                        StepThreeFragment fragment = (StepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
+                        fragment.upload();
+                    }
+                });
             } else {
                 // still pages are left
                 btnNext.setText(getString(R.string.next));
@@ -211,5 +221,14 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onInventoryDataSent(ArrayList<Inventory> inventoryData) {
+        String tag = "android:switcher:" + R.id.view_pager + ":" + 2;
+        StepThreeFragment fragment = (StepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        tempList = inventoryData;
+
+        fragment.getItems(tempList);
     }
 }

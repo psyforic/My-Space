@@ -39,6 +39,7 @@ public class AdminNotificationFragment extends Fragment {
     //private String userId;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
+    private LinearLayout lyt_not_found;
     private DatabaseReference noticationReference = FirebaseDatabase.getInstance().getReference().child("notifications");
 
     @Override
@@ -51,12 +52,12 @@ public class AdminNotificationFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mAuth = FirebaseAuth.getInstance();
         //userId = mAuth.getCurrentUser().getUid();
+        lyt_not_found = view.findViewById(R.id.lyt_not_found);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new AdminNotificationListAdapter(getActivity(), notifications);
-
         getNotifications();
         return view;
     }
@@ -66,16 +67,22 @@ public class AdminNotificationFragment extends Fragment {
         noticationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                notifications.clear();
                 for (DataSnapshot notifSnapShot : dataSnapshot.getChildren()) {
                     Iterable<DataSnapshot> children = notifSnapShot.getChildren();
-                    for (DataSnapshot snapshot: children){
-                        Notification notification =snapshot.getValue(Notification.class);
+                    for (DataSnapshot snapshot : children) {
+                        Notification notification = snapshot.getValue(Notification.class);
                         notifications.add(notification);
                     }
 
                 }
                 recyclerView.setAdapter(mAdapter);
                 progressBar.setVisibility(View.GONE);
+                if (notifications.size() == 0) {
+                    lyt_not_found.setVisibility(View.VISIBLE);
+                } else {
+                    lyt_not_found.setVisibility(View.GONE);
+                }
 
             }
 
@@ -97,7 +104,7 @@ public class AdminNotificationFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                recyclerView.refreshDrawableState();
+                mAdapter.notifyDataSetChanged();
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -80,12 +80,12 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
         final Checkin checkin = filtered_items.get(position);
         User user = new User();
         for (User newUser : users) {
-            if (user.getUserId().equals(checkin.getUserId())) {
+            if (newUser.getUserId().equals(checkin.getUserId())) {
                 user = newUser;
             }
         }
         holder.name.setText(user.getUserFirstName().concat(" ").concat(user.getUserLastName()));
-        holder.city.setText(checkin.getCity());
+        holder.city.setText(user.getUserCity());
         Picasso.with(context).load(R.drawable.unknown_avatar).resize(100, 100)
                 .placeholder(R.drawable.unknown_avatar)
                 .transform(new CircleTransform())

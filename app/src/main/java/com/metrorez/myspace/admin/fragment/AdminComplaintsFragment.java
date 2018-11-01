@@ -45,6 +45,7 @@ public class AdminComplaintsFragment extends Fragment {
         return view;
     }
 
+
     private void setupUI() {
         cities = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);

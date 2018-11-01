@@ -106,6 +106,7 @@
     <string name="tab_notifications">Notifications</string>
     <string name="str_complaint_message">Complaint Filed Successfully</string>
     <string name="str_extra_message">Request Successful, Will get back to you soon</string>
+    <string name="str_checkin_message">Checked in Successfully</string>
 
 
 </resources>

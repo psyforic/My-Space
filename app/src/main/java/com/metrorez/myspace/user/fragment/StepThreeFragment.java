@@ -22,7 +22,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -38,6 +40,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.CheckinActivity;
+import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.Checkin;
 import com.metrorez.myspace.user.model.Inventory;
@@ -61,11 +65,14 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     private ProgressBar progressBar;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String profileImageUrl;
-    private List<Inventory> inventoryList;
+    private List<Inventory> inventoryList = new ArrayList<>();
     private FirebaseAuth mAuth;
+    private ListView listView;
+
+    private ArrayAdapter<String> arrayAdapter;
+    private List<String> items = new ArrayList<>();
 
     private DatabaseReference notificationsReference;
-
 
     private DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference("checkins");
 
@@ -79,6 +86,10 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         setupUI();
         mAuth = FirebaseAuth.getInstance();
         notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
+//        items = getArguments().getStringArrayList(Constants.CHECKIN_EXTRA);
+
+        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(arrayAdapter);
         cameraButton();
         return view;
     }
@@ -86,6 +97,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     @Override
     public void onInventoryDataReceived(ArrayList<Inventory> inventoryData) {
         inventoryList = inventoryData;
+        arrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -94,6 +106,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     }
 
     private void setupUI() {
+        listView = view.findViewById(R.id.listView);
         fab_camera = view.findViewById(R.id.fab_camera_intent);
         imageView = view.findViewById(R.id.imageView);
         progressBar = view.findViewById(R.id.progressBar);
@@ -144,7 +157,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
                         Toast.makeText(getActivity(), selectedImage.toString(),
                                 Toast.LENGTH_LONG).show();
 
-                        uploadImageToFirebaseStorage("image");
+                        //uploadImageToFirebaseStorage("image");
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), "Failed to load", Toast.LENGTH_SHORT)
                                 .show();
@@ -173,6 +186,19 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
             if (cursor != null) {
                 cursor.close();
             }
+        }
+    }
+
+    public void upload() {
+        if (imageUri != null) {
+            uploadImageToFirebaseStorage("image");
+            Intent intent = new Intent(getActivity(), SuccessActivity.class);
+            intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_checkin_message));
+            getActivity().startActivity(intent);
+            getActivity().finish();
+
+        } else {
+            Snackbar.make(view, "No Image taken", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -227,6 +253,11 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         if (inventoryList.size() != 0) {
             this.inventoryList = inventoryList;
         }
+
+        for (Inventory item : inventoryList) {
+            items.add(item.getItemName());
+        }
+        arrayAdapter.notifyDataSetChanged();
     }
 
     private void saveCheckinInfo(List<String> url, String userId, String date) {
@@ -257,5 +288,4 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
-
 }

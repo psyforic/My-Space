@@ -30,6 +30,7 @@ import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Checkin;
 import com.metrorez.myspace.user.model.Complaint;
+import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
 
@@ -48,6 +49,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     private View parent_view;
     private ProgressBar progressBar;
     private List<User> sendTo = new ArrayList<>();
+
     DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference().child("checkins");
     DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
@@ -57,7 +59,6 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         setTheme(R.style.AdminTheme);
         setContentView(R.layout.activity_checkin_details);
         parent_view = findViewById(android.R.id.content);
-
         // animation transition
         ViewCompat.setTransitionName(parent_view, KEY_CITY);
         initToolbar();
@@ -74,6 +75,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
+
         recyclerView = findViewById(R.id.recyclerView);
         lyt_not_found = findViewById(R.id.lyt_not_found);
         progressBar = findViewById(R.id.progressBar);
@@ -81,6 +83,8 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mAdapter = new AdminCheckinListAdapter(this, checkins, users);
+
     }
 
     private void populateAdapter() {
@@ -101,6 +105,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                                     Checkin checkin = checkinSnapshot.getValue(Checkin.class);
                                     checkins.add(checkin);
                                 }
+
                                 mAdapter = new AdminCheckinListAdapter(CheckinDetailsActivity.this, checkins, users);
                                 recyclerView.setAdapter(mAdapter);
                             }
@@ -113,6 +118,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                         }
                     });
                 }
+                progressBar.setVisibility(View.GONE);
 
             }
 
@@ -121,7 +127,6 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         });
-        progressBar.setVisibility(View.GONE);
     }
 
     private void bindView() {
@@ -129,13 +134,19 @@ public class CheckinDetailsActivity extends AppCompatActivity {
             mAdapter.setOnItemClickListener(new AdminCheckinListAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(final View view, final Checkin obj, int position) {
-                    usersReference.child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                             User user = dataSnapshot.getValue(User.class);
                             sendTo.add(user);
-                            ResponseActivity.navigate(CheckinDetailsActivity.this, view, sendTo.get(0), obj.getUserId(), obj.getDate());
+
+                            List<String> items = new ArrayList<>();
+                            for (Inventory item : obj.getInventoryList()) {
+                                items.add(item.getItemName());
+                            }
+                            String checkin = "ITEMS CHECKED IN " + "\n" + items.toString();
+                            ResponseActivity.navigate(CheckinDetailsActivity.this, view, sendTo.get(0), checkin, obj.getDate());
                         }
 
                         @Override
@@ -152,7 +163,6 @@ public class CheckinDetailsActivity extends AppCompatActivity {
             }
 
         } catch (Exception ex) {
-
         }
     }
 

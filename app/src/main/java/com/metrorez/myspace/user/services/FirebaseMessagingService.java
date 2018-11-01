@@ -24,7 +24,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String click_action = remoteMessage.getNotification().getClickAction();
         createNotificationChannel();
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.channel_Id))
-                .setSmallIcon(R.drawable.ic_new_notif)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(messageTitle)
                 .setContentText(messageBody)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);

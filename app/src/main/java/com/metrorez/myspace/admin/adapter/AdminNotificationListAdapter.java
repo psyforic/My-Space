@@ -22,6 +22,7 @@ import com.metrorez.myspace.admin.model.AdminNotif;
 import com.metrorez.myspace.user.ViewNotificationActivity;
 import com.metrorez.myspace.user.adapter.NotificationListAdapter;
 import com.metrorez.myspace.user.model.Notification;
+import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -36,11 +37,20 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     private ItemFilter mFilter = new ItemFilter();
     public static final String USER_ID = "USER_ID";
     public static final String TYPE = "TYPE";
+    private OnItemClickListener mOnItemClickListener;
 
     public AdminNotificationListAdapter(Context context, List<Notification> notifications) {
         this.context = context;
         this.original_items = notifications;
         this.filtered_items = notifications;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, Notification obj, int position);
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mOnItemClickListener = mItemClickListener;
     }
 
     @NonNull

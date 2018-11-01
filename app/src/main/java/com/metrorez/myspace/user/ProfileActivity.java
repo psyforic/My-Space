@@ -263,7 +263,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     // TODO:
     private void loadExtraInfo() {
 
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(mAuth.getCurrentUser().getUid());
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid());
 
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -325,7 +325,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void saveOtherInfo() {
-        //DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(mAuth.getCurrentUser().getUid());
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid());
 
     }
 

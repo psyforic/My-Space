@@ -57,11 +57,11 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
         holder.card_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!clicked && mOnItemClickListener != null) {
-                    clicked = true;
+                if ( mOnItemClickListener != null) {
+                    //clicked = true;
                     mOnItemClickListener.onItemClick(view, checkin, position);
                 }
-                clicked = false;
+                //clicked = false;
             }
         });
 
