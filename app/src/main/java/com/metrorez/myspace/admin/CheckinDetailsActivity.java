@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,14 +45,21 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     private List<User> users = new ArrayList<>();
     private LinearLayout lyt_not_found;
     private SearchView search;
-
+    private View parent_view;
+    private ProgressBar progressBar;
+    private List<User> sendTo = new ArrayList<>();
     DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference().child("checkins");
     DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AdminTheme);
         setContentView(R.layout.activity_checkin_details);
+        parent_view = findViewById(android.R.id.content);
+
+        // animation transition
+        ViewCompat.setTransitionName(parent_view, KEY_CITY);
         initToolbar();
         initComponent();
         populateAdapter();
@@ -65,48 +74,68 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
-
         recyclerView = findViewById(R.id.recyclerView);
         lyt_not_found = findViewById(R.id.lyt_not_found);
+        progressBar = findViewById(R.id.progressBar);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        mAdapter = new AdminCheckinListAdapter(this, checkins, users);
-        mAdapter.setOnItemClickListener(new AdminCheckinListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, Checkin obj, int position) {
-                final User[] user = new User[1];
-                usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        user[0] = dataSnapshot.getValue(User.class);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-                ResponseActivity.navigate(CheckinDetailsActivity.this, view, user[0], obj.getUserId(), obj.getDate());
-            }
-        });
     }
 
     private void populateAdapter() {
+        progressBar.setVisibility(View.VISIBLE);
         usersReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                users.clear();
+                checkins.clear();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     users.add(user);
                     checkinReference.child(user.getUserId()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot checkinSnapshot : dataSnapshot.getChildren()) {
-                                Checkin checkin = checkinSnapshot.getValue(Checkin.class);
-                                checkins.add(checkin);
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot checkinSnapshot : dataSnapshot.getChildren()) {
+                                    Checkin checkin = checkinSnapshot.getValue(Checkin.class);
+                                    checkins.add(checkin);
+                                }
+                                mAdapter = new AdminCheckinListAdapter(CheckinDetailsActivity.this, checkins, users);
+                                recyclerView.setAdapter(mAdapter);
                             }
+                            bindView();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void bindView() {
+        try {
+            mAdapter.setOnItemClickListener(new AdminCheckinListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(final View view, final Checkin obj, int position) {
+                    usersReference.child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            User user = dataSnapshot.getValue(User.class);
+                            sendTo.add(user);
+                            ResponseActivity.navigate(CheckinDetailsActivity.this, view, sendTo.get(0), obj.getUserId(), obj.getDate());
                         }
 
                         @Override
@@ -115,20 +144,16 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                         }
                     });
                 }
-                recyclerView.setAdapter(mAdapter);
-                if (checkins.size() == 0 && users.size() == 0) {
-                    lyt_not_found.setVisibility(View.VISIBLE);
-                } else {
-                    lyt_not_found.setVisibility(View.GONE);
-                }
+            });
+            if (checkins.size() == 0 && users.size() == 0) {
+                lyt_not_found.setVisibility(View.VISIBLE);
+            } else {
+                lyt_not_found.setVisibility(View.GONE);
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        } catch (Exception ex) {
 
-            }
-        });
-        mAdapter.notifyDataSetChanged();
+        }
     }
 
     public void initToolbar() {
