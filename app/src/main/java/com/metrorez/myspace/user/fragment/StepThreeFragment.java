@@ -23,11 +23,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -109,6 +111,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         listView = view.findViewById(R.id.listView);
         fab_camera = view.findViewById(R.id.fab_camera_intent);
         imageView = view.findViewById(R.id.imageView);
+        imageView.setOnTouchListener(new ImageMatrixTouchHandler(view.getContext()));
         progressBar = view.findViewById(R.id.progressBar);
     }
 

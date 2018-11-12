@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +39,7 @@ public class ExtrasFragment extends Fragment {
     private MyExtrasListAdapter mAdapter;
     private View view;
     private List<Extra> extras;
+    private ProgressBar progressBar;
     private LinearLayout lyt_not_found;
     private Fragment fragment = null;
     private FirebaseAuth mAuth;
@@ -72,6 +74,7 @@ public class ExtrasFragment extends Fragment {
 
     private void setupUI() {
         extras = new ArrayList<>();
+        progressBar = view.findViewById(R.id.progressBar);
         lyt_not_found = view.findViewById(R.id.lyt_not_found);
         recyclerView = (RecyclerView) view.findViewById(R.id.extras_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,6 +82,7 @@ public class ExtrasFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         addExtra = (FloatingActionButton) view.findViewById(R.id.fab_add_extra);
 
+        progressBar.setVisibility(View.VISIBLE);
         extrasReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -96,7 +100,7 @@ public class ExtrasFragment extends Fragment {
                     }
                     mAdapter = new MyExtrasListAdapter(getActivity(), extras);
                     recyclerView.setAdapter(mAdapter);
-
+                    progressBar.setVisibility(View.GONE);
                     if (extras.size() == 0) {
                         lyt_not_found.setVisibility(View.VISIBLE);
                     } else {
@@ -109,11 +113,12 @@ public class ExtrasFragment extends Fragment {
                         lyt_not_found.setVisibility(View.GONE);
                     }
                 }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.GONE);
             }
         });
 

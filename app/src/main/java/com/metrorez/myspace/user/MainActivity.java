@@ -1,6 +1,8 @@
 package com.metrorez.myspace.user;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.IdRes;
@@ -106,10 +108,12 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
                 drawer.closeDrawers();
-                actionBar.setTitle(menuItem.getTitle());
+                if (menuItem.getItemId() != R.id.nav_logout) {
+                    actionBar.setTitle(menuItem.getTitle());
+                }
                 if (menuItem.getItemId() == R.id.nav_logout) {
                     logout();
-                    finish();
+
                 }
                 if (menuItem.getItemId() == R.id.nav_billing) {
                     startActivity(new Intent(MainActivity.this, BillingActivity.class));
@@ -144,20 +148,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDrawerCounter() {
-        setMenuAdvCounter(R.id.nav_complaint, global.getComplaints().size());
-        setMenuStdCounter(R.id.nav_notifications, global.getNotifications().size());
+        //setMenuAdvCounter(R.id.nav_complaint, global.getComplaints().size());
+        setMenuAdvCounter(R.id.nav_notifications, global.getNotifications().size());
     }
 
     //set counter in drawer
     private void setMenuAdvCounter(@IdRes int itemId, int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView().findViewById(R.id.counter);
-        view.setText(count > 0 ? String.valueOf(count) : null);
+        view.setText(count > 0 ? String.valueOf(count) : "0");
     }
 
     //set counter in drawer
     private void setMenuStdCounter(@IdRes int itemId, int count) {
-        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
-        view.setText(count > 0 ? String.valueOf(count) : null);
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView().findViewById(R.id.counter);
+        view.setText(count > 0 ? String.valueOf(count) : "0");
     }
 
     private void onHeaderClicked() {
@@ -279,9 +283,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        mAuth.getInstance().signOut();
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage(R.string.logout_message);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 }

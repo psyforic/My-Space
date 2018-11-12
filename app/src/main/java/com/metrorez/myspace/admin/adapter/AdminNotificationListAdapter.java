@@ -35,8 +35,8 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     private List<Notification> original_items = new ArrayList<>();
     private List<Notification> filtered_items = new ArrayList<>();
     private ItemFilter mFilter = new ItemFilter();
-    public static final String USER_ID = "USER_ID";
-    public static final String TYPE = "TYPE";
+//    public static final String USER_ID = "USER_ID";
+//    public static final String TYPE = "TYPE";
     private OnItemClickListener mOnItemClickListener;
 
     public AdminNotificationListAdapter(Context context, List<Notification> notifications) {
@@ -76,7 +76,7 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final Notification n = filtered_items.get(position);
         holder.content.setText(Html.fromHtml(n.getContent()));
         holder.date.setText(n.getDate());
@@ -90,10 +90,10 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ViewNotificationActivity.class);
-                intent.putExtra(USER_ID, n.getFromUserId());
-                intent.putExtra(TYPE, n.getType());
-                context.startActivity(intent);
+                if (mOnItemClickListener != null) {
+                    //clicked = true;
+                    mOnItemClickListener.onItemClick(view, n, position);
+                }
             }
         });
     }

@@ -97,6 +97,7 @@ public class CheckinFragment extends Fragment {
     private void getCheckins() {
 
         if (checkinReference != null) {
+            progressBar.setVisibility(View.VISIBLE);
             checkinReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -129,11 +130,13 @@ public class CheckinFragment extends Fragment {
                         }
                     });
 
+                    progressBar.setVisibility(View.GONE);
+
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         }

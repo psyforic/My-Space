@@ -61,8 +61,6 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_complaint"
         style="@style/FabStyle"
-        android:layout_gravity="center|bottom"
-
         android:clickable="true"
         android:src="@drawable/ic_add"
         android:tint="@android:color/white" />

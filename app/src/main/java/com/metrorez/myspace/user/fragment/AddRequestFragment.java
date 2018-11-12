@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -89,29 +90,38 @@ public class AddRequestFragment extends Fragment {
     }
 
     private void requestExtras() {
+
         btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                // LayoutInflater inflater = getActivity().getLayoutInflater();
+                if (selected.size() != 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    // LayoutInflater inflater = getActivity().getLayoutInflater();
 
-                builder.setMessage(R.string.request_message)
-                        .setTitle(R.string.request_title);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        addRequest();
-                        Toast.makeText(getContext(), R.string.request_success, Toast.LENGTH_LONG).show();
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    builder.setMessage(R.string.request_message)
+                            .setTitle(R.string.request_title);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            addRequest();
+                            Toast.makeText(getContext(), R.string.request_success, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else
+
+                {
+                    Snackbar.make(view, getString(R.string.nothing_selected), Snackbar.LENGTH_SHORT).show();
+                }
             }
+
         });
+
     }
 
     private void setData() {
@@ -129,7 +139,7 @@ public class AddRequestFragment extends Fragment {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date today = Calendar.getInstance().getTime();
         String date = dateFormat.format(today);
-        Constants constants=new Constants();
+        Constants constants = new Constants();
         Request newRequest = new Request(id, date, userId, selected, "Port Elizabeth", "0245");
         extrasReference.child(userId).child(id).setValue(newRequest).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

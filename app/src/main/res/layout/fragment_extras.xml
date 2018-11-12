@@ -67,10 +67,14 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add-extra"
         style="@style/FabStyle"
-        android:layout_gravity="center|bottom"
         android:clickable="true"
         android:src="@drawable/ic_add"
         android:tint="@android:color/white" />
 
-
+    <ProgressBar
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </android.support.design.widget.CoordinatorLayout>

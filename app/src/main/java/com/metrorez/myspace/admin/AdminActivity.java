@@ -1,5 +1,6 @@
 package com.metrorez.myspace.admin;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -41,6 +43,7 @@ import com.metrorez.myspace.admin.fragment.AdminNotificationFragment;
 import com.metrorez.myspace.admin.fragment.AdminRequestsFragment;
 import com.metrorez.myspace.admin.fragment.UsersFragment;
 import com.metrorez.myspace.user.LoginActivity;
+import com.metrorez.myspace.user.MainActivity;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -248,7 +251,7 @@ public class AdminActivity extends AppCompatActivity {
                 drawerLayout.closeDrawers();
                 if (menuItem.getItemId() == R.id.nav_logout) {
                     logout();
-                    finish();
+
                 } else {
                     Snackbar.make(parent_view, menuItem.getTitle() + " Coming Soon ", Snackbar.LENGTH_SHORT).show();
                 }
@@ -378,10 +381,27 @@ public class AdminActivity extends AppCompatActivity {
 
 
     private void logout() {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AdminActivity.this);
+        builder.setMessage(R.string.logout_message);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

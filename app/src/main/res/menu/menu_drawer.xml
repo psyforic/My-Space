@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
@@ -14,38 +12,33 @@
         <item
             android:id="@+id/nav_complaint"
             android:icon="@drawable/ic_complaint"
-            android:title="@string/str_nav_complaint"
-            android:checked="true"
-            app:actionLayout="@layout/menu_counter_colored"/>
+            android:title="@string/str_nav_complaint" />
         <item
             android:id="@+id/nav_extras"
             android:icon="@drawable/ic_extra"
-            android:title="@string/str_nav_extra"/>
+            android:title="@string/str_nav_extra" />
         <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/bell"
             android:title="@string/str_nav_notifications"
-            app:actionLayout="@layout/menu_counter"/>
+            app:actionLayout="@layout/menu_counter_colored" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_profile"
-            android:title="@string/str_nav_profile"
-            />
+            android:title="@string/str_nav_profile" />
         <item
             android:id="@+id/nav_checkin"
             android:icon="@drawable/ic_checkin"
-            android:title="@string/str_nav_checkins"
-            />
+            android:title="@string/str_nav_checkins" />
     </group>
 
     <item android:title="">
         <menu>
-            <group
-                android:checkableBehavior="single">
+            <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_billing"
                     android:icon="@drawable/ic_billing"
-                    android:title="@string/billing_information"/>
+                    android:title="@string/billing_information" />
                 <item
                     android:id="@+id/nav_setting"
                     android:icon="@drawable/ic_setting"
@@ -57,7 +50,7 @@
                 <item
                     android:id="@+id/nav_logout"
                     android:icon="@drawable/ic_logout"
-                    android:title="@string/str_nav_logout"/>
+                    android:title="@string/str_nav_logout" />
             </group>
         </menu>
     </item>

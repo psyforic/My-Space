@@ -170,7 +170,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ResponseActivity.navigate((AppCompatActivity)context, view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), n.getDate());
+                ResponseActivity.navigate((AppCompatActivity) context, view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), n.getDate());
             }
         });
     }

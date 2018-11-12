@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +43,7 @@ public class NotificationsFragment extends Fragment {
     private List<Notification> notifications = new ArrayList<>();
     private String userId;
     private FirebaseAuth mAuth;
+    private LinearLayout lyt_not_found;
     private DatabaseReference noticationReference = FirebaseDatabase.getInstance().getReference("notifications");
 
     @Override
@@ -52,6 +54,7 @@ public class NotificationsFragment extends Fragment {
         setHasOptionsMenu(true);
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
+        lyt_not_found = view.findViewById(R.id.lyt_not_found);
         getNotifications();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,6 +82,12 @@ public class NotificationsFragment extends Fragment {
                 notifications.add(notification);
             }
             mAdapter.notifyDataSetChanged();
+
+            if (notifications.size() == 0) {
+                lyt_not_found.setVisibility(View.VISIBLE);
+            } else {
+                lyt_not_found.setVisibility(View.GONE);
+            }
         }
 
         @Override
