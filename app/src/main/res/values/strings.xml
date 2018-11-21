@@ -109,6 +109,7 @@
     <string name="str_checkin_message">Checked in Successfully</string>
     <string name="logout_message">Are you sure you want to Logout?</string>
     <string name="nothing_selected">Nothing Selected</string>
+    <string name="submit">Submit</string>
 
 
 </resources>

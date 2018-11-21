@@ -52,7 +52,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".user.SuccessActivity" />
-        <activity android:name=".user.CheckinActivity" />
+        <activity android:name=".user.MoveInActivity" />
         <activity
             android:name=".admin.AdminActivity"
             android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />
@@ -87,7 +87,7 @@
 
         <activity android:name=".user.BillingActivity" />
         <activity android:name=".user.ViewComplaintActivity" />
-        <activity android:name=".user.ViewCheckinActivity" />
+        <activity android:name=".user.ViewMoveInActivity" />
         <activity android:name=".admin.ResponseActivity"></activity>
     </application>
 

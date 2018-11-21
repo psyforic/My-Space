@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,12 +17,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
-import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.data.GlobalVariable;
 import com.metrorez.myspace.user.data.Tools;
-import com.metrorez.myspace.user.fragment.CheckinFragment;
+import com.metrorez.myspace.user.fragment.MoveInFragment;
 import com.metrorez.myspace.user.fragment.ComplaintFragment;
 import com.metrorez.myspace.user.fragment.ExtrasFragment;
 import com.metrorez.myspace.user.fragment.HelpFragment;
@@ -52,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private GlobalVariable global;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         Tools.systemBarLolipop(this);
     }
 
-
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -99,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 super.onDrawerOpened(drawerView);
             }
         };
-        drawer.setDrawerListener(toggle);
+        //drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -113,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (menuItem.getItemId() == R.id.nav_logout) {
                     logout();
-
                 }
                 if (menuItem.getItemId() == R.id.nav_billing) {
                     startActivity(new Intent(MainActivity.this, BillingActivity.class));
@@ -121,14 +115,10 @@ public class MainActivity extends AppCompatActivity {
                     if (menuItem.getItemId() != R.id.nav_logout)
                         displayContentView(menuItem.getItemId());
                 }
-
-
                 return true;
             }
         });
         onHeaderClicked();
-
-
     }
 
     @Override
@@ -200,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new HelpFragment();
                 break;
             case R.id.nav_checkin:
-                fragment = new CheckinFragment();
+                fragment = new MoveInFragment();
                 break;
 
         }
@@ -302,6 +292,5 @@ public class MainActivity extends AppCompatActivity {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
 }

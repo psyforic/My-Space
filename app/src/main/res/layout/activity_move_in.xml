@@ -7,16 +7,18 @@
     android:layout_height="match_parent"
     android:background="@color/grey_bg"
     android:fitsSystemWindows="true"
-    tools:showIn="@layout/activity_checkin">
+    tools:showIn="@layout/activity_move_in">
 
-    <android.support.v7.widget.Toolbar
+    <include layout="@layout/toolbar" />
+
+   <!-- <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:paddingRight="5dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
+        />
+-->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
@@ -30,7 +32,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dots_margin_bottom"
         android:gravity="center"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal">
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

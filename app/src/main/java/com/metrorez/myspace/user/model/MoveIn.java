@@ -3,7 +3,7 @@ package com.metrorez.myspace.user.model;
 import java.io.Serializable;
 import java.util.List;
 
-public class Checkin implements Serializable {
+public class MoveIn implements Serializable {
 
     private String id;
     private String date;
@@ -12,10 +12,10 @@ public class Checkin implements Serializable {
     private String userId;
     private List<Inventory> inventoryList;
 
-    public Checkin() {
+    public MoveIn() {
     }
 
-    public Checkin(String userId, String id, String date, List<String> urls, List<Inventory> inventoryList) {
+    public MoveIn(String userId, String id, String date, List<String> urls, List<Inventory> inventoryList) {
         this.id = id;
         this.date = date;
         this.urls = urls;
@@ -23,7 +23,7 @@ public class Checkin implements Serializable {
         this.inventoryList = inventoryList;
     }
 
-    public Checkin(String userId, String id, String date, List<String> urls, String city, List<Inventory> inventoryList) {
+    public MoveIn(String userId, String id, String date, List<String> urls, String city, List<Inventory> inventoryList) {
         this.id = id;
         this.date = date;
         this.urls = urls;

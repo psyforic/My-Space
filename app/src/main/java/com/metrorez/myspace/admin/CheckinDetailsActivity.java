@@ -28,8 +28,7 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.AdminCheckinListAdapter;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.data.Tools;
-import com.metrorez.myspace.user.model.Checkin;
-import com.metrorez.myspace.user.model.Complaint;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
@@ -42,7 +41,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private RecyclerView recyclerView;
     private AdminCheckinListAdapter mAdapter;
-    private List<Checkin> checkins = new ArrayList<>();
+    private List<MoveIn> moveIns = new ArrayList<>();
     private List<User> users = new ArrayList<>();
     private LinearLayout lyt_not_found;
     private SearchView search;
@@ -50,7 +49,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private List<User> sendTo = new ArrayList<>();
 
-    DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference().child("checkins");
+    DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference().child("moveIns");
     DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
@@ -83,7 +82,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        mAdapter = new AdminCheckinListAdapter(this, checkins, users);
+        mAdapter = new AdminCheckinListAdapter(this, moveIns, users);
 
     }
 
@@ -93,7 +92,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();
-                checkins.clear();
+                moveIns.clear();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     users.add(user);
@@ -102,11 +101,11 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot checkinSnapshot : dataSnapshot.getChildren()) {
-                                    Checkin checkin = checkinSnapshot.getValue(Checkin.class);
-                                    checkins.add(checkin);
+                                    MoveIn moveIn = checkinSnapshot.getValue(MoveIn.class);
+                                    moveIns.add(moveIn);
                                 }
 
-                                mAdapter = new AdminCheckinListAdapter(CheckinDetailsActivity.this, checkins, users);
+                                mAdapter = new AdminCheckinListAdapter(CheckinDetailsActivity.this, moveIns, users);
                                 recyclerView.setAdapter(mAdapter);
                             }
                             bindView();
@@ -133,7 +132,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         try {
             mAdapter.setOnItemClickListener(new AdminCheckinListAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(final View view, final Checkin obj, int position) {
+                public void onItemClick(final View view, final MoveIn obj, int position) {
                     usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -156,7 +155,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                     });
                 }
             });
-            if (checkins.size() == 0 && users.size() == 0) {
+            if (moveIns.size() == 0 && users.size() == 0) {
                 lyt_not_found.setVisibility(View.VISIBLE);
             } else {
                 lyt_not_found.setVisibility(View.GONE);

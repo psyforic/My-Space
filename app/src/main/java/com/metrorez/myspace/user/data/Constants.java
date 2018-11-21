@@ -20,7 +20,7 @@ public class Constants {
     public static final String COMPLAINT_TYPE = "COMPLAINT";
     public static final String ADMIN_COMPLAINT_RESPONSE = "ADMIN_COMPLAINT_RESPONSE";
     public static final String REQUEST_TYPE = "REQUEST";
-    public static final String CHECKIN_TYPE = "CHECKIN";
+    public static final String MOVEIN_TYPE = "CHECKIN";
     public static final String STRING_EXTRA = "EXTRA";
     public static final String COMPLAINT_EXTRA = "COMPLAINT_EXTRA";
     private static User[] users;
@@ -28,7 +28,7 @@ public class Constants {
     private static FirebaseAuth mAuth;
 
     private static DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
-    public static final String CHECKIN_EXTRA = "CHECKIN_EXTRA";
+    public static final String MOVEIN_EXTRA = "MOVEIN_EXTRA";
 
     public Constants() {
 

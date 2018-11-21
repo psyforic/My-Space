@@ -15,8 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.model.Checkin;
-import com.metrorez.myspace.user.model.Extra;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -27,16 +26,16 @@ import java.util.List;
 public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinListAdapter.ViewHolder> implements Filterable {
 
     private Context context;
-    private List<Checkin> checkins;
-    private List<Checkin> filtered_items;
+    private List<MoveIn> moveIns;
+    private List<MoveIn> filtered_items;
     private List<User> users;
     private ItemFilter mFilter = new ItemFilter();
 
     private OnItemClickListener mOnItemClickListener;
-    private boolean clicked = false;
+    //private boolean clicked = false;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Checkin obj, int position);
+        void onItemClick(View view, MoveIn obj, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -47,17 +46,17 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
     private OnItemLongClickListener mOnItemLongClickListener;
 
     public interface OnItemLongClickListener {
-        void onItemClick(View view, Checkin obj, int position);
+        void onItemClick(View view, MoveIn obj, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mOnItemLongClickListener) {
         this.mOnItemLongClickListener = mOnItemLongClickListener;
     }
 
-    public AdminCheckinListAdapter(Context context, List<Checkin> checkins, List<User> users) {
+    public AdminCheckinListAdapter(Context context, List<MoveIn> moveIns, List<User> users) {
         this.context = context;
-        this.checkins = checkins;
-        this.filtered_items = checkins;
+        this.moveIns = moveIns;
+        this.filtered_items = moveIns;
         this.users = users;
     }
 
@@ -77,10 +76,10 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
 
     @Override
     public void onBindViewHolder(@NonNull AdminCheckinListAdapter.ViewHolder holder, final int position) {
-        final Checkin checkin = filtered_items.get(position);
+        final MoveIn moveIn = filtered_items.get(position);
         User user = new User();
         for (User newUser : users) {
-            if (newUser.getUserId().equals(checkin.getUserId())) {
+            if (newUser.getUserId().equals(moveIn.getUserId())) {
                 user = newUser;
             }
         }
@@ -96,13 +95,13 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!clicked && mOnItemClickListener != null) {
-                    clicked = true;
-                    mOnItemClickListener.onItemClick(view, checkin, position);
+                if (mOnItemClickListener != null) {
+                   // clicked = true;
+                    mOnItemClickListener.onItemClick(view, moveIn, position);
                 }
             }
         });
-        clicked = false;
+        //clicked = false;
     }
 
     @Override
@@ -144,8 +143,8 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
             String query = constraint.toString().toLowerCase();
 
             FilterResults results = new FilterResults();
-            final List<Checkin> list = checkins;
-            final List<Checkin> result_list = new ArrayList<>(list.size());
+            final List<MoveIn> list = moveIns;
+            final List<MoveIn> result_list = new ArrayList<>(list.size());
 
             for (int i = 0; i < list.size(); i++) {
                 String str_title = list.get(i).getDate();
@@ -162,7 +161,7 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filtered_items = (List<Checkin>) results.values;
+            filtered_items = (List<MoveIn>) results.values;
             notifyDataSetChanged();
         }
     }

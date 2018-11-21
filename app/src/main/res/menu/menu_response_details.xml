@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_sample"
+        android:id="@+id/admin_notification"
         android:orderInCategory="100"
-        android:title="Sample Action"
+        android:title="Notifications"
         app:showAsAction="never" />
 </menu>

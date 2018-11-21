@@ -170,7 +170,7 @@ public class AddRequestFragment extends Fragment {
         String id = notificationsReference.push().getKey();
         String typeId = extrasReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId);
+        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
 

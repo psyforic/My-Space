@@ -10,25 +10,24 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.model.Checkin;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.ViewHolder> {
+public class MoveInListAdapter extends RecyclerView.Adapter<MoveInListAdapter.ViewHolder> {
 
-    private List<Checkin> checkin_list;
+    private List<MoveIn> moveIn_list;
     private Context ctx;
     private OnItemClickListener mOnItemClickListener;
     private boolean clicked = false;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Checkin obj, int position);
+        void onItemClick(View view, MoveIn obj, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -38,16 +37,16 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_checkin, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_move_in, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CheckinListAdapter.ViewHolder holder, final int position) {
-        final Checkin checkin = checkin_list.get(position);
-        holder.title.setText(checkin.getDate());
-        holder.time.setText(checkin.getDate());
+    public void onBindViewHolder(@NonNull MoveInListAdapter.ViewHolder holder, final int position) {
+        final MoveIn moveIn = moveIn_list.get(position);
+        holder.title.setText(moveIn.getDate());
+        holder.time.setText(moveIn.getDate());
 
         Picasso.with(ctx).load(R.drawable.ic_checkin).resize(100, 100)
                 .transform(new CircleTransform())
@@ -59,7 +58,7 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
             public void onClick(View view) {
                 if ( mOnItemClickListener != null) {
                     //clicked = true;
-                    mOnItemClickListener.onItemClick(view, checkin, position);
+                    mOnItemClickListener.onItemClick(view, moveIn, position);
                 }
                 //clicked = false;
             }
@@ -81,7 +80,7 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
 
     @Override
     public int getItemCount() {
-        return checkin_list.size();
+        return moveIn_list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -102,8 +101,8 @@ public class CheckinListAdapter extends RecyclerView.Adapter<CheckinListAdapter.
         }
     }
 
-    public CheckinListAdapter(Context context, List<Checkin> items) {
+    public MoveInListAdapter(Context context, List<MoveIn> items) {
         this.ctx = context;
-        this.checkin_list = items;
+        this.moveIn_list = items;
     }
 }

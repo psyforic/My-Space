@@ -21,16 +21,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.CheckinItemAdapter;
-import com.metrorez.myspace.user.adapter.ComplaintListAdapter;
 import com.metrorez.myspace.user.data.Constants;
-import com.metrorez.myspace.user.model.Checkin;
-import com.metrorez.myspace.user.model.Complaint;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewCheckinActivity extends AppCompatActivity {
+public class ViewMoveInActivity extends AppCompatActivity {
 
     String checkinId;
     private TextView date;
@@ -44,11 +42,11 @@ public class ViewCheckinActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_checkin);
+        setContentView(R.layout.activity_view_move_in);
         mAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
-        Checkin checkin = (Checkin) intent.getSerializableExtra(Constants.CHECKIN_EXTRA);
-        checkinId = checkin.getId();
+        MoveIn moveIn = (MoveIn) intent.getSerializableExtra(Constants.MOVEIN_EXTRA);
+        checkinId = moveIn.getId();
         setupUi();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -73,10 +71,10 @@ public class ViewCheckinActivity extends AppCompatActivity {
 
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot checkinSnapshot : dataSnapshot.getChildren()) {
-                        Checkin checkin = checkinSnapshot.getValue(Checkin.class);
-                        items.addAll(checkin.getInventoryList());
-                        date.setText(checkin.getDate());
-                        mAdapter = new CheckinItemAdapter(ViewCheckinActivity.this, items);
+                        MoveIn moveIn = checkinSnapshot.getValue(MoveIn.class);
+                        items.addAll(moveIn.getInventoryList());
+                        date.setText(moveIn.getDate());
+                        mAdapter = new CheckinItemAdapter(ViewMoveInActivity.this, items);
                         recyclerView.setAdapter(mAdapter);
                     }
                 }
@@ -95,10 +93,10 @@ public class ViewCheckinActivity extends AppCompatActivity {
         return true;
     }
 
-    public static void navigate(AppCompatActivity activity, View transitionImage, Checkin obj) {
+    public static void navigate(AppCompatActivity activity, View transitionImage, MoveIn obj) {
         Intent intent = new Intent(activity, ViewComplaintActivity.class);
-        intent.putExtra(Constants.CHECKIN_EXTRA, obj);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, Constants.CHECKIN_EXTRA);
+        intent.putExtra(Constants.MOVEIN_EXTRA, obj);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, Constants.MOVEIN_EXTRA);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 }

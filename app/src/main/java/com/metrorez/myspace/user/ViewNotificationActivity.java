@@ -13,9 +13,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.NotificationListAdapter;
 import com.metrorez.myspace.user.data.Constants;
-import com.metrorez.myspace.user.model.Checkin;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Complaint;
-import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Request;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class ViewNotificationActivity extends AppCompatActivity {
     private String userId;
     private List<Complaint> complaints;
     private List<Request> extras;
-    private List<Checkin> checkins;
+    private List<MoveIn> moveIns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +41,8 @@ public class ViewNotificationActivity extends AppCompatActivity {
     private void loadData() {
 
         switch (type) {
-            case Constants.CHECKIN_TYPE:
-                databaseReference = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("checkins").addValueEventListener(valueEventListener);
+            case Constants.MOVEIN_TYPE:
+                databaseReference = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("moveIns").addValueEventListener(valueEventListener);
                 break;
             case Constants.COMPLAINT_TYPE:
                 databaseReference = FirebaseDatabase.getInstance().getReference().child("complaints");
@@ -59,7 +58,7 @@ public class ViewNotificationActivity extends AppCompatActivity {
             if (databaseReference != null) {
                 switch (type) {
 
-                    case Constants.CHECKIN_TYPE:
+                    case Constants.MOVEIN_TYPE:
                         valueEventListener = queryCheckins();
                         break;
                     case Constants.COMPLAINT_TYPE:
@@ -84,8 +83,8 @@ public class ViewNotificationActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
 
-                    Checkin checkin = checkinSnapShot.getValue(Checkin.class);
-                    checkins.add(checkin);
+                    MoveIn moveIn = checkinSnapShot.getValue(MoveIn.class);
+                    moveIns.add(moveIn);
                 }
             }
 

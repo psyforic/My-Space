@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,53 +22,52 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.metrorez.myspace.user.CheckinActivity;
+import com.metrorez.myspace.user.MoveInActivity;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.MainActivity;
-import com.metrorez.myspace.user.ViewCheckinActivity;
-import com.metrorez.myspace.user.adapter.CheckinListAdapter;
+import com.metrorez.myspace.user.ViewMoveInActivity;
+import com.metrorez.myspace.user.adapter.MoveInListAdapter;
 import com.metrorez.myspace.user.data.Tools;
-import com.metrorez.myspace.user.model.Checkin;
+import com.metrorez.myspace.user.model.MoveIn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckinFragment extends Fragment {
+public class MoveInFragment extends Fragment {
 
-    FloatingActionButton addCheckin;
+    FloatingActionButton addMoveIn;
     private RecyclerView recyclerView;
-    public CheckinListAdapter mAdapter;
+    public MoveInListAdapter mAdapter;
     private ProgressBar progressBar;
     private View view;
-    private List<Checkin> checkins;
+    private List<MoveIn> moveIns;
     private LinearLayout lyt_not_found;
     private FirebaseAuth mAuth;
 
-    private DatabaseReference checkinReference;
+    private DatabaseReference moveInReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_checkin, container, false);
+        view = inflater.inflate(R.layout.fragment__move_in, container, false);
         mAuth = FirebaseAuth.getInstance();
-        checkinReference = FirebaseDatabase.getInstance().getReference().child("checkins");
-        //getCheckins();
+        moveInReference = FirebaseDatabase.getInstance().getReference().child("moveIns");
+        //getMoveIns();
         setupUI();
 
-        addCheckin.setOnClickListener(new View.OnClickListener() {
+        addMoveIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CheckinActivity.class);
+                Intent intent = new Intent(getActivity(), MoveInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
 
-        mAdapter.setOnItemClickListener(new CheckinListAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new MoveInListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, Checkin obj, int position) {
-                ViewCheckinActivity.navigate((AppCompatActivity) getActivity(), view, obj);
+            public void onItemClick(View view, MoveIn obj, int position) {
+                ViewMoveInActivity.navigate((AppCompatActivity) getActivity(), view, obj);
             }
         });
         return view;
@@ -78,55 +76,55 @@ public class CheckinFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //getCheckins();
+        //getMoveIns();
     }
 
     private void setupUI() {
-        checkins = new ArrayList<>();
+        moveIns = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         lyt_not_found = (LinearLayout) view.findViewById(R.id.lyt_not_found);
-        addCheckin = view.findViewById(R.id.fab_add_checkin);
-        mAdapter = new CheckinListAdapter(getActivity(), checkins);
+        addMoveIn = view.findViewById(R.id.fab_add_move_in);
+        mAdapter = new MoveInListAdapter(getActivity(), moveIns);
         LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), Tools.getGridSpanCount(getActivity()));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
-        getCheckins();
+        getMoveIns();
     }
 
-    private void getCheckins() {
+    private void getMoveIns() {
 
-        if (checkinReference != null) {
+        if (moveInReference != null) {
             progressBar.setVisibility(View.VISIBLE);
-            checkinReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            moveInReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    checkins.clear();
+                    moveIns.clear();
                     if (dataSnapshot.exists()) {
-                        for (DataSnapshot checkinSnapShot : dataSnapshot.getChildren()) {
-                            Checkin checkin = checkinSnapShot.getValue(Checkin.class);
-                            checkins.add(checkin);
+                        for (DataSnapshot moveInSnapShot : dataSnapshot.getChildren()) {
+                            MoveIn moveIn = moveInSnapShot.getValue(MoveIn.class);
+                            moveIns.add(moveIn);
                         }
                         recyclerView.setAdapter(mAdapter);
                         mAdapter.notifyDataSetChanged();
 
-                        if (checkins.size() == 0) {
+                        if (moveIns.size() == 0) {
                             lyt_not_found.setVisibility(View.VISIBLE);
                         } else {
                             lyt_not_found.setVisibility(View.GONE);
                         }
 
                     } else {
-                        if (checkins.size() == 0) {
+                        if (moveIns.size() == 0) {
                             lyt_not_found.setVisibility(View.VISIBLE);
                         } else {
                             lyt_not_found.setVisibility(View.GONE);
                         }
                     }
-                    mAdapter.setOnItemClickListener(new CheckinListAdapter.OnItemClickListener() {
+                    mAdapter.setOnItemClickListener(new MoveInListAdapter.OnItemClickListener() {
                         @Override
-                        public void onItemClick(View view, Checkin obj, int position) {
-                            ViewCheckinActivity.navigate((AppCompatActivity) getActivity(), view, obj);
+                        public void onItemClick(View view, MoveIn obj, int position) {
+                            ViewMoveInActivity.navigate((AppCompatActivity) getActivity(), view, obj);
                         }
                     });
 
@@ -151,7 +149,7 @@ public class CheckinFragment extends Fragment {
 
     @Override
     public void onStart() {
-        //getCheckins();
+        //getMoveIns();
         super.onStart();
 
     }

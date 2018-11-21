@@ -189,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             if (user.getPhotoUrl() != null) {
                 String photoUrl = user.getPhotoUrl().toString();
                 Picasso.with(this).load(photoUrl.toString())
-                        .placeholder(R.drawable.ic_placeholder)
+                        .placeholder(R.drawable.unknown_avatar)
                         .transform(new CircleTransform())
                         .into(profileImage);
                 //Glide.with(this).load(photoUrl).into(profileImage);

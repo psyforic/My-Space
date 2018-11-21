@@ -43,12 +43,12 @@ public class StepOneFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupUI();
-        nextBtn.setOnClickListener(new View.OnClickListener() {
+       /* nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mOnInventoryDataListener.onInventoryDataReceived((ArrayList<Inventory>) selected);
             }
-        });
+        });*/
     }
 
     private void setupUI() {
@@ -64,11 +64,13 @@ public class StepOneFragment extends Fragment {
             @Override
             public void onItemCheck(Inventory item) {
                 selected.add(item);
+                passData();
             }
 
             @Override
             public void onItemUncheck(Inventory item) {
                 selected.remove(item);
+                passData();
             }
         });
 
@@ -76,11 +78,16 @@ public class StepOneFragment extends Fragment {
 
     }
 
+    private void passData() {
+        mOnInventoryDataListener.onInventoryDataReceived((ArrayList<Inventory>) selected);
+    }
+
     private void populateList() {
         inventoryList.add(new Inventory("Bed"));
-        inventoryList.add(new Inventory("Couch"));
-        inventoryList.add(new Inventory("Fridge"));
+        inventoryList.add(new Inventory("Carpet"));
+        inventoryList.add(new Inventory("Table"));
         inventoryList.add(new Inventory("Wardrobe"));
+        inventoryList.add(new Inventory("Lamp"));
     }
 
     public interface OnInventoryDataListener {

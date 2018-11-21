@@ -1,10 +1,7 @@
 package com.metrorez.myspace.user.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -19,18 +16,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.AdminActivity;
 import com.metrorez.myspace.admin.ResponseActivity;
-import com.metrorez.myspace.user.ViewNotificationActivity;
 import com.metrorez.myspace.user.data.Constants;
-import com.metrorez.myspace.user.model.Checkin;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Inventory;
@@ -111,13 +105,13 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                             }
                         });
                         break;
-                    case Constants.CHECKIN_TYPE:
+                    case Constants.MOVEIN_TYPE:
                         reference.child("checkins").child(n.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Checkin checkin = dataSnapshot.getValue(Checkin.class);
+                                MoveIn moveIn = dataSnapshot.getValue(MoveIn.class);
                                 List<String> items = new ArrayList<>();
-                                for (Inventory item : checkin.getInventoryList()) {
+                                for (Inventory item : moveIn.getInventoryList()) {
                                     items.add(item.getItemName());
                                 }
                                 snippet.append("ITEMS CHECKED IN " + "\n" + items.toString());

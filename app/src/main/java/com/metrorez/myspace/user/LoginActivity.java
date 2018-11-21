@@ -75,10 +75,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Swap without transition
         }
-        setContentView(R.layout.activity_login);
-        parent_view = findViewById(android.R.id.content);
-
-        setupUI();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -95,9 +91,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
             }
-        }
+        };
+        setContentView(R.layout.activity_login);
+        parent_view = findViewById(android.R.id.content);
 
-        ;
+        setupUI();
+
+
         btnLogin.setOnClickListener(new View.OnClickListener()
 
         {

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -42,13 +40,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.CheckinActivity;
 import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.data.Constants;
-import com.metrorez.myspace.user.model.Checkin;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.Notification;
-import com.metrorez.myspace.user.model.UploadInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -88,7 +84,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         setupUI();
         mAuth = FirebaseAuth.getInstance();
         notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
-//        items = getArguments().getStringArrayList(Constants.CHECKIN_EXTRA);
+//        items = getArguments().getStringArrayList(Constants.MOVEIN_EXTRA);
 
         arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, items);
         listView.setAdapter(arrayAdapter);
@@ -266,11 +262,11 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     private void saveCheckinInfo(List<String> url, String userId, String date) {
         String Id = mAuth.getCurrentUser().getUid();
         String key = checkinReference.push().getKey();
-        Checkin checkin = new Checkin(userId, key, date, url, inventoryList);
-        checkinReference.child(Id).child(key).setValue(checkin).addOnSuccessListener(new OnSuccessListener<Void>() {
+        MoveIn moveIn = new MoveIn(userId, key, date, url, inventoryList);
+        checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendNotification("Checkin", Constants.CHECKIN_TYPE);
+                sendNotification("MoveIn", Constants.MOVEIN_TYPE);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -288,7 +284,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
         String id = notificationsReference.push().getKey();
         String typeId = checkinReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId);
+        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
 }

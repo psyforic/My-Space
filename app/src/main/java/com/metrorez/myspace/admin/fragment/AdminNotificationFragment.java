@@ -21,13 +21,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.ResponseActivity;
 import com.metrorez.myspace.admin.adapter.AdminNotificationListAdapter;
 import com.metrorez.myspace.user.data.Constants;
-import com.metrorez.myspace.user.model.Checkin;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Inventory;
@@ -102,13 +101,13 @@ public class AdminNotificationFragment extends Fragment {
                                 });
 
                                 break;
-                            case Constants.CHECKIN_TYPE:
+                            case Constants.MOVEIN_TYPE:
                                 reference.child("checkins").child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        Checkin checkin = dataSnapshot.getValue(Checkin.class);
+                                        MoveIn moveIn = dataSnapshot.getValue(MoveIn.class);
                                         List<String> items = new ArrayList<>();
-                                        for (Inventory item : checkin.getInventoryList()) {
+                                        for (Inventory item : moveIn.getInventoryList()) {
                                             items.add(item.getItemName());
                                         }
                                         snippet.append("ITEMS CHECKED IN " + "\n").append(items.toString());

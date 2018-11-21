@@ -40,12 +40,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No Check-ins found"
+            android:text="You Haven't Move-in Yet"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_checkin"
+        android:id="@+id/fab_add_move_in"
         style="@style/FabStyle"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"

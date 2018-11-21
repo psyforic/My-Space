@@ -106,7 +106,7 @@ public class ResponseActivity extends AppCompatActivity {
         if (user != null) {
             actionBar.setTitle(user.getUserFirstName() + " " + user.getUserLastName());
         } else {
-            actionBar.setTitle("LUNDI");
+            actionBar.setTitle("User");
         }
     }
 
@@ -191,7 +191,7 @@ public class ResponseActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_sample:
+            case R.id.admin_notification:
                 Snackbar.make(parent_view, item.getTitle() + " Clicked ", Snackbar.LENGTH_SHORT).show();
                 return true;
             default:
@@ -207,7 +207,7 @@ public class ResponseActivity extends AppCompatActivity {
         String id = notificationsReference.push().getKey();
         String typeId = notificationsReference.push().getKey();
 
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, "ADMIN", type, typeId);
+        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, "ADMIN", type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
 

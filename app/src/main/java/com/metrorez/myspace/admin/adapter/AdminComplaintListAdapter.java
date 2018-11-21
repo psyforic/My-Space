@@ -42,7 +42,7 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
     }
 
     private OnItemClickListener mOnItemClickListener;
-    private boolean clicked = false;
+    //private boolean clicked = false;
 
     public interface OnItemClickListener {
         void onItemClick(View view, Complaint obj, int position);
@@ -93,14 +93,14 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mOnItemClickListener != null) {
-                    //clicked = true;
+                if (mOnItemClickListener != null ) {
+                   // clicked = true;
                     mOnItemClickListener.onItemClick(view, complaint, position);
                 }
 
             }
         });
-        // clicked = false;
+       // clicked = false;
     }
 
     private Complaint getComplaint(int position) {

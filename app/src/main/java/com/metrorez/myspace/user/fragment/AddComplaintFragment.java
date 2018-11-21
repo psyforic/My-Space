@@ -269,7 +269,7 @@ public class AddComplaintFragment extends Fragment {
         String id = notificationsReference.push().getKey();
         String typeId = databaseReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId);
+        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
 

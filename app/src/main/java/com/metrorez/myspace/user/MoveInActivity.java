@@ -1,7 +1,6 @@
 package com.metrorez.myspace.user;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.view.ViewPager;
@@ -17,18 +16,16 @@ import android.widget.TextView;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.adapter.PageFragmentAdapter;
-import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.fragment.StepOneFragment;
 import com.metrorez.myspace.user.fragment.StepThreeFragment;
 import com.metrorez.myspace.user.fragment.StepTwoFragment;
-import com.metrorez.myspace.user.model.Checkin;
 import com.metrorez.myspace.user.model.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckinActivity extends AppCompatActivity implements StepOneFragment.OnInventoryDataListener, StepTwoFragment.OnInventoryDataSender {
+public class MoveInActivity extends AppCompatActivity implements StepOneFragment.OnInventoryDataListener, StepTwoFragment.OnInventoryDataSender {
 
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
@@ -49,7 +46,7 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checkin);
+        setContentView(R.layout.activity_move_in);
         initToolbar();
         setupUI();
 
@@ -122,8 +119,6 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
                 R.layout.fragment_step_three,};
         // adding bottom dots
         addBottomDots(0);
-
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -175,8 +170,8 @@ public class CheckinActivity extends AppCompatActivity implements StepOneFragmen
         public void onPageSelected(int position) {
             addBottomDots(position);
             if (position == layouts.length - 1) {
-                // last page. make button text to GOT IT
-                btnNext.setText(getString(R.string.start));
+                // last page. make button text to Submit
+                btnNext.setText(getString(R.string.submit));
                 btnSkip.setVisibility(View.GONE);
                 btnNext.setOnClickListener(new View.OnClickListener() {
                     @Override
