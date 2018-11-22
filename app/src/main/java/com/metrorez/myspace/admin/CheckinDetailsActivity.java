@@ -30,6 +30,7 @@ import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Inventory;
+import com.metrorez.myspace.user.model.MoveInItem;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
 
@@ -141,7 +142,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                             sendTo.add(user);
 
                             List<String> items = new ArrayList<>();
-                            for (Inventory item : obj.getInventoryList()) {
+                            for (MoveInItem item : obj.getItemList()) {
                                 items.add(item.getItemName());
                             }
                             String checkin = "ITEMS CHECKED IN " + "\n" + items.toString();

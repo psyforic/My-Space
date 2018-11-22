@@ -10,18 +10,19 @@ import android.widget.TextView;
 
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.model.Inventory;
+import com.metrorez.myspace.user.model.MoveInItem;
 
 import java.util.List;
 
-public class CheckinItemAdapter extends RecyclerView.Adapter<CheckinItemAdapter.ViewHolder> {
+public class MoveInItemAdapter extends RecyclerView.Adapter<MoveInItemAdapter.ViewHolder> {
 
-    private List<Inventory> inventoryList;
+    private List<MoveInItem> moveInItemList;
     private Context context;
     private boolean clicked = false;
 
 
-    public CheckinItemAdapter(Context context, List<Inventory> inventoryList) {
-        this.inventoryList = inventoryList;
+    public MoveInItemAdapter(Context context, List<MoveInItem> moveInItemList) {
+        this.moveInItemList = moveInItemList;
         this.context = context;
     }
 
@@ -35,14 +36,14 @@ public class CheckinItemAdapter extends RecyclerView.Adapter<CheckinItemAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final Inventory inventory = inventoryList.get(position);
-        holder.txtName.setText(inventory.getItemName());
+        final MoveInItem item = moveInItemList.get(position);
+        holder.txtName.setText(item.getItemName());
 
     }
 
     @Override
     public int getItemCount() {
-        return inventoryList.size();
+        return moveInItemList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

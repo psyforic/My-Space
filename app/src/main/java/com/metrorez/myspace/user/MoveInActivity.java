@@ -25,7 +25,7 @@ import com.metrorez.myspace.user.model.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoveInActivity extends AppCompatActivity implements StepOneFragment.OnInventoryDataListener, StepTwoFragment.OnInventoryDataSender {
+public class MoveInActivity extends AppCompatActivity implements StepOneFragment.OnInventoryDataListener {
 
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
@@ -39,7 +39,6 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
     List<Inventory> tempList;
     private StepOneFragment f_stepOne;
     private StepTwoFragment f_stepTwo;
-    private StepThreeFragment f_stepThree;
 
     private InventoryListAdapter mAdapter;
 
@@ -79,13 +78,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
             }
         });
 
-
     }
-
-    private void launchCheckinFragment() {
-
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
@@ -115,8 +108,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         // add few more layouts if you want
         layouts = new int[]{
                 R.layout.fragment_step_one,
-                R.layout.fragment_step_two,
-                R.layout.fragment_step_three,};
+                R.layout.fragment_step_two};
         // adding bottom dots
         addBottomDots(0);
     }
@@ -128,15 +120,9 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         }
         if (f_stepTwo == null) {
             f_stepTwo = new StepTwoFragment();
-
-        }
-        if (f_stepThree == null) {
-            f_stepThree = new StepThreeFragment();
         }
         adapter.addFragment(f_stepOne, getString(R.string.str_check_items));
         adapter.addFragment(f_stepTwo, getString(R.string.str_inventory_condition));
-        adapter.addFragment(f_stepThree, getString(R.string.str_take_images));
-
         viewPager.setAdapter(adapter);
     }
 
@@ -173,14 +159,6 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
                 // last page. make button text to Submit
                 btnNext.setText(getString(R.string.submit));
                 btnSkip.setVisibility(View.GONE);
-                btnNext.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String tag = "android:switcher:" + R.id.view_pager + ":" + 2;
-                        StepThreeFragment fragment = (StepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
-                        fragment.upload();
-                    }
-                });
             } else {
                 // still pages are left
                 btnNext.setText(getString(R.string.next));
@@ -216,14 +194,5 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    @Override
-    public void onInventoryDataSent(ArrayList<Inventory> inventoryData) {
-        String tag = "android:switcher:" + R.id.view_pager + ":" + 2;
-        StepThreeFragment fragment = (StepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
-        tempList = inventoryData;
-
-        fragment.getItems(tempList);
     }
 }

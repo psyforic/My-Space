@@ -20,10 +20,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.adapter.CheckinItemAdapter;
+import com.metrorez.myspace.user.adapter.MoveInItemAdapter;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.MoveIn;
-import com.metrorez.myspace.user.model.Inventory;
+import com.metrorez.myspace.user.model.MoveInItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +34,9 @@ public class ViewMoveInActivity extends AppCompatActivity {
     private TextView date;
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
-    private List<Inventory> items = new ArrayList<>();
+    private List<MoveInItem> items = new ArrayList<>();
     private RecyclerView recyclerView;
-    private CheckinItemAdapter mAdapter;
+    private MoveInItemAdapter mAdapter;
     private DatabaseReference checkinsReference = FirebaseDatabase.getInstance().getReference("checkins");
 
     @Override
@@ -72,9 +72,9 @@ public class ViewMoveInActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot checkinSnapshot : dataSnapshot.getChildren()) {
                         MoveIn moveIn = checkinSnapshot.getValue(MoveIn.class);
-                        items.addAll(moveIn.getInventoryList());
+                        items.addAll(moveIn.getItemList());
                         date.setText(moveIn.getDate());
-                        mAdapter = new CheckinItemAdapter(ViewMoveInActivity.this, items);
+                        mAdapter = new MoveInItemAdapter(ViewMoveInActivity.this, items);
                         recyclerView.setAdapter(mAdapter);
                     }
                 }

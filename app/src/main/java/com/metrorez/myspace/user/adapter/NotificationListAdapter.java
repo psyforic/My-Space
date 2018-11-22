@@ -28,6 +28,7 @@ import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Inventory;
+import com.metrorez.myspace.user.model.MoveInItem;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.Request;
 import com.metrorez.myspace.user.model.User;
@@ -111,7 +112,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 MoveIn moveIn = dataSnapshot.getValue(MoveIn.class);
                                 List<String> items = new ArrayList<>();
-                                for (Inventory item : moveIn.getInventoryList()) {
+                                for (MoveInItem item : moveIn.getItemList()) {
                                     items.add(item.getItemName());
                                 }
                                 snippet.append("ITEMS CHECKED IN " + "\n" + items.toString());

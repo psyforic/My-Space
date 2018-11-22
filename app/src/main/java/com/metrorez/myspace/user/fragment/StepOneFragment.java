@@ -75,11 +75,11 @@ public class StepOneFragment extends Fragment {
         });
 
         recyclerView.setAdapter(mAdapter);
-
     }
 
     private void passData() {
         mOnInventoryDataListener.onInventoryDataReceived((ArrayList<Inventory>) selected);
+        this.selected.clear();
     }
 
     private void populateList() {

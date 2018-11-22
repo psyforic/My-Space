@@ -10,26 +10,26 @@ public class MoveIn implements Serializable {
     private List<String> urls;
     private String city;
     private String userId;
-    private List<Inventory> inventoryList;
+    private List<MoveInItem> itemList;
 
     public MoveIn() {
     }
 
-    public MoveIn(String userId, String id, String date, List<String> urls, List<Inventory> inventoryList) {
+    public MoveIn(String userId, String id, String date, List<String> urls, List<MoveInItem> itemList) {
         this.id = id;
         this.date = date;
         this.urls = urls;
         this.userId = userId;
-        this.inventoryList = inventoryList;
+        this.itemList = itemList;
     }
 
-    public MoveIn(String userId, String id, String date, List<String> urls, String city, List<Inventory> inventoryList) {
+    public MoveIn(String userId, String id, String date, List<String> urls, String city, List<MoveInItem> itemList) {
         this.id = id;
         this.date = date;
         this.urls = urls;
         this.city = city;
         this.userId = userId;
-        this.inventoryList = inventoryList;
+        this.itemList = itemList;
     }
 
     public String getId() {
@@ -48,8 +48,12 @@ public class MoveIn implements Serializable {
         return userId;
     }
 
-    public List<Inventory> getInventoryList() {
-        return inventoryList;
+//    public List<MoveInItem> getInventoryList() {
+//        return itemList;
+//    }
+
+    public List<MoveInItem> getItemList() {
+        return itemList;
     }
 
     public List<String> getUrls() {

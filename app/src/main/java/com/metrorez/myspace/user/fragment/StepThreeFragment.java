@@ -44,6 +44,7 @@ import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Inventory;
+import com.metrorez.myspace.user.model.MoveInItem;
 import com.metrorez.myspace.user.model.Notification;
 
 import java.io.ByteArrayOutputStream;
@@ -64,6 +65,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String profileImageUrl;
     private List<Inventory> inventoryList = new ArrayList<>();
+    private List<MoveInItem> moveInItems = new ArrayList<>();
     private FirebaseAuth mAuth;
     private ListView listView;
 
@@ -262,7 +264,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
     private void saveCheckinInfo(List<String> url, String userId, String date) {
         String Id = mAuth.getCurrentUser().getUid();
         String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(userId, key, date, url, inventoryList);
+        MoveIn moveIn = new MoveIn(userId, key, date, url, moveInItems);
         checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
