@@ -2,19 +2,25 @@ package com.metrorez.myspace.user;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +38,10 @@ import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Role;
 import com.metrorez.myspace.user.model.User;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "LOGGED";
@@ -44,6 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnSignUp, btnLogin;
     private View parent_view;
     private ProgressBar progressBar;
+    private Spinner cities;
+
     DatabaseReference usersDatabase, rolesDatabase;
 
     @Override
@@ -107,6 +119,35 @@ public class RegisterActivity extends AppCompatActivity {
         btnSignUp = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_sign_in);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        cities = (Spinner) findViewById(R.id.city_spinner);
+
+        final List<String> cityList = new ArrayList<>(Arrays.asList(this.getResources().getStringArray(R.array.city)));
+        final ArrayAdapter<String> cityArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cityList) {
+            @Override
+            public boolean isEnabled(int position) {
+                if (position == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View spinnerCityView = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) spinnerCityView;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                } else {
+                    textView.setTextColor(Color.BLACK);
+                }
+                return spinnerCityView;
+            }
+        };
+
+        cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cities.setAdapter(cityArrayAdapter);
+
     }
 
     private void submitForm() {
@@ -129,6 +170,9 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
         if (!validateConfirmPassword()) {
+            return;
+        }
+        if(!validateCity()){
             return;
         }
 
@@ -212,6 +256,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return true;
     }
+    private boolean validateCity() {
+
+        if (cities.getSelectedItemPosition() == 0) {
+            Snackbar.make(parent_view, getString(R.string.err_city_msg), Snackbar.LENGTH_SHORT).show();
+            requestFocus(cities);
+            return false;
+        }
+        return true;
+    }
 
     private static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -251,11 +304,12 @@ public class RegisterActivity extends AppCompatActivity {
         String lastName = inputLastName.getText().toString().trim();
         String email = inputEmail.getText().toString().trim();
         String studentNo = inputStudentNo.getText().toString().trim();
+        String city = cities.getSelectedItem().toString();
 
 
-        if (validateName() && validateEmail() && validateLastName() && validateStudentNo()) {
+        if (validateName() && validateEmail() && validateLastName() && validateStudentNo()  && validateCity()) {
             String userId = mAuth.getUid();
-            User user = new User(userId, firstName, lastName, email, studentNo);
+            User user = new User(userId, firstName, lastName, email, studentNo, city);
             usersDatabase.child(userId).setValue(user);
             Role role = new Role(userId, "NORMAL_USER");
             rolesDatabase.child(userId).setValue(role);

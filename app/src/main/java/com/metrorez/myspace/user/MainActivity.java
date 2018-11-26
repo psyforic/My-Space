@@ -34,7 +34,6 @@ import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.fragment.MoveInFragment;
 import com.metrorez.myspace.user.fragment.ComplaintFragment;
 import com.metrorez.myspace.user.fragment.ExtrasFragment;
-import com.metrorez.myspace.user.fragment.HelpFragment;
 import com.metrorez.myspace.user.fragment.NotificationsFragment;
 import com.metrorez.myspace.user.fragment.ProfileFragment;
 import com.metrorez.myspace.user.fragment.SettingFragment;
@@ -185,9 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_setting:
                 fragment = new SettingFragment();
-                break;
-            case R.id.nav_help:
-                fragment = new HelpFragment();
                 break;
             case R.id.nav_checkin:
                 fragment = new MoveInFragment();

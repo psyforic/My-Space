@@ -9,9 +9,9 @@
 
 
     <integer-array name="city_photos">
-        <item>@drawable/ic_city</item>
-        <item>@drawable/ic_city</item>
-        <item>@drawable/ic_city</item>
+        <item>@drawable/ic_city_admin</item>
+        <item>@drawable/ic_city_admin</item>
+        <item>@drawable/ic_city_admin</item>
     </integer-array>
 
     <string-array name="city_no_complaints">

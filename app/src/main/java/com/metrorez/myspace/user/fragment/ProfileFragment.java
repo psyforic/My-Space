@@ -24,6 +24,7 @@ public class ProfileFragment extends Fragment {
     private TextView name, lastname, email, studentNo;
     private View view;
     private Button editButton;
+    private TextView editTxt;
     private FirebaseAuth mAuth;
 
     @Override
@@ -41,6 +42,12 @@ public class ProfileFragment extends Fragment {
                 ProfileActivity.navigate((MainActivity) getActivity());
             }
         });
+        editTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProfileActivity.navigate((MainActivity) getActivity());
+            }
+        });
         return view;
     }
 
@@ -49,6 +56,7 @@ public class ProfileFragment extends Fragment {
         name = view.findViewById(R.id.name);
         lastname = view.findViewById(R.id.surname);
         email = view.findViewById(R.id.email);
+        editTxt = view.findViewById(R.id.edit_txt);
         studentNo = view.findViewById(R.id.description2);
     }
 

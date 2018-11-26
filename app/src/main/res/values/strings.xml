@@ -6,12 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="activity_select_friend">Select Friend</string>
 
-    <string name="about_text">This is Material Design Social App template, this app use dummy data not related for any backend
-    \n\nImage source :
-        \n<a href="www.pexels.com">www.pexels.com</a>
-        \n<a href="www.pixabay.com">www.pixabay.com</a>
-    </string>
-
     <string name="my_name">John Miller</string>
     <string name="me_mail">john.miller@mail.com</string>
     <string name="tab_feed">Feeds</string>
@@ -46,11 +40,11 @@
     <string name="sub_items">Sub items</string>
     <string name="title_activity_activity_login">Login</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis</string>
-    <string name="err_msg_email">Please Enter A Valide Email Address</string>
-    <string name="inv_msg_password">Password must be atleast 6 characters</string>
+    <string name="err_msg_email">Please Enter A Valid Email Address</string>
+    <string name="inv_msg_password">Password must be at least 8 characters</string>
     <string name="err_msg_password">Password required</string>
-    <string name="err_msg_name">Please enter firstname</string>
-    <string name="err_msg_lastname">Please enter lastname</string>
+    <string name="err_msg_name">Please enter First Name</string>
+    <string name="err_msg_lastname">Please enter Last Name</string>
     <string name="err_msg_studentNo">Please enter student number</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="btn_sign_in">Login</string>
@@ -79,7 +73,7 @@
     <string name="request_title">Request Items</string>
     <string name="request_message">Are you sure you want to request the selected items?</string>
     <string name="request_success">Items Requested Successfully</string>
-    <string name="str_nav_checkins">Check-ins</string>
+    <string name="str_nav_checkins">Move-ins</string>
     <string name="next">Next</string>
     <string name="skip">Back</string>
     <string name="start">Done</string>
@@ -110,6 +104,15 @@
     <string name="logout_message">Are you sure you want to Logout?</string>
     <string name="nothing_selected">Nothing Selected</string>
     <string name="submit">Submit</string>
+    <string name="first_name_holder">firstname</string>
+    <string name="last_name_holder">lastname</string>
+    <string name="email_holder">example@email.com</string>
+    <string name="cellnumber_holder">071 234 5678</string>
+    <string name="residence_holder">Your Residence</string>
+    <string name="str_edit_profile">Edit Profile</string>
+    <string name="name_placeholder">%1$s %2$s</string>
+    <string name="err_city_msg">Please select a valid city</string>
+    <string name="err_residence_msg">Please select a valid residence name</string>
 
 
 </resources>

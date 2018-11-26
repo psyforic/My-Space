@@ -16,12 +16,13 @@ public class User implements Serializable{
     public User() {
     }
 
-    public User(String userId, String userFirstName, String userLastName, String userEmail, String userStudentNo) {
+    public User(String userId, String userFirstName, String userLastName, String userEmail, String userStudentNo, String userCity) {
         this.userId = userId;
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
         this.userEmail = userEmail;
         this.userStudentNo = userStudentNo;
+        this.userCity = userCity;
     }
 
     public User(String userId, String userFirstName, String userLastName, String userEmail, String userStudentNo, String userCity, String userResidence, String userRoom) {

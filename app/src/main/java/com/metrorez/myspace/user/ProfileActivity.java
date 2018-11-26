@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,7 +44,9 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,7 +54,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView profileImage;
     private ImageView cameraImage;
     private EditText editTextName, editTextlastName, editTextEmail, editTextRoom, editTextStudentNo, editTextPhone;
-    private Spinner spinnerCity, spinnerResdidence;
+    private Spinner spinnerCity, spinnerResidence;
+    private View parent_view;
+    private TextView location, nameTxt;
     private Button btnSave;
     private Uri profileUri;
     private Toolbar toolbar;
@@ -96,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void saveUserInformation() {
         progressBar.setVisibility(View.VISIBLE);
         String displayName = editTextName.getText().toString() + " " + editTextlastName.getText().toString();
-        if (!validateName() || !validateLastName()) {
+        if (!validateName() || !validateLastName() || !validateRoomNo() || !validateResidence()) {
             progressBar.setVisibility(View.GONE);
             return;
         }
@@ -117,6 +122,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             });
             progressBar.setVisibility(View.GONE);
         }
+        saveOtherInfo();
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -196,7 +203,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
             if (user.getDisplayName() != null) {
                 String displayName = user.getDisplayName();
-                TextView textView = findViewById(R.id.name);
+                TextView textView = findViewById(R.id.txtName);
                 textView.setText(displayName);
             }
         }
@@ -226,13 +233,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         editTextlastName = findViewById(R.id.input_lastName);
         editTextEmail = findViewById(R.id.input_email);
         editTextRoom = findViewById(R.id.input_roomName);
+        parent_view = findViewById(android.R.id.content);
         editTextStudentNo = findViewById(R.id.input_studentNo);
         editTextPhone = findViewById(R.id.input_phone);
+        nameTxt = findViewById(R.id.txtName);
         spinnerCity = findViewById(R.id.spinner_city);
-        spinnerResdidence = findViewById(R.id.spinner_residence);
+        spinnerResidence = findViewById(R.id.spinner_residence);
         btnSave = findViewById(R.id.btn_update_profile);
         progressBar = findViewById(R.id.progressBar);
         view = findViewById(R.id.lyt_parent);
+        location = findViewById(R.id.location);
         users = new ArrayList<>();
     }
 
@@ -245,10 +255,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         return true;
     }
 
+    private boolean validateRoomNo() {
+        if (editTextRoom.getText().toString().trim().isEmpty()) {
+            //inputLayoutName.setError(getString(R.string.err_msg_name));
+            requestFocus(editTextRoom);
+            return false;
+        }
+        return true;
+    }
+
     private boolean validateLastName() {
         if (editTextlastName.getText().toString().trim().isEmpty()) {
 
             requestFocus(editTextlastName);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateResidence() {
+        if (spinnerResidence.getSelectedItemPosition() == 0) {
+            Snackbar.make(parent_view, getString(R.string.err_residence_msg), Snackbar.LENGTH_SHORT).show();
+            requestFocus(spinnerResidence);
             return false;
         }
         return true;
@@ -274,6 +302,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 editTextlastName.setText(user.getUserLastName());
                 editTextEmail.setText(user.getUserEmail());
                 editTextStudentNo.setText(user.getUserStudentNo());
+                nameTxt.setText(getString(R.string.name_placeholder, user.getUserFirstName(), user.getUserLastName()));
+
+                if (user.getUserCity() != null) {
+                    String locationText = user.getUserCity() + ", " + user.getUserResidence();
+                    location.setText(locationText);
+                }
+                if (user.getUserRoom() != null) {
+                    editTextRoom.setText(user.getUserRoom());
+                }
+
 
             }
 
@@ -325,7 +363,24 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void saveOtherInfo() {
+
+        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid());
+        Map<String, Object> user = new HashMap<>();
+        user.put("userResidence", spinnerResidence.getSelectedItem().toString());
+        user.put("userRoom", editTextRoom.getText().toString());
+        userReference.updateChildren(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                progressBar.setVisibility(View.VISIBLE);
+                Snackbar.make(parent_view,"Profile updated",Snackbar.LENGTH_LONG).show();
+            }
+        });
 
     }
 
