@@ -5,10 +5,11 @@
     android:layout_alignParentStart="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentTop="true"
-    android:layout_marginTop="50dp"
     android:background="#FFFFFF"
     android:gravity="center_horizontal"
     android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
 
     <TextView
         android:layout_width="wrap_content"

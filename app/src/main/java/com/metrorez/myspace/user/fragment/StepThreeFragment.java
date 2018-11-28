@@ -74,7 +74,7 @@ public class StepThreeFragment extends Fragment implements StepOneFragment.OnInv
 
     private DatabaseReference notificationsReference;
 
-    private DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference("checkins");
+    private DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference("moveins");
 
     private StorageReference imageReference;
 

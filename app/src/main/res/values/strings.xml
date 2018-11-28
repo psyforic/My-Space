@@ -113,6 +113,16 @@
     <string name="name_placeholder">%1$s %2$s</string>
     <string name="err_city_msg">Please select a valid city</string>
     <string name="err_residence_msg">Please select a valid residence name</string>
+    <string name="move_in_checkinList">Move In Checklist</string>
+    <string name="move_in_images">Take Images</string>
+    <string name="request_items">Requested Items</string>
+    <string name="str_btn_request">REQUEST</string>
+    <string name="str_complaints_title">COMPLAINTS</string>
+    <string name="requests">REQUESTS</string>
+    <string name="filed_complaints">%1$s, Filed Complaints</string>
+    <string name="items_requested">%1$s, Items Requested</string>
+    <string name="file_complaint">FILE COMPLAINT</string>
+    <string name="str_nav_home">Home</string>
 
 
 </resources>

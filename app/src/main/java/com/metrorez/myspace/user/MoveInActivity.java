@@ -3,6 +3,7 @@ package com.metrorez.myspace.user;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +18,8 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.adapter.PageFragmentAdapter;
 import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.fragment.BaseFragment;
 import com.metrorez.myspace.user.fragment.StepOneFragment;
-import com.metrorez.myspace.user.fragment.StepThreeFragment;
 import com.metrorez.myspace.user.fragment.StepTwoFragment;
 import com.metrorez.myspace.user.model.Inventory;
 
@@ -77,8 +78,8 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
                 }
             }
         });
-
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
@@ -117,6 +118,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         adapter = new PageFragmentAdapter(getSupportFragmentManager());
         if (f_stepOne == null) {
             f_stepOne = new StepOneFragment();
+
         }
         if (f_stepTwo == null) {
             f_stepTwo = new StepTwoFragment();
@@ -140,7 +142,6 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
             dots[i].setTextColor(colorsInactive[currentPage]);
             dotsLayout.addView(dots[i]);
         }
-
         if (dots.length > 0)
             dots[currentPage].setTextColor(colorsActive[currentPage]);
     }
@@ -151,7 +152,6 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
 
     //  viewpager change listener
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
-
         @Override
         public void onPageSelected(int position) {
             addBottomDots(position);
@@ -195,4 +195,23 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         onBackPressed();
         return true;
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+//
+//        boolean handled = false;
+//        for(Fragment f : fragmentList) {
+//            if(f instanceof BaseFragment) {
+//                handled = ((BaseFragment)f).onBackPressed();
+//
+//                if(handled) {
+//                    break;
+//                }
+//            }
+//        }
+//        if(!handled) {
+//            super.onBackPressed();
+//        }
+//    }
 }

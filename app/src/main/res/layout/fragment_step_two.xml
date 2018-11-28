@@ -3,16 +3,17 @@
     android:id="@+id/fragment_two"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_bg">
-
+    android:background="@color/grey_bg"
+    android:fitsSystemWindows="true">
+    <include layout="@layout/toolbar" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/spacing_xxlarge"
-        android:layout_marginBottom="@dimen/spacing_xxlarge"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="50dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 

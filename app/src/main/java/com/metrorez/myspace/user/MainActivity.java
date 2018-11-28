@@ -31,6 +31,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.data.GlobalVariable;
 import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.fragment.BillingFragment;
+import com.metrorez.myspace.user.fragment.HomeFragment;
 import com.metrorez.myspace.user.fragment.MoveInFragment;
 import com.metrorez.myspace.user.fragment.ComplaintFragment;
 import com.metrorez.myspace.user.fragment.ExtrasFragment;
@@ -57,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
         initDrawerMenu();
         mAuth = FirebaseAuth.getInstance();
         // set home view
-        actionBar.setTitle(getString(R.string.str_nav_complaint));
-        displayContentView(R.id.nav_complaint);
+        actionBar.setTitle(getString(R.string.str_nav_home));
+        displayContentView(R.id.nav_home);
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -107,9 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (menuItem.getItemId() == R.id.nav_logout) {
                     logout();
-                }
-                if (menuItem.getItemId() == R.id.nav_billing) {
-                    startActivity(new Intent(MainActivity.this, BillingActivity.class));
                 } else {
                     if (menuItem.getItemId() != R.id.nav_logout)
                         displayContentView(menuItem.getItemId());
@@ -188,7 +187,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_checkin:
                 fragment = new MoveInFragment();
                 break;
-
+            case R.id.nav_home:
+                fragment = new HomeFragment();
+                break;
+            case R.id.nav_billing:
+                fragment = new BillingFragment();
+                break;
         }
         fragment.setArguments(bundle);
         if (fragment != null) {
@@ -207,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 String photoUrl = user.getPhotoUrl().toString();
                 ImageView profileImage = headerView.findViewById(R.id.image_header);
                 Picasso.with(this).load(photoUrl)
-                        .placeholder(R.drawable.ic_placeholder)
+                        .placeholder(R.drawable.unknown_avatar)
                         .resize(200, 200)
                         .transform(new CircleTransform())
                         .into(profileImage);
@@ -289,4 +293,5 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 }

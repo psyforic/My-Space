@@ -1,32 +1,39 @@
 package com.metrorez.myspace.user.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.MoveInActivity;
 import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.model.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepOneFragment extends Fragment {
+public class StepOneFragment extends BaseFragment {
 
     private View view;
     private RecyclerView recyclerView;
     private InventoryListAdapter mAdapter;
     private List<Inventory> inventoryList;
     private List<Inventory> selected;
+    public ActionBar actionBar;
+    private Toolbar toolbar;
     private OnInventoryDataListener mOnInventoryDataListener;
     private Fragment fragment = null;
     private Button nextBtn;
@@ -36,6 +43,7 @@ public class StepOneFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_step_one, container, false);
+        initToolbar();
         return view;
     }
 
@@ -43,12 +51,6 @@ public class StepOneFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupUI();
-       /* nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnInventoryDataListener.onInventoryDataReceived((ArrayList<Inventory>) selected);
-            }
-        });*/
     }
 
     private void setupUI() {
@@ -71,10 +73,20 @@ public class StepOneFragment extends Fragment {
             public void onItemUncheck(Inventory item) {
                 selected.remove(item);
                 passData();
+
             }
         });
 
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void initToolbar() {
+        toolbar = view.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setTitle(getString(R.string.move_in_checkinList));
     }
 
     private void passData() {
@@ -101,5 +113,12 @@ public class StepOneFragment extends Fragment {
             mOnInventoryDataListener = (OnInventoryDataListener) getActivity();
         } catch (ClassCastException ex) {
         }
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        getActivity().startActivity(new Intent(getActivity(), MoveInActivity.class));
+        getActivity().finish();
+        return true;
     }
 }
