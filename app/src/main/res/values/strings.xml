@@ -123,6 +123,7 @@
     <string name="items_requested">%1$s, Items Requested</string>
     <string name="file_complaint">FILE COMPLAINT</string>
     <string name="str_nav_home">Home</string>
+    <string name="complaint_delete_success">Complaint Deleted Successfully</string>
 
 
 </resources>

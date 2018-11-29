@@ -1,6 +1,8 @@
 package com.metrorez.myspace.user.adapter;
 
+import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,27 +15,34 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.MainActivity;
+import com.metrorez.myspace.user.MoveInActivity;
+import com.metrorez.myspace.user.fragment.StepTwoFragment;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.MoveInItem;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGridAdapter.ViewHolder> implements Filterable {
+public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGridAdapter.ViewHolder> {
 
     private List<MoveInItem> moveInItems;
     private Context ctx;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private StepTwoFragment fragment;
+    private DatabaseReference moveInReference = FirebaseDatabase.getInstance().getReference("moveIns").child(mAuth.getCurrentUser().getUid());
 
-    public MoveInItemsGridAdapter(Context context, List<MoveInItem> moveInItems) {
+    public MoveInItemsGridAdapter(Context context, List<MoveInItem> moveInItems, StepTwoFragment fragment) {
         this.ctx = context;
         this.moveInItems = moveInItems;
-    }
-
-    @Override
-    public Filter getFilter() {
-        return null;
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -56,7 +65,7 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
         holder.camera_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                fragment.takePhoto();
             }
         });
     }
@@ -85,11 +94,16 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             title = (TextView) itemView.findViewById(R.id.title);
             image = (ImageView) itemView.findViewById(R.id.image);
             camera_btn = (ImageButton) itemView.findViewById(R.id.camera_btn);
             delete_btn = (ImageButton) itemView.findViewById(R.id.delete_btn);
         }
+    }
+
+    public void setImageInView(int position, Bitmap imageDesc, String imageUrl) {
+        MoveInItem moveIn = (MoveInItem) moveInItems.get(position);
+        moveIn.setImageUrl(imageUrl);
+        notifyDataSetChanged();
     }
 }

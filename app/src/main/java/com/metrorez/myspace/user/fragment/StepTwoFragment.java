@@ -1,13 +1,16 @@
 package com.metrorez.myspace.user.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -15,6 +18,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -126,6 +131,7 @@ public class StepTwoFragment extends BaseFragment {
 
     private void setupUI() {
         recyclerView = view.findViewById(R.id.recyclerView);
+        imageView = view.findViewById(R.id.imageView);
         LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), Tools.getGridSpanCount(getActivity()));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
@@ -143,10 +149,16 @@ public class StepTwoFragment extends BaseFragment {
             }
         }
         Log.i("DATA_ITEMS", items.toString());
-        mAdapter = new MoveInItemsGridAdapter(getActivity(), items);
+        mAdapter = new MoveInItemsGridAdapter(getActivity(), items, StepTwoFragment.this);
         mAdapter.notifyDataSetChanged();
     }
     public void takePhoto() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        }
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
         String imageFilename = "JPEG_" + timeStamp + "_";
@@ -296,5 +308,10 @@ public class StepTwoFragment extends BaseFragment {
         String userId = mAuth.getCurrentUser().getUid();
         Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
+    }
+
+    public static StepTwoFragment newInstance(){
+        StepTwoFragment fragment = new StepTwoFragment();
+        return fragment;
     }
 }

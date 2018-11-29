@@ -18,6 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.ViewComplaintActivity;
 import com.metrorez.myspace.user.data.Constants;
@@ -28,11 +35,13 @@ import java.util.List;
 public class ComplaintListAdapter extends RecyclerView.Adapter<ComplaintListAdapter.ViewHolder> implements Filterable {
 
     private List<Complaint> complaint_list;
-
     private Context context;
     private OnItemClickListener mOnItemClickListener;
     private OnDeleteButtonClickListener onDeleteButtonClickListener;
     private boolean clicked = false;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints").child(mAuth.getCurrentUser().getUid());
 
 
     public interface OnItemClickListener {
@@ -104,37 +113,45 @@ public class ComplaintListAdapter extends RecyclerView.Adapter<ComplaintListAdap
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onDeleteButtonClick(view, complaint);
+                onDeleteButtonClick(view, position);
             }
         });
-
-
     }
 
-    private void onDeleteButtonClick(final View view, final Complaint complaint) {
-
-
+    private void onDeleteButtonClick(final View view,  final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(R.string.dialog_message)
                 .setTitle(R.string.dialog_title);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                complaint_list.remove(complaint);
-                Snackbar.make(view, "Complaint Deleted Successfully", Snackbar.LENGTH_LONG).show();
+                String complaintId = complaint_list.get(position).getComplaintId();
+                Query complaintsQuery = complaintsReference.orderByChild("complaintId").equalTo(complaintId);
+                complaintsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot complaintSnapshot: dataSnapshot.getChildren()){
+                            complaintSnapshot.getRef().removeValue();
+                            notifyDataSetChanged();
+                        }
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //complaint_list.remove(complaint);
+                Snackbar.make(view, R.string.complaint_delete_success, Snackbar.LENGTH_LONG).show();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
-
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
-
-
     @Override
     public int getItemCount() {
         return complaint_list.size();

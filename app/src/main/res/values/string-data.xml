@@ -21,11 +21,24 @@
     </string-array>
 
 
-    <string-array name="residences">
+    <string-array name="PortElizabethResidences">
         <item>Select Residence</item>
         <item>Russell Road</item>
         <item>At Mr. Price</item>
         <item>Hallack Street</item>
+        <item>Strand Street</item>
+        <item>Ackermans</item>
+    </string-array>
+
+    <string-array name="EastLondonResidences">
+        <item>Select Residence</item>
+        <item>No. 38 Terminus Street</item>
+        <item>No. 65 Union Street</item>
+    </string-array>
+
+    <string-array name="QueenstownResidences">
+        <item>Select Residence</item>
+        <item>No. 1 Shepston Street</item>
     </string-array>
 
     <string-array name="city">

@@ -3,7 +3,6 @@ package com.metrorez.myspace.user;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.adapter.PageFragmentAdapter;
 import com.metrorez.myspace.user.data.Tools;
-import com.metrorez.myspace.user.fragment.BaseFragment;
 import com.metrorez.myspace.user.fragment.StepOneFragment;
 import com.metrorez.myspace.user.fragment.StepTwoFragment;
 import com.metrorez.myspace.user.model.Inventory;
@@ -59,7 +57,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // launchHomeScreen();
+                launchHomeScreen();
             }
         });
 
@@ -78,6 +76,10 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
                 }
             }
         });
+    }
+
+    private void launchHomeScreen() {
+        onBackPressed();
     }
 
     @Override
@@ -196,22 +198,4 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         return true;
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-//
-//        boolean handled = false;
-//        for(Fragment f : fragmentList) {
-//            if(f instanceof BaseFragment) {
-//                handled = ((BaseFragment)f).onBackPressed();
-//
-//                if(handled) {
-//                    break;
-//                }
-//            }
-//        }
-//        if(!handled) {
-//            super.onBackPressed();
-//        }
-//    }
 }

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -81,8 +82,6 @@ public class AddComplaintFragment extends Fragment {
                     cameraButton.setVisibility(View.VISIBLE);
                     checked = false;
                 }
-
-
             }
         });
         attachImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -99,102 +98,14 @@ public class AddComplaintFragment extends Fragment {
     }
 
     private void setupUI() {
-        residences = (Spinner) view.findViewById(R.id.spinner_residence);
-
-
-        final List<String> residenceList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.residences)));
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, residenceList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View spinnerView = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) spinnerView;
-                if (position == 0) {
-                    textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
-                }
-                return spinnerView;
-            }
-        };
-
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        residences.setAdapter(spinnerArrayAdapter);
-
-        cities = (Spinner) view.findViewById(R.id.spinner_city);
-
-        final List<String> cityList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.city)));
-        final ArrayAdapter<String> cityArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, cityList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View spinnerCityView = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) spinnerCityView;
-                if (position == 0) {
-                    textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
-                }
-                return spinnerCityView;
-            }
-        };
-
-        cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        cities.setAdapter(cityArrayAdapter);
-
-
-        roomNo = (EditText) view.findViewById(R.id.txtRoomName);
-        editTextComplaint = (EditText) view.findViewById(R.id.txtComment);
-        priority = (Spinner) view.findViewById(R.id.spinner_priority);
-
-
-        final List<String> priorityList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.priorities)));
-        final ArrayAdapter<String> priorityArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, priorityList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View spinnerPriorityView = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) spinnerPriorityView;
-                if (position == 0) {
-                    textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
-                }
-                return spinnerPriorityView;
-            }
-        };
-        priorityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        priority.setAdapter(priorityArrayAdapter);
-
-
+        setupDropdowns();
         fileComplaint = (Button) view.findViewById(R.id.btn_send_comment);
         attachImage = (CheckBox) view.findViewById(R.id.checkbox_attach);
         cameraButton = (ImageButton) view.findViewById(R.id.camera_btn);
         progressBar = view.findViewById(R.id.progressBar);
+        roomNo = (EditText) view.findViewById(R.id.txtRoomName);
+        editTextComplaint = (EditText) view.findViewById(R.id.txtComment);
+
     }
 
     private void addComplaint() {
@@ -225,7 +136,6 @@ public class AddComplaintFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-
 
         } else {
             progressBar.setVisibility(View.GONE);
@@ -271,6 +181,124 @@ public class AddComplaintFragment extends Fragment {
         String userId = mAuth.getCurrentUser().getUid();
         Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
+    }
+
+    private void setupDropdowns() {
+        /**
+         * Cities Dropdwn
+         */
+        cities = (Spinner) view.findViewById(R.id.spinner_city);
+        final List<String> cityList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.city)));
+        final ArrayAdapter<String> cityArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, cityList) {
+            @Override
+            public boolean isEnabled(int position) {
+                if (position == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View spinnerCityView = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) spinnerCityView;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                } else {
+                    textView.setTextColor(Color.BLACK);
+                }
+                return spinnerCityView;
+            }
+        };
+
+        cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cities.setAdapter(cityArrayAdapter);
+
+        /**
+         * Residences Dynamic Dropdown
+         */
+        residences = (Spinner) view.findViewById(R.id.spinner_residence);
+        final int[] array = new int[1];
+
+        cities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (cities.getSelectedItemPosition()) {
+                    case 1:
+                        array[0] = R.array.PortElizabethResidences;
+                        break;
+
+                    case 2:
+                        array[0] = R.array.EastLondonResidences;
+                        break;
+                    case 3:
+                        array[0] = R.array.QueenstownResidences;
+                        break;
+                    default:
+                        array[0] = R.array.PortElizabethResidences;
+                        break;
+                }
+            }
+        });
+
+        final List<String> residenceList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(array[0])));
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, residenceList) {
+            @Override
+            public boolean isEnabled(int position) {
+                if (position == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View spinnerView = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) spinnerView;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                } else {
+                    textView.setTextColor(Color.BLACK);
+                }
+                return spinnerView;
+            }
+        };
+
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        residences.setAdapter(spinnerArrayAdapter);
+        /**
+         * Priority List Dropdown
+         */
+        priority = (Spinner) view.findViewById(R.id.spinner_priority);
+        final List<String> priorityList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.priorities)));
+        final ArrayAdapter<String> priorityArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, priorityList) {
+            @Override
+            public boolean isEnabled(int position) {
+                if (position == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View spinnerPriorityView = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) spinnerPriorityView;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                } else {
+                    textView.setTextColor(Color.BLACK);
+                }
+                return spinnerPriorityView;
+            }
+        };
+        priorityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        priority.setAdapter(priorityArrayAdapter);
+
+
     }
 
 }
