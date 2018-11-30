@@ -20,7 +20,8 @@
         android:layout_above="@+id/app_version"
         android:layout_centerHorizontal="true"
         android:paddingBottom="@dimen/spacing_large"
-        android:text="@string/app_name"
+        android:text="@string/app_ad_name"
+        android:textStyle="bold"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         android:textSize="18sp" />

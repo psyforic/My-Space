@@ -61,7 +61,7 @@
     <string name="err_msg_complaint">Please Enter Complaint</string>
     <string name="str_extra_price">R 1000</string>
     <string name="str_extra_name">Extra Name</string>
-    <string name="str_version">Version 1.0.0</string>
+    <string name="str_version">Version 1.1.0</string>
     <string name="hint_phone">Cellphone</string>
     <string name="hint_room_number">Room Number</string>
     <string name="btn_update_profile">Update Profile</string>
@@ -124,6 +124,8 @@
     <string name="file_complaint">FILE COMPLAINT</string>
     <string name="str_nav_home">Home</string>
     <string name="complaint_delete_success">Complaint Deleted Successfully</string>
+    <string name="app_ad_name">MySpace By MetroRez</string>
+    <string name="no_complaints">No Complaints Filed</string>
 
 
 </resources>

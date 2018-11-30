@@ -31,14 +31,4 @@ public class Constants {
         return items;
     }
 
-//    public static List<AdminUser> getUsersData(Context ctx) {
-//        List<AdminUser> items = new ArrayList<>();
-//        String s_arr[] = ctx.getResources().getStringArray(R.array.users_names);
-//        TypedArray drw_arr = ctx.getResources().obtainTypedArray(R.array.users_photos);
-//        for (int i = 0; i < s_arr.length; i++) {
-//            AdminUser fr = new AdminUser(i, s_arr[i], drw_arr.getResourceId(i, -1));
-//            items.add(fr);
-//        }
-//        return items;
-//    }
 }

@@ -148,7 +148,6 @@ public class StepTwoFragment extends BaseFragment {
                 items.add(item);
             }
         }
-        Log.i("DATA_ITEMS", items.toString());
         mAdapter = new MoveInItemsGridAdapter(getActivity(), items, StepTwoFragment.this);
         mAdapter.notifyDataSetChanged();
     }
@@ -250,7 +249,7 @@ public class StepTwoFragment extends BaseFragment {
 
             final Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (!task.isSuccessful()) {
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();

@@ -14,6 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.widget.CircleTransform;
@@ -27,7 +33,7 @@ public class CheckinsGridAdapter extends RecyclerView.Adapter<CheckinsGridAdapte
     private List<City> original_items = new ArrayList<>();
     private List<City> filtered_items = new ArrayList<>();
     private ItemFilter itemFilter = new ItemFilter();
-
+    private DatabaseReference moveInReference = FirebaseDatabase.getInstance().getReference();
     private Context context;
 
     private OnItemClickListener mOnItemClickListener;
@@ -51,6 +57,7 @@ public class CheckinsGridAdapter extends RecyclerView.Adapter<CheckinsGridAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+
         final City city = filtered_items.get(position);
         holder.title.setText(city.getName());
         holder.complaints.setText(city.getSnippet());
@@ -63,7 +70,7 @@ public class CheckinsGridAdapter extends RecyclerView.Adapter<CheckinsGridAdapte
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ( mOnItemClickListener != null) {
+                if (mOnItemClickListener != null) {
                     //clicked = true;
                     mOnItemClickListener.onItemClick(view, city, position);
                 }

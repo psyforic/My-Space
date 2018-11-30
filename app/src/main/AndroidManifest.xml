@@ -4,18 +4,14 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--<uses-permission android:name="android.permission.CAMERA" />-->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
 
     <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
@@ -86,7 +82,8 @@
         <activity android:name=".user.BillingActivity" />
         <activity android:name=".user.ViewComplaintActivity" />
         <activity android:name=".user.ViewMoveInActivity" />
-        <activity android:name=".admin.ResponseActivity"></activity>
+        <activity android:name=".admin.ResponseActivity" />
+        <activity android:name=".admin.AdminSettingsActivity"></activity>
     </application>
 
 </manifest>

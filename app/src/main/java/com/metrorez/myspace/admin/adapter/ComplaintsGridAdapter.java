@@ -14,6 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.model.Complaint;
@@ -29,7 +35,7 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
     private ItemFilter itemFilter = new ItemFilter();
 
     private Context context;
-
+    private DatabaseReference complainsRefence = FirebaseDatabase.getInstance().getReference().child("complaints");
     private OnItemClickListener mOnItemClickListener;
     private boolean clicked = false;
 
@@ -54,8 +60,43 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final City city = filtered_items.get(position);
+        final List<Complaint> complaintList = new ArrayList<>();
+        complainsRefence.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                   for(DataSnapshot complaintSnapShot: userSnapshot.getChildren()){
+                       Complaint complaint = complaintSnapShot.getValue(Complaint.class);
+                       if(complaint.getComplaintCity().equals(city.getName())){
+                           complaintList.add(complaint);
+                       }
+                   }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+       /* Query complaintsQuery = complainsRefence.orderByChild("complaintCity").equalTo(city.getName());
+        complaintsQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot complaintSnapShot : dataSnapshot.getChildren()) {
+                    Complaint complaint = complaintSnapShot.getValue(Complaint.class);
+                    complaintList.add(complaint);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
+
         holder.title.setText(city.getName());
-        holder.complaints.setText(city.getSnippet());
+        holder.complaints.setText(String.valueOf(complaintList.size()));
         Picasso.with(context).load(city.getPhoto()).resize(100, 100).transform(new CircleTransform()).into(holder.image);
 
         // Here you apply the animation when the view is bound
@@ -66,7 +107,7 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
             @Override
             public void onClick(View view) {
                 if (mOnItemClickListener != null) {
-                   // clicked = true;
+                    // clicked = true;
                     mOnItemClickListener.onItemClick(view, city, position);
                 }
             }

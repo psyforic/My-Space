@@ -221,9 +221,9 @@ public class AddComplaintFragment extends Fragment {
         residences = (Spinner) view.findViewById(R.id.spinner_residence);
         final int[] array = new int[1];
 
-        cities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        cities.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (cities.getSelectedItemPosition()) {
                     case 1:
                         array[0] = R.array.PortElizabethResidences;
@@ -240,9 +240,13 @@ public class AddComplaintFragment extends Fragment {
                         break;
                 }
             }
-        });
 
-        final List<String> residenceList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(array[0])));
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        final List<String> residenceList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.PortElizabethResidences)));
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, residenceList) {
             @Override
             public boolean isEnabled(int position) {

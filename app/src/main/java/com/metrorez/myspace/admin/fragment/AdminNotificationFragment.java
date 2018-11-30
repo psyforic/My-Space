@@ -43,7 +43,7 @@ public class AdminNotificationFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private View view;
-    private AdminNotificationListAdapter mAdapter;
+    public AdminNotificationListAdapter mAdapter;
     private List<Notification> notifications = new ArrayList<>();
     //private String userId;
     private FirebaseAuth mAuth;

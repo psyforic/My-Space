@@ -58,7 +58,7 @@ public class AdminActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private DrawerLayout drawerLayout;
     private TabLayout tabLayout;
-    public FloatingActionButton fab;
+    //public FloatingActionButton fab;
     private Toolbar searchToolbar;
     private ViewPager viewPager;
     private AdminNotificationFragment f_notifications;
@@ -75,14 +75,6 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(R.style.AdminTheme);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-            getWindow().setEnterTransition(new Slide());
-            getWindow().setExitTransition(new Fade());
-        } else {
-            // Swap without transition
-        }
         setContentView(R.layout.activity_admin);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -114,7 +106,7 @@ public class AdminActivity extends AppCompatActivity {
 
 
     private void initAction() {
-        fab.setOnClickListener(new View.OnClickListener() {
+       /* fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (viewPager.getCurrentItem()) {
@@ -130,10 +122,10 @@ public class AdminActivity extends AppCompatActivity {
                         break;
                 }
             }
-        });
+        });*/
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        /*tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 closeSearch();
@@ -158,8 +150,8 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
-        });
-        viewPager.setCurrentItem(1);
+        });*/
+        viewPager.setCurrentItem(0);
     }
 
 
@@ -168,7 +160,7 @@ public class AdminActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar_viewpager);
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         searchToolbar = (Toolbar) findViewById(R.id.toolbar_search);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        //fab = (FloatingActionButton) findViewById(R.id.fab);
         viewPager = (ViewPager) findViewById(R.id.admin_viewpager);
     }
 
@@ -211,18 +203,18 @@ public class AdminActivity extends AppCompatActivity {
             settingDrawer();
         }
     }
-
+/*
     public void setVisibilityAppBar(boolean visible) {
         CoordinatorLayout.LayoutParams layout_visible = new CoordinatorLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         CoordinatorLayout.LayoutParams layout_invisible = new CoordinatorLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
-        if (visible) {
+       *//* if (visible) {
             appBarLayout.setLayoutParams(layout_visible);
             fab.show();
         } else {
             appBarLayout.setLayoutParams(layout_invisible);
             fab.hide();
-        }
-    }
+        }*//*
+    }*/
 
     private void settingDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -249,13 +241,24 @@ public class AdminActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
                 drawerLayout.closeDrawers();
-                if (menuItem.getItemId() == R.id.nav_logout) {
-                    logout();
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_logout:
+                        logout();
+                        break;
+                    case R.id.nav_setting:
+                        startActivity(new Intent(AdminActivity.this, AdminSettingsActivity.class));
+                        break;
+                    default:
+                        Snackbar.make(parent_view, menuItem.getTitle() + " Coming Soon ", Snackbar.LENGTH_SHORT).show();
+                        break;
+                }
+              /*  if (menuItem.getItemId() == R.id.nav_logout) {
+
 
                 } else {
                     Snackbar.make(parent_view, menuItem.getTitle() + " Coming Soon ", Snackbar.LENGTH_SHORT).show();
                 }
-
+*/
                 return true;
             }
         });
@@ -294,6 +297,9 @@ public class AdminActivity extends AppCompatActivity {
                 case 2:
                     search.setQueryHint("Search requests...");
                     break;
+                case 3:
+                    search.setQueryHint("Search notifications by user");
+                    break;
             }
             search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -305,13 +311,17 @@ public class AdminActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(String s) {
                     switch (viewPager.getCurrentItem()) {
                         case 0:
-                            f_complaints.mAdapter.getFilter().filter(s);
+                            f_checkins.mAdapter.getFilter().filter(s);
                             break;
                         case 1:
-                            f_requests.mAdapter.getFilter().filter(s);
+                            f_complaints.mAdapter.getFilter().filter(s);
                             break;
                         case 2:
-                            f_checkins.mAdapter.getFilter().filter(s);
+                            f_requests.mAdapter.getFilter().filter(s);
+                            break;
+
+                        case 3:
+                            f_notifications.mAdapter.getFilter().filter(s);
                             break;
                     }
                     return true;

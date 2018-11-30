@@ -179,6 +179,7 @@ public class ResponseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
     }
 
     /**
@@ -189,7 +190,8 @@ public class ResponseActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                //onBackPressed();
+                finish();
                 return true;
             case R.id.admin_notification:
                 Snackbar.make(parent_view, item.getTitle() + " Clicked ", Snackbar.LENGTH_SHORT).show();
