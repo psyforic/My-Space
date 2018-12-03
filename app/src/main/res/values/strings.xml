@@ -126,6 +126,8 @@
     <string name="complaint_delete_success">Complaint Deleted Successfully</string>
     <string name="app_ad_name">MySpace By MetroRez</string>
     <string name="no_complaints">No Complaints Filed</string>
+    <string name="str_extra_comments">Extra Comments</string>
+    <string name="hint_comments">Extra Comments</string>
 
 
 </resources>

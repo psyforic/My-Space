@@ -65,7 +65,6 @@ public class ResponseActivity extends AppCompatActivity {
     private List<ResponseDetails> items = new ArrayList<>();
     private View parent_view;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

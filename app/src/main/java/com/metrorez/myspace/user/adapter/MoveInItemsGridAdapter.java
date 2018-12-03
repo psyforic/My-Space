@@ -54,7 +54,7 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final MoveInItem moveIn = moveInItems.get(position);
         holder.title.setText(moveIn.getItemName());
         Picasso.with(ctx).load(moveIn.getImageUrl()).fit()
@@ -65,7 +65,7 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
         holder.camera_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment.takePhoto();
+                fragment.takePhoto(position);
             }
         });
     }

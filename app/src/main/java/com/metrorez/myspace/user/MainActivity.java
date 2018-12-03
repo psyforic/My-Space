@@ -28,6 +28,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.data.GlobalVariable;
 import com.metrorez.myspace.user.data.Tools;
@@ -39,6 +44,7 @@ import com.metrorez.myspace.user.fragment.ExtrasFragment;
 import com.metrorez.myspace.user.fragment.NotificationsFragment;
 import com.metrorez.myspace.user.fragment.ProfileFragment;
 import com.metrorez.myspace.user.fragment.SettingFragment;
+import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private GlobalVariable global;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadUserInfo() {
         FirebaseUser user = mAuth.getCurrentUser();
-        View headerView = navigationView.getHeaderView(0);
+        final View headerView = navigationView.getHeaderView(0);
         if (user != null) {
             if (user.getPhotoUrl() != null) {
                 String photoUrl = user.getPhotoUrl().toString();
@@ -221,6 +228,21 @@ public class MainActivity extends AppCompatActivity {
                 String displayName = user.getDisplayName();
                 TextView textView = headerView.findViewById(R.id.header_title_name);
                 textView.setText(displayName);
+            } else {
+                userReference.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        String displayName = user.getUserFirstName() + " " + user.getUserLastName();
+                        TextView textView = headerView.findViewById(R.id.header_title_name);
+                        textView.setText(displayName);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         }
     }
@@ -255,13 +277,11 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         mAuth.removeAuthStateListener(mAuthListener);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.default_menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

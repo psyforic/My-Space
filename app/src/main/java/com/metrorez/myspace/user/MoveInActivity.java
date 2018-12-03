@@ -18,6 +18,7 @@ import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.adapter.PageFragmentAdapter;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.fragment.StepOneFragment;
+import com.metrorez.myspace.user.fragment.StepThreeFragment;
 import com.metrorez.myspace.user.fragment.StepTwoFragment;
 import com.metrorez.myspace.user.model.Inventory;
 
@@ -38,6 +39,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
     List<Inventory> tempList;
     private StepOneFragment f_stepOne;
     private StepTwoFragment f_stepTwo;
+    private StepThreeFragment f_stepThree;
 
     private InventoryListAdapter mAdapter;
 
@@ -111,7 +113,8 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         // add few more layouts if you want
         layouts = new int[]{
                 R.layout.fragment_step_one,
-                R.layout.fragment_step_two};
+                R.layout.fragment_step_two,
+                R.layout.fragment_step_three};
         // adding bottom dots
         addBottomDots(0);
     }
@@ -125,8 +128,12 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         if (f_stepTwo == null) {
             f_stepTwo = new StepTwoFragment();
         }
+        if (f_stepThree == null) {
+            f_stepThree = new StepThreeFragment();
+        }
         adapter.addFragment(f_stepOne, getString(R.string.str_check_items));
         adapter.addFragment(f_stepTwo, getString(R.string.str_inventory_condition));
+        adapter.addFragment(f_stepThree, getString(R.string.str_extra_comments));
         viewPager.setAdapter(adapter);
     }
 

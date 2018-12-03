@@ -115,12 +115,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             user.updateProfile(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
+                    progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
                         Snackbar.make(view, "Profile updated", Snackbar.LENGTH_LONG).show();
                     }
+
                 }
             });
-            progressBar.setVisibility(View.GONE);
         }
         saveOtherInfo();
         progressBar.setVisibility(View.GONE);
@@ -303,9 +304,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 editTextEmail.setText(user.getUserEmail());
                 editTextStudentNo.setText(user.getUserStudentNo());
                 nameTxt.setText(getString(R.string.name_placeholder, user.getUserFirstName(), user.getUserLastName()));
-
+                spinnerCity.setSelection(getIndex(spinnerCity, user.getUserCity()));
+                if (user.getUserResidence() != null) {
+                    spinnerResidence.setSelection(getIndex(spinnerResidence, user.getUserResidence()));
+                }
                 if (user.getUserCity() != null) {
-                    String locationText = user.getUserCity() + ", " + user.getUserResidence();
+                    String residence = user.getUserResidence() != null ? user.getUserResidence() : " ";
+                    String locationText = user.getUserCity() + ", " + residence;
                     location.setText(locationText);
                 }
                 if (user.getUserRoom() != null) {
@@ -372,16 +377,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         userReference.updateChildren(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
+                progressBar.setVisibility(View.GONE);
             }
         }).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                progressBar.setVisibility(View.VISIBLE);
-                Snackbar.make(parent_view,"Profile updated",Snackbar.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+                Snackbar.make(parent_view, "Profile updated", Snackbar.LENGTH_LONG).show();
             }
         });
 
+    }
+
+    private int getIndex(Spinner spinner, String myString) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     public static void navigate(AppCompatActivity activity) {

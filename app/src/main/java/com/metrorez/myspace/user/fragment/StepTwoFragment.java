@@ -31,7 +31,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -70,7 +69,6 @@ public class StepTwoFragment extends BaseFragment {
 
     private View view;
     private Uri imageUri = null;
-    private ImageView imageView;
     private ProgressBar progressBar;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String profileImageUrl;
@@ -80,11 +78,11 @@ public class StepTwoFragment extends BaseFragment {
 
     private RecyclerView recyclerView;
     private List<Inventory> inventoryList = new ArrayList<>();
-    private List<MoveInItem> items = new ArrayList<>();
-    private List<MoveInItem> moveInItems = new ArrayList<>();
+    private List<MoveInItem> items = new ArrayList<>();;
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
     private ActionBar actionBar;
+    int position;
     public MoveInItemsGridAdapter mAdapter;
 
     private DatabaseReference notificationsReference;
@@ -112,10 +110,11 @@ public class StepTwoFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         setupUI();
     }
+
     private void initToolbar() {
         toolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        actionBar =((AppCompatActivity)getActivity()).getSupportActionBar();
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(getString(R.string.move_in_images));
@@ -130,8 +129,8 @@ public class StepTwoFragment extends BaseFragment {
     }
 
     private void setupUI() {
+        progressBar = view.findViewById(R.id.progressBar);
         recyclerView = view.findViewById(R.id.recyclerView);
-        imageView = view.findViewById(R.id.imageView);
         LinearLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), Tools.getGridSpanCount(getActivity()));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
@@ -151,7 +150,9 @@ public class StepTwoFragment extends BaseFragment {
         mAdapter = new MoveInItemsGridAdapter(getActivity(), items, StepTwoFragment.this);
         mAdapter.notifyDataSetChanged();
     }
-    public void takePhoto() {
+
+    public void takePhoto(int pos) {
+        position = pos;
         if (Build.VERSION.SDK_INT >= 23) {
             int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -170,6 +171,7 @@ public class StepTwoFragment extends BaseFragment {
         StepTwoFragment.this.startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -185,14 +187,13 @@ public class StepTwoFragment extends BaseFragment {
                         bitmap = android.provider.MediaStore.Images.Media
                                 .getBitmap(cr, selectedImage);
 
-                        imageView.setImageBitmap(bitmap);
                         Uri selected = getImageUri(getActivity(), bitmap);
                         String realPath = getRealPathFromURI(selected);
                         selectedImage = Uri.parse(realPath);
                         Toast.makeText(getActivity(), selectedImage.toString(),
                                 Toast.LENGTH_LONG).show();
-
-                        //uploadImageToFirebaseStorage("image");
+                        uploadImageToFirebaseStorage("image");
+                        mAdapter.setImageInView(position, bitmap, profileImageUrl);
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), "Failed to load", Toast.LENGTH_SHORT)
                                 .show();
@@ -223,6 +224,7 @@ public class StepTwoFragment extends BaseFragment {
             }
         }
     }
+
     public void upload() {
         if (imageUri != null) {
             uploadImageToFirebaseStorage("image");
@@ -235,82 +237,84 @@ public class StepTwoFragment extends BaseFragment {
             Snackbar.make(view, "No Image taken", Snackbar.LENGTH_LONG).show();
         }
     }
+
     private void uploadImageToFirebaseStorage(final String name) {
         imageReference = FirebaseStorage.getInstance().getReference("checkinPics/" + System.currentTimeMillis() + ".jpg");
 
         if (imageUri != null) {
             progressBar.setVisibility(View.VISIBLE);
+            ContentResolver cr = getActivity().getContentResolver();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(cr, imageUri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+                byte[] data = baos.toByteArray();
+                UploadTask uploadTask = imageReference.putBytes(data);
+                final Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (!task.isSuccessful()) {
+                            progressBar.setVisibility(View.GONE);
+                            Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
 
-            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-            UploadTask uploadTask = imageReference.putFile(imageUri);
-
-            final Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (!task.isSuccessful()) {
+                        return imageReference.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
                         progressBar.setVisibility(View.GONE);
-                        Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                        if (task.isSuccessful()) {
+                            profileImageUrl = task.getResult().toString();
+                            List<String> urls = new ArrayList<>();
+                            urls.add(profileImageUrl);
+                            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                            Date today = Calendar.getInstance().getTime();
+                            String date = dateFormat.format(today);
+                            saveCheckinInfo(urls, mAuth.getCurrentUser().getUid(), date);
+
+                        } else {
+                            Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
                     }
+                });
+                progressBar.setVisibility(View.GONE);
+            } catch (Exception e) {
 
-                    return imageReference.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    progressBar.setVisibility(View.GONE);
-                    if (task.isSuccessful()) {
-                        profileImageUrl = task.getResult().toString();
-                        List<String> urls = new ArrayList<>();
-                        urls.add(profileImageUrl);
-                        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        Date today = Calendar.getInstance().getTime();
-                        String date = dateFormat.format(today);
-
-                        saveCheckinInfo(urls, mAuth.getCurrentUser().getUid(), date);
-
-
-                    } else {
-                        Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                    }
-                }
-            });
-
+            }
         }
     }
 
-    private void saveCheckinInfo(List<String> url, String userId, String date) {
-        String Id = mAuth.getCurrentUser().getUid();
-        String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(userId, key, date, url, moveInItems);
-        checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                sendNotification("MoveIn", Constants.MOVEIN_TYPE);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+        private void saveCheckinInfo (List < String > url, String userId, String date){
+            String Id = mAuth.getCurrentUser().getUid();
+            String key = checkinReference.push().getKey();
+            MoveIn moveIn = new MoveIn(userId, key, date, url, items);
+            checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    sendNotification("MoveIn", Constants.MOVEIN_TYPE);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
 
-            }
-        });
-    }
-    private void sendNotification(String content, String type) {
+                }
+            });
+        }
+        private void sendNotification (String content, String type){
 
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date today = Calendar.getInstance().getTime();
-        String date = dateFormat.format(today);
-        String id = notificationsReference.push().getKey();
-        String typeId = checkinReference.push().getKey();
-        String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
-        notificationsReference.child(userId).child(id).setValue(notification);
-    }
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date today = Calendar.getInstance().getTime();
+            String date = dateFormat.format(today);
+            String id = notificationsReference.push().getKey();
+            String typeId = checkinReference.push().getKey();
+            String userId = mAuth.getCurrentUser().getUid();
+            Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
+            notificationsReference.child(userId).child(id).setValue(notification);
+        }
 
-    public static StepTwoFragment newInstance(){
-        StepTwoFragment fragment = new StepTwoFragment();
-        return fragment;
+        public static StepTwoFragment newInstance () {
+            StepTwoFragment fragment = new StepTwoFragment();
+            return fragment;
+        }
     }
-}

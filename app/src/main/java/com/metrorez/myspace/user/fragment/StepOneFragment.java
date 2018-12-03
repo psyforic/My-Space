@@ -95,11 +95,17 @@ public class StepOneFragment extends BaseFragment {
     }
 
     private void populateList() {
-        inventoryList.add(new Inventory("Bed"));
-        inventoryList.add(new Inventory("Carpet"));
-        inventoryList.add(new Inventory("Table"));
+        inventoryList.add(new Inventory("Plugs/light fittings"));
+        inventoryList.add(new Inventory("Carpets"));
+        inventoryList.add(new Inventory("Door Locks"));
         inventoryList.add(new Inventory("Wardrobe"));
-        inventoryList.add(new Inventory("Lamp"));
+        inventoryList.add(new Inventory("Bed"));
+        inventoryList.add(new Inventory("Waste Bin"));
+        inventoryList.add(new Inventory("Chair"));
+        inventoryList.add(new Inventory("Study Table"));
+        inventoryList.add(new Inventory("Wardrobe"));
+        inventoryList.add(new Inventory("Keys"));
+        inventoryList.add(new Inventory("Mirror"));
     }
 
     public interface OnInventoryDataListener {

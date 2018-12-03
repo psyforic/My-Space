@@ -220,10 +220,12 @@ public class AddComplaintFragment extends Fragment {
          */
         residences = (Spinner) view.findViewById(R.id.spinner_residence);
         final int[] array = new int[1];
-
+        array[0] = R.array.PortElizabethResidences;
+        final ArrayAdapter<String> spinnerArrayAdapter;
         cities.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
                 switch (cities.getSelectedItemPosition()) {
                     case 1:
                         array[0] = R.array.PortElizabethResidences;
@@ -246,8 +248,9 @@ public class AddComplaintFragment extends Fragment {
 
             }
         });
-        final List<String> residenceList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.PortElizabethResidences)));
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, residenceList) {
+
+        final List<String> residenceList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(array[0])));
+        spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, residenceList) {
             @Override
             public boolean isEnabled(int position) {
                 if (position == 0) {
@@ -269,7 +272,7 @@ public class AddComplaintFragment extends Fragment {
                 return spinnerView;
             }
         };
-
+        spinnerArrayAdapter.notifyDataSetChanged();
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         residences.setAdapter(spinnerArrayAdapter);
         /**
@@ -301,7 +304,6 @@ public class AddComplaintFragment extends Fragment {
         };
         priorityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         priority.setAdapter(priorityArrayAdapter);
-
 
     }
 

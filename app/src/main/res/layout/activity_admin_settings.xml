@@ -31,7 +31,7 @@
 
         <ImageView
             android:id="@+id/btn_change_password"
-            android:layout_width="100dp"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/btn_ripple_effect"

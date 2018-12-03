@@ -11,6 +11,7 @@ public class MoveIn implements Serializable {
     private String city;
     private String userId;
     private List<MoveInItem> itemList;
+    private String extraComments;
 
     public MoveIn() {
     }
@@ -58,5 +59,9 @@ public class MoveIn implements Serializable {
 
     public List<String> getUrls() {
         return urls;
+    }
+
+    public String getExtraComments() {
+        return extraComments;
     }
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="str_extra_message">Request Successful, Will get back to you soon</string>
+    <string name="hint_comments">Extra Comments</string>
 </resources>
