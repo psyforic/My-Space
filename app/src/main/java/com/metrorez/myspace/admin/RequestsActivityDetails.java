@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.AdminComplaintListAdapter;
@@ -87,8 +88,10 @@ public class RequestsActivityDetails extends AppCompatActivity {
     }
 
     private void populateAdapter() {
-
-        usersReference.addValueEventListener(new ValueEventListener() {
+        Intent intent = getIntent();
+        City city = (City) intent.getExtras().getSerializable(KEY_CITY);
+        Query userQuery = usersReference.orderByChild("userCity").equalTo(city.getName());
+        userQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();

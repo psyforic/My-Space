@@ -42,7 +42,7 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
     }
 
     private OnItemClickListener mOnItemClickListener;
-    //private boolean clicked = false;
+    //10private boolean clicked = false;
 
     public interface OnItemClickListener {
         void onItemClick(View view, Complaint obj, int position);

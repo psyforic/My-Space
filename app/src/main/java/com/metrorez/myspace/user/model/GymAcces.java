@@ -5,21 +5,23 @@ import java.io.Serializable;
 public class GymAcces implements Serializable{
     private String userId;
     private String userGender;
-    private String Branch;
+    private String branch;
     private String accessId;
     private String contactEmail;
     private String city;
+    private String date;
 
     public GymAcces() {
     }
 
-    public GymAcces(String userId, String userGender, String branch, String accessId, String contactEmail, String city) {
+    public GymAcces(String userId, String userGender, String branch, String accessId, String contactEmail, String city, String date) {
         this.userId = userId;
         this.userGender = userGender;
-        Branch = branch;
+        this.branch = branch;
         this.accessId = accessId;
         this.contactEmail = contactEmail;
         this.city = city;
+        this.date = date;
     }
 
     public String getUserId() {
@@ -27,7 +29,7 @@ public class GymAcces implements Serializable{
     }
 
     public String getBranch() {
-        return Branch;
+        return branch;
     }
 
     public String getAccessId() {
@@ -40,5 +42,13 @@ public class GymAcces implements Serializable{
 
     public String getCity() {
         return city;
+    }
+
+    public String getUserGender() {
+        return userGender;
+    }
+
+    public String getDate() {
+        return date;
     }
 }

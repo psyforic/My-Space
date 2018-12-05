@@ -8,6 +8,7 @@ public class WeekendJob implements Serializable{
     private String gender;
     private String city;
     private String jobDescription;
+    private String date;
 
     public WeekendJob() {
     }
@@ -18,6 +19,19 @@ public class WeekendJob implements Serializable{
         this.gender = gender;
         this.city = city;
         this.jobDescription = jobDescription;
+    }
+
+    public WeekendJob(String userId, String residence, String gender, String city, String jobDescription, String date) {
+        this.userId = userId;
+        this.residence = residence;
+        this.gender = gender;
+        this.city = city;
+        this.jobDescription = jobDescription;
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
     }
 
     public String getUserId() {

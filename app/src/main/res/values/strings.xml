@@ -133,6 +133,8 @@
     <string name="hint_job_req">What Kind Of job Are you looking for?</string>
     <string name="friend_name">Friend Name</string>
     <string name="hint_friend_lastname">Friend Lastname</string>
+    <string name="hint_idNo">Id / Passport Number</string>
+    <string name="err_msg_id_no">Invalid Number of Characters</string>
 
 
 </resources>

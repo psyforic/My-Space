@@ -130,7 +130,7 @@ public class AddRequestFragment extends Fragment {
         extras.add(new Extra("Fridge", 457.00, false));
         extras.add(new Extra("Table", 250.00, false));
         extras.add(new Extra("Extra Lamp", 50, false));
-        extras.add(new Extra("Microwave", 456.00, false));
+        extras.add(new Extra("Ottoman", 99.00, false));
     }
 
     private void addRequest() {

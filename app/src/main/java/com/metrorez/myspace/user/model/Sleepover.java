@@ -2,7 +2,7 @@ package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
 
-public class Sleepover implements Serializable{
+public class Sleepover implements Serializable {
     private String roomNo;
     private String userId;
     private String friendName;
@@ -10,11 +10,12 @@ public class Sleepover implements Serializable{
     private String friendGender;
     private String residenceName;
     private String city;
+    private String requestDate;
 
     public Sleepover() {
     }
 
-    public Sleepover(String roomNo, String userId, String friendName, String friendLastName, String friendGender, String residenceName, String city) {
+    public Sleepover(String roomNo, String userId, String friendName, String friendLastName, String friendGender, String residenceName, String city, String requestDate) {
         this.roomNo = roomNo;
         this.userId = userId;
         this.friendName = friendName;
@@ -22,6 +23,7 @@ public class Sleepover implements Serializable{
         this.friendGender = friendGender;
         this.residenceName = residenceName;
         this.city = city;
+        this.requestDate = requestDate;
     }
 
     public String getRoomNo() {

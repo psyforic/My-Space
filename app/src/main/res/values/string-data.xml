@@ -21,11 +21,13 @@
     </string-array>
 
     <string-array name="gender">
+        <item>Select Gender</item>
         <item>Female</item>
         <item>Male</item>
     </string-array>
 
     <string-array name="branch">
+        <item>Select Branch</item>
         <item>Port Elizabeth</item>
         <item>Uitenhage</item>
     </string-array>

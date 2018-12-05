@@ -12,6 +12,7 @@ public class Notification implements Serializable {
     private String type;
     private String typeId;
     private String userId;
+    private String toUserId;
     private boolean isRead;
 
     public Notification() {
@@ -36,6 +37,19 @@ public class Notification implements Serializable {
         this.type = type;
         this.typeId = typeId;
         this.userId = userId;
+        this.isRead = isRead;
+    }
+
+    public Notification(String notif_id, String fromUserId, String date, String content, String userName, String type, String typeId, String userId, String toUserId, boolean isRead) {
+        this.notif_id = notif_id;
+        this.fromUserId = fromUserId;
+        this.date = date;
+        this.content = content;
+        this.userName = userName;
+        this.type = type;
+        this.typeId = typeId;
+        this.userId = userId;
+        this.toUserId = toUserId;
         this.isRead = isRead;
     }
 
@@ -73,5 +87,9 @@ public class Notification implements Serializable {
 
     public boolean isRead() {
         return isRead;
+    }
+
+    public String getToUserId() {
+        return toUserId;
     }
 }

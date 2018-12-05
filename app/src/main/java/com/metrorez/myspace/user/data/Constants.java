@@ -10,8 +10,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.user.model.User;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class Constants {
@@ -25,20 +27,20 @@ public class Constants {
     public static final String COMPLAINT_EXTRA = "COMPLAINT_EXTRA";
     private static User[] users;
 
-    private static FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private static DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
     public static final String MOVEIN_EXTRA = "MOVEIN_EXTRA";
 
     public Constants() {
 
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
     }
 
 
     public static User getUser() {
 
-        userReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -55,7 +57,8 @@ public class Constants {
 
         return users[0];
     }
-    public static String formatTime(long time){
+
+    public static String formatTime(long time) {
         // income time
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(time);
@@ -65,17 +68,75 @@ public class Constants {
         curDate.setTimeInMillis(System.currentTimeMillis());
 
         SimpleDateFormat dateFormat = null;
-        if(date.get(Calendar.YEAR)==curDate.get(Calendar.YEAR)){
-            if(date.get(Calendar.DAY_OF_YEAR) == curDate.get(Calendar.DAY_OF_YEAR) ){
+        if (date.get(Calendar.YEAR) == curDate.get(Calendar.YEAR)) {
+            if (date.get(Calendar.DAY_OF_YEAR) == curDate.get(Calendar.DAY_OF_YEAR)) {
                 dateFormat = new SimpleDateFormat("h:mm a", Locale.US);
-            }
-            else{
+            } else {
                 dateFormat = new SimpleDateFormat("MMM d", Locale.US);
             }
-        }
-        else{
+        } else {
             dateFormat = new SimpleDateFormat("MMM yyyy", Locale.US);
         }
         return dateFormat.format(time);
+    }
+
+    public static String getToday() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        String date = dateFormat.format(today);
+
+        return date;
+    }
+
+    public static String getUserCity() {
+        final String[] userCity = new String[1];
+        userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                userCity[0] = user.getUserCity();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return userCity[0];
+    }
+
+    public static String getUserResidence() {
+        final String[] userResidence = new String[1];
+        userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                userResidence[0] = user.getUserResidence();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return userResidence[0];
+    }
+
+    public static String getUserRoomNo() {
+        final String[] userRoomNo = new String[1];
+        userReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                userRoomNo[0] = user.getUserRoom();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return userRoomNo[0];
     }
 }

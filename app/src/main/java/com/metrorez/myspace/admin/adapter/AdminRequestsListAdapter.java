@@ -100,7 +100,7 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
         //clicked = false;
     }
 
-    private Request getComplaint(int position) {
+    private Request getRequest(int position) {
         return filtered_items.get(position);
     }
 

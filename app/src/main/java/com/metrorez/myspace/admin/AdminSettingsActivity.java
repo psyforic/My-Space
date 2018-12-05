@@ -2,6 +2,7 @@ package com.metrorez.myspace.admin;
 
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,7 @@ public class AdminSettingsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView txtPassword;
     private ImageView btnChange;
+    private View parent_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,7 @@ public class AdminSettingsActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-
+        parent_view = findViewById(android.R.id.content);
         txtPassword = findViewById(R.id.txtPassword);
         btnChange = findViewById(R.id.btn_change_password);
     }
@@ -57,7 +59,7 @@ public class AdminSettingsActivity extends AppCompatActivity {
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Snackbar.make(parent_view,"Coming Soon", Snackbar.LENGTH_LONG ).show();
             }
         });
         txtPassword.setOnClickListener(new View.OnClickListener() {
