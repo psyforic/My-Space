@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,8 @@ public class ExtrasFragment extends Fragment {
     private LinearLayout lyt_not_found;
     private Fragment fragment = null;
     private FirebaseAuth mAuth;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
 
 
     DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
@@ -58,6 +61,27 @@ public class ExtrasFragment extends Fragment {
         addExtra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createPopup();
+            }
+        });
+        return view;
+    }
+
+    private void createPopup() {
+        dialogBuilder = new AlertDialog.Builder(getContext());
+        View view = getLayoutInflater().inflate(R.layout.request_popup, null);
+        LinearLayout addReq, addGym, addSleepover, addWeekendJob;
+        addReq = view.findViewById(R.id.linear_req_extra);
+        addGym = view.findViewById(R.id.linear_req_gym);
+        addSleepover = view.findViewById(R.id.linear_req_sleepover);
+        addWeekendJob = view.findViewById(R.id.linear_req_job);
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        addReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 fragment = new AddRequestFragment();
                 Bundle bundle = new Bundle();
                 fragment.setArguments(bundle);
@@ -66,10 +90,58 @@ public class ExtrasFragment extends Fragment {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame_content, fragment);
                     fragmentTransaction.commit();
+                    dialog.dismiss();
                 }
             }
         });
-        return view;
+        addGym.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new GymAccessFragment();
+                Bundle bundle = new Bundle();
+                fragment.setArguments(bundle);
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_content, fragment);
+                    fragmentTransaction.commit();
+                    dialog.dismiss();
+                }
+            }
+        });
+        addSleepover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new SleepOverFragment();
+                Bundle bundle = new Bundle();
+                fragment.setArguments(bundle);
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_content, fragment);
+                    fragmentTransaction.commit();
+                    dialog.dismiss();
+
+                }
+            }
+        });
+        addWeekendJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new WeekendJobFragment();
+                Bundle bundle = new Bundle();
+                fragment.setArguments(bundle);
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_content, fragment);
+                    fragmentTransaction.commit();
+                    dialog.dismiss();
+                }
+            }
+        });
+
+
     }
 
     private void setupUI() {

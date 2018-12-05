@@ -64,8 +64,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-public class StepTwoFragment extends BaseFragment {
+public class StepTwoFragment extends BaseFragment  {
 
     private View view;
     private Uri imageUri = null;
@@ -78,11 +79,13 @@ public class StepTwoFragment extends BaseFragment {
 
     private RecyclerView recyclerView;
     private List<Inventory> inventoryList = new ArrayList<>();
-    private List<MoveInItem> items = new ArrayList<>();;
+    private List<MoveInItem> items = new ArrayList<>();
+    ;
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
     private ActionBar actionBar;
     int position;
+    List<String> urls = new ArrayList<>();
     public MoveInItemsGridAdapter mAdapter;
 
     private DatabaseReference notificationsReference;
@@ -179,12 +182,17 @@ public class StepTwoFragment extends BaseFragment {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = imageUri;
-                    getActivity().getContentResolver().notifyChange(selectedImage, null);
-                    ContentResolver cr = getActivity().getContentResolver();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        Objects.requireNonNull(getActivity()).getContentResolver().notifyChange(selectedImage, null);
+                    }
+                    ContentResolver cr = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                        cr = Objects.requireNonNull(getActivity()).getContentResolver();
+                    }
                     Bitmap bitmap;
 
                     try {
-                        bitmap = android.provider.MediaStore.Images.Media
+                        bitmap = MediaStore.Images.Media
                                 .getBitmap(cr, selectedImage);
 
                         Uri selected = getImageUri(getActivity(), bitmap);
@@ -226,15 +234,19 @@ public class StepTwoFragment extends BaseFragment {
     }
 
     public void upload() {
-        if (imageUri != null) {
-            uploadImageToFirebaseStorage("image");
+        if (urls.size() != 0) {
+//            uploadImageToFirebaseStorage("image");
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date today = Calendar.getInstance().getTime();
+            String date = dateFormat.format(today);
+            saveCheckinInfo(urls, mAuth.getCurrentUser().getUid(), date);
             Intent intent = new Intent(getActivity(), SuccessActivity.class);
             intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_checkin_message));
             getActivity().startActivity(intent);
             getActivity().finish();
 
         } else {
-            Snackbar.make(view, "No Image taken", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "No Images taken", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -266,12 +278,7 @@ public class StepTwoFragment extends BaseFragment {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             profileImageUrl = task.getResult().toString();
-                            List<String> urls = new ArrayList<>();
                             urls.add(profileImageUrl);
-                            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                            Date today = Calendar.getInstance().getTime();
-                            String date = dateFormat.format(today);
-                            saveCheckinInfo(urls, mAuth.getCurrentUser().getUid(), date);
 
                         } else {
                             Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
@@ -285,36 +292,38 @@ public class StepTwoFragment extends BaseFragment {
         }
     }
 
-        private void saveCheckinInfo (List < String > url, String userId, String date){
-            String Id = mAuth.getCurrentUser().getUid();
-            String key = checkinReference.push().getKey();
-            MoveIn moveIn = new MoveIn(userId, key, date, url, items);
-            checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    sendNotification("MoveIn", Constants.MOVEIN_TYPE);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
+    private void saveCheckinInfo(List<String> url, String userId, String date) {
+        String Id = mAuth.getCurrentUser().getUid();
+        String key = checkinReference.push().getKey();
+        MoveIn moveIn = new MoveIn(userId, key, date, url, items);
+        checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                sendNotification("MoveIn", Constants.MOVEIN_TYPE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
 
-                }
-            });
-        }
-        private void sendNotification (String content, String type){
-
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date today = Calendar.getInstance().getTime();
-            String date = dateFormat.format(today);
-            String id = notificationsReference.push().getKey();
-            String typeId = checkinReference.push().getKey();
-            String userId = mAuth.getCurrentUser().getUid();
-            Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
-            notificationsReference.child(userId).child(id).setValue(notification);
-        }
-
-        public static StepTwoFragment newInstance () {
-            StepTwoFragment fragment = new StepTwoFragment();
-            return fragment;
-        }
+            }
+        });
     }
+
+    private void sendNotification(String content, String type) {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        String date = dateFormat.format(today);
+        String id = notificationsReference.push().getKey();
+        String typeId = checkinReference.push().getKey();
+        String userId = mAuth.getCurrentUser().getUid();
+        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
+        notificationsReference.child(userId).child(id).setValue(notification);
+    }
+
+    public static StepTwoFragment newInstance() {
+        StepTwoFragment fragment = new StepTwoFragment();
+        return fragment;
+    }
+
+}

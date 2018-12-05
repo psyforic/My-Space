@@ -20,7 +20,7 @@ public class Constants {
     public static final String COMPLAINT_TYPE = "COMPLAINT";
     public static final String ADMIN_COMPLAINT_RESPONSE = "ADMIN_COMPLAINT_RESPONSE";
     public static final String REQUEST_TYPE = "REQUEST";
-    public static final String MOVEIN_TYPE = "CHECKIN";
+    public static final String MOVEIN_TYPE = "MOVEIN";
     public static final String STRING_EXTRA = "EXTRA";
     public static final String COMPLAINT_EXTRA = "COMPLAINT_EXTRA";
     private static User[] users;

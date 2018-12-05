@@ -42,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:tabGravity="fill"
-            android:minWidth="300dp" />
+            app:tabMode="scrollable"
+            android:minWidth="200dp" />
 
     </android.support.design.widget.AppBarLayout>
 

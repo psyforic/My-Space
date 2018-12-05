@@ -128,6 +128,11 @@
     <string name="no_complaints">No Complaints Filed</string>
     <string name="str_extra_comments">Extra Comments</string>
     <string name="hint_comments">Extra Comments</string>
+    <string name="tab_moveins">Move-Ins</string>
+    <string name="choose_item">Choose Request</string>
+    <string name="hint_job_req">What Kind Of job Are you looking for?</string>
+    <string name="friend_name">Friend Name</string>
+    <string name="hint_friend_lastname">Friend Lastname</string>
 
 
 </resources>

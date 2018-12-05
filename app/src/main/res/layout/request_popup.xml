@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="25dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/choose_item"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"/>
+
+            <LinearLayout
+                android:id="@+id/linear_req_extra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_middle">
+
+                <TextView
+                    android:id="@+id/txt_add_req"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Request Items"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Menu"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_req_gym"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_req_extra"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_middle">
+
+                <TextView
+                    android:id="@+id/txt_add_gym"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Gym Access"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Menu"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_req_sleepover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_req_gym"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_middle">
+
+                <TextView
+                    android:id="@+id/txt_add_sleepover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Friend Sleepover"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Menu"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_req_job"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_req_sleepover"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_middle">
+
+                <TextView
+                    android:id="@+id/txt_add_job"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekend Job"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Menu"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

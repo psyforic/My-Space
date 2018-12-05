@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -59,11 +60,18 @@ public class StepThreeFragment extends Fragment {
         actionBar.setTitle(getString(R.string.str_extra_comments));
     }
 
-    private void addExtraComments() {
+    public void addExtraComments() {
         Map<String, Object> extraComments = new HashMap<>();
         if (comments.getText() != null) {
             extraComments.put("extraComments",comments.getText().toString());
-            //moveInReference.getK
+            moveInReference.child(moveInReference.getKey()).updateChildren(extraComments).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            });
         }
     }
+
+
 }

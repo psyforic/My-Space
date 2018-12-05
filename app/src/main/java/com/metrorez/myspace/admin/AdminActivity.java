@@ -180,7 +180,7 @@ public class AdminActivity extends AppCompatActivity {
         if (f_notifications == null) {
             f_notifications = new AdminNotificationFragment();
         }
-        adapter.addFragment(f_checkins, getString(R.string.tab_checkins));
+        adapter.addFragment(f_checkins, getString(R.string.tab_moveins));
         adapter.addFragment(f_complaints, getString(R.string.tab_complaints));
         adapter.addFragment(f_requests, getString(R.string.tab_requests));
         adapter.addFragment(f_notifications, "");

@@ -2,6 +2,7 @@ package com.metrorez.myspace.admin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -138,6 +139,7 @@ public class ResponseActivity extends AppCompatActivity {
         if (et_content.length() == 0) {
             btn_send.setEnabled(false);
         }
+
         hideKeyboard();
     }
 

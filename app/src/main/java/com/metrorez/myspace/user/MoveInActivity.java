@@ -69,15 +69,26 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
                 // checking for last page
                 // if last page home screen will be launched
                 int current = getItem(+1);
-                if (current < layouts.length && tempList.size() != 0) {
+                if (current < layouts.length) {
                     // move to next screen
                     viewPager.setCurrentItem(current);
 
+                } else if (current == layouts.length) {
+                    submitMoveIn();
                 } else {
                     //launchHomeScreen();
                 }
             }
         });
+    }
+
+    private void submitMoveIn() {
+        String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
+        StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment.isAdded()) {
+            fragment.upload();
+        }
+
     }
 
     private void launchHomeScreen() {
