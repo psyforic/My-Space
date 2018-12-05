@@ -58,7 +58,7 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(final @NonNull ViewHolder holder, final int position) {
         final City city = filtered_items.get(position);
         final List<Complaint> complaintList = new ArrayList<>();
         complainsRefence.addValueEventListener(new ValueEventListener() {
@@ -71,6 +71,7 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
                            complaintList.add(complaint);
                        }
                    }
+                    holder.complaints.setText(String.valueOf(complaintList.size()));
                 }
             }
 
@@ -96,7 +97,7 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
         });*/
 
         holder.title.setText(city.getName());
-        holder.complaints.setText(String.valueOf(complaintList.size()));
+
         Picasso.with(context).load(city.getPhoto()).resize(100, 100).transform(new CircleTransform()).into(holder.image);
 
         // Here you apply the animation when the view is bound

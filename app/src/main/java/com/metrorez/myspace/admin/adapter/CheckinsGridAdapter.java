@@ -22,6 +22,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.model.City;
+import com.metrorez.myspace.user.model.Complaint;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -56,11 +58,31 @@ public class CheckinsGridAdapter extends RecyclerView.Adapter<CheckinsGridAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         final City city = filtered_items.get(position);
+        final List<MoveIn> moveInList = new ArrayList<>();
+        moveInReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    for(DataSnapshot complaintSnapShot: userSnapshot.getChildren()){
+                        MoveIn moveIn = complaintSnapShot.getValue(MoveIn.class);
+                        if(moveIn.getCity().equals(city.getName())){
+                            moveInList.add(moveIn);
+                        }
+                    }
+                    holder.complaints.setText(String.valueOf(moveInList.size()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         holder.title.setText(city.getName());
-        holder.complaints.setText(city.getSnippet());
+        //holder.complaints.setText(city.getSnippet());
         Picasso.with(context).load(city.getPhoto()).resize(100, 100).transform(new CircleTransform()).into(holder.image);
 
         // Here you apply the animation when the view is bound
