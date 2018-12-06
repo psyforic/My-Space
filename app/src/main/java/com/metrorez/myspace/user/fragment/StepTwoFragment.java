@@ -66,7 +66,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class StepTwoFragment extends BaseFragment  {
+public class StepTwoFragment extends BaseFragment {
 
     private View view;
     private Uri imageUri = null;
@@ -295,7 +295,7 @@ public class StepTwoFragment extends BaseFragment  {
     private void saveCheckinInfo(List<String> url, String userId, String date) {
         String Id = mAuth.getCurrentUser().getUid();
         String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(userId, key, date, url, items);
+        MoveIn moveIn = new MoveIn(userId, key, date, url, Constants.getUserCity(), items);
         checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

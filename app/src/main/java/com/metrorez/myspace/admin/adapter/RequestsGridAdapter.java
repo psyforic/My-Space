@@ -14,8 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.model.City;
+import com.metrorez.myspace.user.model.MoveIn;
+import com.metrorez.myspace.user.model.Request;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +33,7 @@ public class RequestsGridAdapter extends RecyclerView.Adapter<RequestsGridAdapte
     private List<City> original_items = new ArrayList<>();
     private List<City> filtered_items = new ArrayList<>();
     private ItemFilter itemFilter = new ItemFilter();
-
+    private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
     private Context context;
 
     private OnItemClickListener mOnItemClickListener;
@@ -51,10 +58,32 @@ public class RequestsGridAdapter extends RecyclerView.Adapter<RequestsGridAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final City city = filtered_items.get(position);
+        final List<Request> requestList = new ArrayList<>();
+
+        extrasReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                requestList.clear();
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot extrasSnapShot : userSnapshot.getChildren()) {
+                        Request request = extrasSnapShot.getValue(Request.class);
+                        if (request.getCity().equals(city.getName())) {
+                            requestList.add(request);
+                        }
+                    }
+                    holder.requests.setText(String.valueOf(requestList.size()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         holder.title.setText(city.getName());
-        holder.requests.setText(city.getSnippet());
+        //holder.requests.setText(city.getSnippet());
         Picasso.with(context).load(city.getPhoto()).resize(100, 100).transform(new CircleTransform()).into(holder.image);
 
         // Here you apply the animation when the view is bound
