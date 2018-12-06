@@ -1,7 +1,9 @@
 package com.metrorez.myspace.admin.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,11 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.ResponseActivity;
 import com.metrorez.myspace.admin.model.ResponseDetails;
 import com.metrorez.myspace.user.model.User;
+import com.metrorez.myspace.user.widget.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,6 +53,7 @@ public class ResponseDetailsListAdapter extends BaseAdapter {
         return mMessages.get(position).getId();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ResponseDetails msg = (ResponseDetails) getItem(position);
@@ -59,6 +66,8 @@ public class ResponseDetailsListAdapter extends BaseAdapter {
             holder.lyt_thread = (CardView) convertView.findViewById(R.id.lyt_thread);
             holder.lyt_parent = (LinearLayout) convertView.findViewById(R.id.lyt_parent);
             holder.image_status = (ImageView) convertView.findViewById(R.id.image_status);
+            holder.complaintImage = (ImageView) convertView.findViewById(R.id.image);
+            //holder.complaintImage.setOnTouchListener(new ImageMatrixTouchHandler(ResponseActivity.this));
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -66,6 +75,12 @@ public class ResponseDetailsListAdapter extends BaseAdapter {
 
         holder.message.setText(msg.getContent());
         holder.time.setText(msg.getDate());
+        if (msg.getImageUrl() != null) {
+            Picasso.with(context).load(msg.getImageUrl()).resize(100, 100)
+                    .placeholder(R.drawable.animation_loader)
+                    .error(R.drawable.ic_error)
+                    .into(holder.complaintImage);
+        }
 
         if (msg.isFromMe()) {
             holder.lyt_parent.setPadding(100, 10, 15, 10);
@@ -86,6 +101,7 @@ public class ResponseDetailsListAdapter extends BaseAdapter {
     public void remove(int position) {
         mMessages.remove(position);
     }
+
     /**
      * add data item to messageAdapter
      **/
@@ -107,5 +123,6 @@ public class ResponseDetailsListAdapter extends BaseAdapter {
         LinearLayout lyt_parent;
         CardView lyt_thread;
         ImageView image_status;
+        ImageView complaintImage;
     }
 }

@@ -25,6 +25,8 @@ public class Constants {
     public static final String MOVEIN_TYPE = "MOVEIN";
     public static final String STRING_EXTRA = "EXTRA";
     public static final String COMPLAINT_EXTRA = "COMPLAINT_EXTRA";
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String NORMAL_USER = "NORMAL_USER";
     private static User[] users;
 
     private static FirebaseAuth mAuth = FirebaseAuth.getInstance();

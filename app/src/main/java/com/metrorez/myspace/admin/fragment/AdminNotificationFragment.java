@@ -75,7 +75,7 @@ public class AdminNotificationFragment extends Fragment {
         getNotifications();
         mAdapter.setOnItemClickListener(new AdminNotificationListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, final Notification obj, int position) {
+            public void onItemClick(final View view, final Notification obj, int position) {
                 final List<User> user = new ArrayList<>();
                 snippet = new StringBuilder("");
                 userRefence.child("users").child(obj.getFromUserId()).addValueEventListener(new ValueEventListener() {
@@ -92,6 +92,7 @@ public class AdminNotificationFragment extends Fragment {
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         Complaint complaint = dataSnapshot.getValue(Complaint.class);
                                         snippet.append(complaint.getComplaintComment()).append("\n").append("PRIORITY: ").append(complaint.getComplaintCategory()).append("\n").append(complaint.getComplaintResidence()).append("\n").append("ROOM NO. : ").append(complaint.getComplaintRoom());
+                                        ResponseActivity.navigate((AppCompatActivity) getActivity(), view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), obj.getDate());
                                     }
 
                                     @Override
@@ -103,7 +104,7 @@ public class AdminNotificationFragment extends Fragment {
 
                                 break;
                             case Constants.MOVEIN_TYPE:
-                                reference.child("checkins").child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                reference.child("moveIns").child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         MoveIn moveIn = dataSnapshot.getValue(MoveIn.class);
@@ -112,6 +113,7 @@ public class AdminNotificationFragment extends Fragment {
                                             items.add(item.getItemName());
                                         }
                                         snippet.append("ITEMS CHECKED IN " + "\n").append(items.toString());
+                                        ResponseActivity.navigate((AppCompatActivity) getActivity(), view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), obj.getDate());
                                     }
 
                                     @Override
@@ -131,7 +133,7 @@ public class AdminNotificationFragment extends Fragment {
                                             items.add(item.getExtraName());
                                         }
                                         snippet.append(request.getCity() + "\n" + size + " Items" + "\n" + items + "\n");
-
+                                        ResponseActivity.navigate((AppCompatActivity) getActivity(), view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), obj.getDate());
                                     }
 
                                     @Override
@@ -139,6 +141,7 @@ public class AdminNotificationFragment extends Fragment {
 
                                     }
                                 });
+                                //ResponseActivity.navigate((AppCompatActivity) getActivity(), view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), obj.getDate());
                                 break;
                         }
 
@@ -149,7 +152,7 @@ public class AdminNotificationFragment extends Fragment {
 
                     }
                 });
-                ResponseActivity.navigate((AppCompatActivity) getActivity(), view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), obj.getDate());
+
             }
         });
 

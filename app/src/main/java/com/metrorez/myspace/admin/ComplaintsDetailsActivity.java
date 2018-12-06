@@ -185,10 +185,13 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
 
                             User user = dataSnapshot.getValue(User.class);
                             sendTo.add(user);
-
                             String complaint = obj.getComplaintComment() + "\n" + "PRIORITY: " + obj.getComplaintCategory() + "\n" + obj.getComplaintResidence() + "\n"
                                     + "ROOM NO. : " + obj.getComplaintRoom();
-                            ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, sendTo.get(0), complaint, obj.getComplaintDate());
+                            if (obj.getImagePath() == null) {
+                                ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, sendTo.get(0), complaint, obj.getComplaintDate());
+                            } else {
+                                ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, sendTo.get(0), complaint, obj.getComplaintDate(), obj.getImagePath());
+                            }
                         }
 
                         @Override

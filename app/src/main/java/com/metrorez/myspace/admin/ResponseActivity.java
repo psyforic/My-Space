@@ -20,8 +20,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,6 +46,8 @@ public class ResponseActivity extends AppCompatActivity {
     public static final String KEY_USER = "USER";
     public static final String KEY_DATA = "DATA";
     public static final String KEY_DATE = "DATE";
+    public static final String KEY_IMAGE = "IMAGE";
+    private ImageView imageView;
     private FirebaseAuth mAuth;
     private DatabaseReference notificationsReference = FirebaseDatabase.getInstance().getReference("notifications");
 
@@ -52,6 +56,16 @@ public class ResponseActivity extends AppCompatActivity {
         intent.putExtra(KEY_USER, obj);
         intent.putExtra(KEY_DATA, snippet);
         intent.putExtra(KEY_DATE, date);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, KEY_USER);
+        ActivityCompat.startActivity(activity, intent, options.toBundle());
+    }
+
+    public static void navigate(AppCompatActivity activity, View transitionImage, User obj, String snippet, String date, String imageUrl) {
+        Intent intent = new Intent(activity, ResponseActivity.class);
+        intent.putExtra(KEY_USER, obj);
+        intent.putExtra(KEY_DATA, snippet);
+        intent.putExtra(KEY_DATE, date);
+        intent.putExtra(KEY_IMAGE, imageUrl);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, KEY_USER);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
@@ -81,10 +95,12 @@ public class ResponseActivity extends AppCompatActivity {
         String snippet = intent.getStringExtra(KEY_DATA);
         //String snippet = Html.fromHtml(data).toString();
         String date = intent.getStringExtra(KEY_DATE);
-
+        String imageUrl = intent.getStringExtra(KEY_IMAGE);
         initToolbar();
         iniComponent();
-        if (snippet != null) {
+        if (imageUrl != null && snippet != null) {
+            items.add(new ResponseDetails(999, date, user, snippet, imageUrl, false));
+        } else if (snippet != null && imageUrl == null) {
             items.add(new ResponseDetails(999, date, user, snippet, false));
         }
         //items.addAll(Constants.getChatDetailsData(this, user));

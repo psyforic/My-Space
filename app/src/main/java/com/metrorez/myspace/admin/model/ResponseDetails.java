@@ -11,6 +11,7 @@ public class ResponseDetails implements Serializable {
     private User user;
     private String content;
     private boolean fromMe;
+    private String imageUrl;
 
     public ResponseDetails(long id, String date, User user, String content, boolean fromMe) {
         this.id = id;
@@ -18,6 +19,15 @@ public class ResponseDetails implements Serializable {
         this.user = user;
         this.content = content;
         this.fromMe = fromMe;
+    }
+
+    public ResponseDetails(long id, String date, User user, String content, String imageUrl, boolean fromMe) {
+        this.id = id;
+        this.date = date;
+        this.user = user;
+        this.content = content;
+        this.fromMe = fromMe;
+        this.imageUrl = imageUrl;
     }
 
     public long getId() {
@@ -38,5 +48,13 @@ public class ResponseDetails implements Serializable {
 
     public boolean isFromMe() {
         return fromMe;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
