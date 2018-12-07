@@ -25,7 +25,12 @@
         <item>Female</item>
         <item>Male</item>
     </string-array>
-
+    <string-array name="jobs">
+        <item>Select Job Type</item>
+        <item>Rez Office</item>
+        <item>Print</item>
+        <item>Gym</item>
+    </string-array>
     <string-array name="branch">
         <item>Select Branch</item>
         <item>Port Elizabeth</item>
