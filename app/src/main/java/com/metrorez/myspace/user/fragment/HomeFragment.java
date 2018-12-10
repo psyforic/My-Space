@@ -42,22 +42,7 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         mAuth = FirebaseAuth.getInstance();
         bindData();
-        complaintBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddComplaintFragment fragment = new AddComplaintFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_content, fragment, ADD_FRAGMENT)
-                        .addToBackStack(ADD_FRAGMENT)
-                        .commit();
-            }
-        });
-        requestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
         return view;
     }
 
