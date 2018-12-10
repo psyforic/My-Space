@@ -21,7 +21,7 @@ import com.metrorez.myspace.user.ProfileActivity;
 import com.metrorez.myspace.user.model.User;
 
 public class ProfileFragment extends Fragment {
-    private TextView name, lastname, email, studentNo;
+    private TextView name, lastname, email, studentNo, residence, residenceRoom, userCell;
     private View view;
     private Button editButton;
     private TextView editTxt;
@@ -58,6 +58,9 @@ public class ProfileFragment extends Fragment {
         email = view.findViewById(R.id.email);
         editTxt = view.findViewById(R.id.edit_txt);
         studentNo = view.findViewById(R.id.description2);
+        residence = view.findViewById(R.id.residence);
+        residenceRoom = view.findViewById(R.id.residence_room);
+        userCell = view.findViewById(R.id.userCell);
     }
 
     private void loadExtraInfo() {
@@ -73,6 +76,14 @@ public class ProfileFragment extends Fragment {
                 lastname.setText(user.getUserLastName());
                 email.setText(user.getUserEmail());
                 studentNo.setText(user.getUserStudentNo());
+                residence.setText(user.getUserResidence());
+                residenceRoom.setText(user.getUserRoom());
+                if (user.getUserCellphone() != null) {
+                    userCell.setText(user.getUserCellphone());
+                } else {
+                    userCell.setText(" ");
+                }
+
 
             }
 

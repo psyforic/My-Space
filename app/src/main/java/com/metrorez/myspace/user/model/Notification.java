@@ -66,8 +66,8 @@ public class Notification implements Serializable {
     }
 
     public String getContent() {
-//        return content + " from " + userName;
-        return content;
+        return content + " from " + userName;
+        //return content;
     }
 
     public String getUserName() {

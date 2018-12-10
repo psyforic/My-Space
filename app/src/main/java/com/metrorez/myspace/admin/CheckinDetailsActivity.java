@@ -149,7 +149,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                             for (MoveInItem item : obj.getItemList()) {
                                 items.add(item.getItemName());
                             }
-                            String checkin = "ITEMS CHECKED IN " + "\n" + items.toString();
+                            String checkin = obj.getCity()+ "\n" + obj.getUserResidence() + "\n" + obj.getUserRoom() + "\n" + "ITEMS CHECKED IN " + "\n" + items.toString();
                             ResponseActivity.navigate(CheckinDetailsActivity.this, view, sendTo.get(0), checkin, obj.getDate());
                         }
 

@@ -20,8 +20,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.adapter.ExtraListAdapter;
@@ -30,6 +33,7 @@ import com.metrorez.myspace.user.data.GlobalVariable;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.Request;
+import com.metrorez.myspace.user.model.User;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,7 +53,11 @@ public class AddRequestFragment extends Fragment {
     private FirebaseAuth mAuth;
     private GlobalVariable global;
     private ProgressBar progressBar;
+    private String userRoom;
+    private String residenceName;
+    private String userCity;
     private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
+    private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
     private DatabaseReference notificationsReference;
 
     @Override
@@ -59,6 +67,7 @@ public class AddRequestFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_add_request, container, false);
         mAuth = FirebaseAuth.getInstance();
         notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
+        getUserInfo();
         setData();
         setupUI();
         requestExtras();
@@ -140,7 +149,7 @@ public class AddRequestFragment extends Fragment {
         Date today = Calendar.getInstance().getTime();
         String date = dateFormat.format(today);
         Constants constants = new Constants();
-        Request newRequest = new Request(id, date, userId, selected, "Port Elizabeth", "0245");
+        Request newRequest = new Request(id, date, userId, selected, userCity, residenceName, userRoom);
         extrasReference.child(userId).child(id).setValue(newRequest).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -172,6 +181,23 @@ public class AddRequestFragment extends Fragment {
         String userId = mAuth.getCurrentUser().getUid();
         Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
+    }
+
+    private void getUserInfo() {
+        usersReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                residenceName = user != null ? user.getUserResidence() : "";
+                userRoom = user != null ? user.getUserRoom() : "";
+                userCity = user != null ? user.getUserCity() : "";
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

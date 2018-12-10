@@ -40,8 +40,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -54,6 +57,7 @@ import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.MoveInItem;
 import com.metrorez.myspace.user.model.Notification;
+import com.metrorez.myspace.user.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -79,7 +83,12 @@ public class StepTwoFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private List<Inventory> inventoryList = new ArrayList<>();
     private List<MoveInItem> items = new ArrayList<>();
-    ;
+
+
+    private String userResidence;
+    private String userRoom;
+    private String userCity;
+
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
     private ActionBar actionBar;
@@ -89,6 +98,7 @@ public class StepTwoFragment extends BaseFragment {
 
     private DatabaseReference notificationsReference;
     private DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference("moveIns");
+    private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
     private StorageReference imageReference;
 
     @Override
@@ -97,6 +107,7 @@ public class StepTwoFragment extends BaseFragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_step_two, container, false);
         mAuth = FirebaseAuth.getInstance();
+        getUserInfo();
         initToolbar();
         notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
         return view;
@@ -292,7 +303,7 @@ public class StepTwoFragment extends BaseFragment {
     private void saveCheckinInfo(List<String> url, String userId, String date) {
         String Id = mAuth.getCurrentUser().getUid();
         String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(userId, key, date, url, Constants.getUserCity(), items);
+        MoveIn moveIn = new MoveIn(userId, key, date, url, userCity, userResidence, userRoom, items);
         checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -323,4 +334,21 @@ public class StepTwoFragment extends BaseFragment {
         return fragment;
     }
 
+    private void getUserInfo() {
+
+        usersReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                userResidence = user != null ? user.getUserResidence() : "";
+                userRoom = user != null ? user.getUserRoom() : "";
+                userCity = user != null ? user.getUserCity() : "";
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

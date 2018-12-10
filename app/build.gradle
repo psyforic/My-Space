@@ -6,9 +6,9 @@ android {
         applicationId "com.metrorez.myspace"
         minSdkVersion 15
         targetSdkVersion 27
-        versionName '1.0.3'
+        versionName '1.0.5'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 2
+        versionCode 4
     }
     buildTypes {
         release {

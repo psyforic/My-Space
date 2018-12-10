@@ -10,17 +10,19 @@ public class Request implements Serializable {
     private List<Extra> extras;
     private String city;
     private String roomNo;
+    private String residenceName;
 
     public Request() {
     }
 
-    public Request(String id, String requestDate, String userId, List<Extra> extras, String city, String roomNo) {
+    public Request(String id, String requestDate, String userId, List<Extra> extras, String city, String residenceName, String roomNo) {
         this.id = id;
         this.requestDate = requestDate;
         this.userId = userId;
         this.extras = extras;
         this.city = city;
         this.roomNo = roomNo;
+        this.residenceName = residenceName;
     }
 
     public String getId() {
@@ -45,5 +47,9 @@ public class Request implements Serializable {
 
     public String getRoomNo() {
         return roomNo;
+    }
+
+    public String getResidenceName() {
+        return residenceName;
     }
 }

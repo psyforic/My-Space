@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish ();
+                finish();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
@@ -311,7 +311,7 @@ public class RegisterActivity extends AppCompatActivity {
             String userId = mAuth.getUid();
             User user = new User(userId, firstName, lastName, email, studentNo, city);
             usersDatabase.child(userId).setValue(user);
-            Role role = new Role(userId, "ADMIN");
+            Role role = new Role(userId, "NORMAL_USER");
             rolesDatabase.child(userId).setValue(role);
         }
     }

@@ -49,7 +49,7 @@ public class SuccessActivity extends AppCompatActivity {
             }
         };
 
-        new Timer().schedule(task, 2000);
+        new Timer().schedule(task, 4000);
         Tools.systemBarLolipop(this);
     }
 

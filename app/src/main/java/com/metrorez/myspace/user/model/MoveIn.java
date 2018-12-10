@@ -12,25 +12,31 @@ public class MoveIn implements Serializable {
     private String userId;
     private List<MoveInItem> itemList;
     private String extraComments;
+    private String userResidence;
+    private String userRoom;
 
     public MoveIn() {
     }
 
-    public MoveIn(String userId, String id, String date, List<String> urls, List<MoveInItem> itemList) {
+    public MoveIn(String userId, String id, String date, String userResidence, String userRoom, List<String> urls, List<MoveInItem> itemList) {
         this.id = id;
         this.date = date;
         this.urls = urls;
         this.userId = userId;
         this.itemList = itemList;
+        this.userResidence = userResidence;
+        this.userRoom = userRoom;
     }
 
-    public MoveIn(String userId, String id, String date, List<String> urls, String city, List<MoveInItem> itemList) {
+    public MoveIn(String userId, String id, String date, List<String> urls, String city, String userResidence, String userRoom, List<MoveInItem> itemList) {
         this.id = id;
         this.date = date;
         this.urls = urls;
         this.city = city;
         this.userId = userId;
         this.itemList = itemList;
+        this.userRoom = userRoom;
+        this.userResidence = userResidence;
     }
 
     public String getId() {
@@ -63,5 +69,13 @@ public class MoveIn implements Serializable {
 
     public String getExtraComments() {
         return extraComments;
+    }
+
+    public String getUserResidence() {
+        return userResidence;
+    }
+
+    public String getUserRoom() {
+        return userRoom;
     }
 }

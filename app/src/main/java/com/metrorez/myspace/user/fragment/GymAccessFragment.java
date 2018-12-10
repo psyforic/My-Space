@@ -26,14 +26,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.Request;
+import com.metrorez.myspace.user.model.User;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,7 +55,9 @@ public class GymAccessFragment extends Fragment {
     private List<Extra> extra;
     private TextInputLayout inputLayoutEmail, inputLayoutIdNo;
     private Button btnRequest;
+    private String userResidence, userRoom, userCity;
     private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
+    private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
     private DatabaseReference notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
     private FirebaseAuth mAuth;
 
@@ -109,7 +115,7 @@ public class GymAccessFragment extends Fragment {
             String id = extrasReference.push().getKey();
             extra = new ArrayList<>();
             extra.add(new Extra("Gym Access", 0.00, true));
-            Request request = new Request(id, Constants.getToday(), mAuth.getCurrentUser().getUid(), extra, Constants.getUserCity(), Constants.getUserRoomNo());
+            Request request = new Request(id, Constants.getToday(), mAuth.getCurrentUser().getUid(), extra, userCity, userResidence, userRoom);
 
             // TODO: Fix later
             extrasReference.child(mAuth.getCurrentUser().getUid()).child(id).setValue(request).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -264,5 +270,22 @@ public class GymAccessFragment extends Fragment {
         String userId = mAuth.getCurrentUser().getUid();
         Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
+    }
+
+    private void getUserInfo() {
+        usersReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                userResidence = user != null ? user.getUserResidence() : "";
+                userRoom = user != null ? user.getUserRoom() : "";
+                userCity = user != null ? user.getUserCity() : "";
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

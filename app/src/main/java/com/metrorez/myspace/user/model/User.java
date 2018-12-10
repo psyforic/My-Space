@@ -11,6 +11,7 @@ public class User implements Serializable{
     private String userCity;
     private String userResidence;
     private String userRoom;
+    private String userCellphone;
     private int photo;
 
     public User() {
@@ -93,5 +94,9 @@ public class User implements Serializable{
 
     public int getPhoto() {
         return photo;
+    }
+
+    public String getUserCellphone() {
+        return userCellphone;
     }
 }

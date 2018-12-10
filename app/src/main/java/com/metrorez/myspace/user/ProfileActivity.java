@@ -161,10 +161,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
             byte[] data = baos.toByteArray();
             UploadTask uploadTask = profileStorageReference.putBytes(data);
-            uploadTask = profileStorageReference.putFile(profileUri);
+            uploadTask = profileStorageReference.putBytes(data);
 
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -303,6 +303,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 editTextlastName.setText(user.getUserLastName());
                 editTextEmail.setText(user.getUserEmail());
                 editTextStudentNo.setText(user.getUserStudentNo());
+                editTextPhone.setText(user.getUserCellphone());
                 nameTxt.setText(getString(R.string.name_placeholder, user.getUserFirstName(), user.getUserLastName()));
                 spinnerCity.setSelection(getIndex(spinnerCity, user.getUserCity()));
                 if (user.getUserResidence() != null) {
@@ -374,6 +375,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Map<String, Object> user = new HashMap<>();
         user.put("userResidence", spinnerResidence.getSelectedItem().toString());
         user.put("userRoom", editTextRoom.getText().toString());
+        user.put("userCellphone", editTextPhone.getText().toString());
         userReference.updateChildren(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

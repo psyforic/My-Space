@@ -145,7 +145,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
                             for (Extra item : obj.getExtras()) {
                                 items.add(item.getExtraName());
                             }
-                            String request = obj.getCity() + "\n" + size + " Items" + "\n" + items + "\n";
+                            String request = obj.getCity() + "\n" + obj.getResidenceName() + "\n" + "Room: " + obj.getRoomNo() + "\n" + size + " Item(s)" + "\n" + items + "\n";
                             ResponseActivity.navigate(RequestsActivityDetails.this, view, sendTo.get(0), request, obj.getRequestDate());
                         }
 
@@ -212,4 +212,6 @@ public class RequestsActivityDetails extends AppCompatActivity {
         }
         return false;
     }
+
+
 }
