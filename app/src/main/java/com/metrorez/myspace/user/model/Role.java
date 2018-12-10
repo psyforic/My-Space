@@ -2,16 +2,16 @@ package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
 
-public class Role implements Serializable{
+public class Role implements Serializable {
     private String userId;
-    private String UserRole;
+    private String userRole;
 
     public Role() {
     }
 
     public Role(String userId, String userRole) {
         this.userId = userId;
-        UserRole = userRole;
+        this.userRole = userRole;
     }
 
     public String getUserId() {
@@ -19,6 +19,6 @@ public class Role implements Serializable{
     }
 
     public String getUserRole() {
-        return UserRole;
+        return userRole;
     }
 }

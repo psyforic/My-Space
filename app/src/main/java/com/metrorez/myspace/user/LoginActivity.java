@@ -311,7 +311,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Role role = dataSnapshot.getValue(Role.class);
-                    if (((role.getUserRole() != null) && role.getUserRole().equals(Constants.ADMIN_ROLE))) {
+                    if (((role.getUserRole() != null) && role.getUserRole().equals("ADMIN"))) {
                         Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);

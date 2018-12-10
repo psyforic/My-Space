@@ -77,7 +77,7 @@ public class AdminNotificationFragment extends Fragment {
             @Override
             public void onItemClick(final View view, final Notification obj, int position) {
                 final List<User> user = new ArrayList<>();
-                snippet = new StringBuilder("");
+                snippet = new StringBuilder();
                 userRefence.child("users").child(obj.getFromUserId()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
