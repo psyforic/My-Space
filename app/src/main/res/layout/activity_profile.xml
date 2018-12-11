@@ -47,8 +47,8 @@
                         android:id="@+id/profile_camera"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_below="@id/image"
                         android:layout_alignRight="@id/image"
+                        android:layout_below="@id/image"
                         android:layout_marginTop="-30dp"
                         android:background="@drawable/circle_bg_white"
                         android:src="@drawable/ic_camera" />
@@ -311,6 +311,7 @@
                                 android:id="@+id/input_studentNo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:ems="10"
                                 android:enabled="false"
                                 android:hint="@string/hint_studentNo"
                                 android:inputType="number" />
@@ -333,27 +334,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/spacing_mlarge"
-                android:paddingTop="@dimen/spacing_middle"
-                android:paddingRight="@dimen/spacing_mlarge">
-
-                <Spinner
-                    android:id="@+id/spinner_city"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/city"
-                    android:padding="@dimen/spacing_small">
-
-                </Spinner>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/spacing_mlarge"
-                android:paddingTop="@dimen/spacing_middle"
-                android:paddingRight="@dimen/spacing_mlarge">
+                android:paddingRight="@dimen/spacing_mlarge"
+                android:paddingTop="@dimen/spacing_middle">
 
                 <Spinner
                     android:id="@+id/spinner_residence"

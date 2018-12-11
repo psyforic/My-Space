@@ -83,7 +83,9 @@
         <activity android:name=".user.ViewComplaintActivity" />
         <activity android:name=".user.ViewMoveInActivity" />
         <activity android:name=".admin.ResponseActivity" />
-        <activity android:name=".admin.AdminSettingsActivity"></activity>
+        <activity android:name=".admin.AdminSettingsActivity" />
+        <activity android:name=".user.ResetPasswordActivity" />
+        <activity android:name=".user.EmailSentActivity"></activity>
     </application>
 
 </manifest>

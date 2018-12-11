@@ -25,7 +25,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    public static  final String ADD_FRAGMENT="ADD_FRAGMENT";
+    public static final String ADD_FRAGMENT = "ADD_FRAGMENT";
     RecyclerView recyclerView;
     //public HomeGridAdapter mAdater;
     private View view;
@@ -74,8 +74,10 @@ public class HomeFragment extends Fragment {
                     extras.addAll(request != null ? request.getExtras() : null);
                 }
 
-                txtRequests.setText(getString(R.string.items_requested, String.valueOf(extras.size())));
-                txtComplaints.setText(getString(R.string.filed_complaints, String.valueOf(complaintsCount[0])));
+                if (isAdded()) {
+                    txtRequests.setText(getString(R.string.items_requested, String.valueOf(extras.size())));
+                    txtComplaints.setText(getString(R.string.filed_complaints, String.valueOf(complaintsCount[0])));
+                }
             }
 
             @Override

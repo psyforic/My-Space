@@ -135,6 +135,9 @@
     <string name="hint_friend_lastname">Friend Lastname</string>
     <string name="hint_idNo">Id / Passport Number</string>
     <string name="err_msg_id_no">Invalid Number of Characters</string>
+    <string name="btn_forgot_password">Forgot Password?</string>
+    <string name="btn_reset">Reset</string>
+    <string name="email_sent">Password reset link sent, Please Check Your Emails</string>
 
 
 </resources>

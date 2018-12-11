@@ -55,9 +55,10 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private TextInputLayout inputLayoutEmail, inputLayoutPassword;
-    private Button btnLogin, btnRegister;
+    private Button btnLogin, btnRegister, btnForgotPassword;
     private ProgressBar progressBar;
     private View parent_view;
+
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
@@ -114,6 +115,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+            }
+        });
+
+        btnForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), ResetPasswordActivity.class));
             }
         });
         Tools.systemBarLolipop(this);
@@ -219,6 +227,7 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail.addTextChangedListener(new MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
         btnRegister = (Button) findViewById(R.id.btn_register);
+        btnForgotPassword = (Button) findViewById(R.id.btn_forgot_password);
     }
 
     private boolean validateEmail() {
@@ -240,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
             inputLayoutPassword.setError(getString(R.string.err_msg_password));
             requestFocus(inputPassword);
             return false;
-        } else if (inputPassword.getText().length() < 5) {
+        } else if (inputPassword.getText().length() < 8) {
             inputLayoutPassword.setError(getString(R.string.inv_msg_password));
             requestFocus(inputPassword);
             return false;

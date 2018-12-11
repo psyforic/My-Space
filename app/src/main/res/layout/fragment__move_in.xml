@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You Haven't Move-in Yet"
+            android:text="You Haven't Moved-in Yet"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
     </LinearLayout>
 

@@ -54,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView profileImage;
     private ImageView cameraImage;
     private EditText editTextName, editTextlastName, editTextEmail, editTextRoom, editTextStudentNo, editTextPhone;
-    private Spinner spinnerCity, spinnerResidence;
+    private Spinner spinnerResidence;
     private View parent_view;
     private TextView location, nameTxt;
     private Button btnSave;
@@ -88,6 +88,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 saveUserInformation();
+                disableEdittexts();
             }
         });
         editButtonsClickListeners();
@@ -238,7 +239,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         editTextStudentNo = findViewById(R.id.input_studentNo);
         editTextPhone = findViewById(R.id.input_phone);
         nameTxt = findViewById(R.id.txtName);
-        spinnerCity = findViewById(R.id.spinner_city);
         spinnerResidence = findViewById(R.id.spinner_residence);
         btnSave = findViewById(R.id.btn_update_profile);
         progressBar = findViewById(R.id.progressBar);
@@ -305,10 +305,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 editTextStudentNo.setText(user.getUserStudentNo());
                 editTextPhone.setText(user.getUserCellphone());
                 nameTxt.setText(getString(R.string.name_placeholder, user.getUserFirstName(), user.getUserLastName()));
-                spinnerCity.setSelection(getIndex(spinnerCity, user.getUserCity()));
-                if (user.getUserResidence() != null) {
-                    spinnerResidence.setSelection(getIndex(spinnerResidence, user.getUserResidence()));
-                }
                 if (user.getUserCity() != null) {
                     String residence = user.getUserResidence() != null ? user.getUserResidence() : " ";
                     String locationText = user.getUserCity() + ", " + residence;
@@ -380,12 +376,15 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onSuccess(Void aVoid) {
                 progressBar.setVisibility(View.GONE);
+                disableEdittexts();
             }
         }).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressBar.setVisibility(View.GONE);
+
                 Snackbar.make(parent_view, "Profile updated", Snackbar.LENGTH_LONG).show();
+                disableEdittexts();
             }
         });
 
@@ -406,4 +405,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
+    private void disableEdittexts() {
+        editTextEmail.setEnabled(false);
+        editTextlastName.setEnabled(false);
+        editTextName.setEnabled(false);
+        editTextPhone.setEnabled(false);
+        editTextRoom.setEnabled(false);
+        editTextStudentNo.setEnabled(false);
+    }
 }
