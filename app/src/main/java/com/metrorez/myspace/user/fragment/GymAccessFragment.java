@@ -55,7 +55,7 @@ public class GymAccessFragment extends Fragment {
     private List<Extra> extra;
     private TextInputLayout inputLayoutEmail, inputLayoutIdNo;
     private Button btnRequest;
-    private String userResidence, userRoom, userCity;
+    private String userResidence, userRoom, userCity, userName;
     private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
     private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
     private DatabaseReference notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
@@ -69,6 +69,7 @@ public class GymAccessFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         setupUI();
         setupDropdowns();
+        getUserInfo();
         btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,7 +116,7 @@ public class GymAccessFragment extends Fragment {
             String id = extrasReference.push().getKey();
             extra = new ArrayList<>();
             extra.add(new Extra("Gym Access", 0.00, true));
-            Request request = new Request(id, Constants.getToday(), mAuth.getCurrentUser().getUid(), extra, userCity, userResidence, userRoom);
+            Request request = new Request(id, Constants.getToday(), mAuth.getCurrentUser().getUid(), extra, userCity, userResidence, userRoom, userName);
 
             // TODO: Fix later
             extrasReference.child(mAuth.getCurrentUser().getUid()).child(id).setValue(request).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -268,7 +269,7 @@ public class GymAccessFragment extends Fragment {
         String id = notificationsReference.push().getKey();
         String typeId = extrasReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, Constants.ADMIN_USER_ID, false);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
 
@@ -280,6 +281,7 @@ public class GymAccessFragment extends Fragment {
                 userResidence = user != null ? user.getUserResidence() : "";
                 userRoom = user != null ? user.getUserRoom() : "";
                 userCity = user != null ? user.getUserCity() : "";
+                userName = user != null ? user.getUserFirstName() + " " + user.getUserLastName() : null;
             }
 
             @Override

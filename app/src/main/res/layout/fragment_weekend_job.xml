@@ -49,7 +49,7 @@
                         android:id="@+id/input_layout_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true">
+                        >
 
 
                         <EditText
@@ -96,6 +96,7 @@
                         android:layout_gravity="center_horizontal|bottom"
                         android:layout_marginTop="@dimen/spacing_xlarge"
                         android:background="@color/colorAccent"
+                        android:drawableEnd="@drawable/ic_check_btn"
                         android:drawableRight="@drawable/ic_check_btn"
                         android:padding="3dp"
                         android:shadowColor="@color/cardview_shadow_end_color"

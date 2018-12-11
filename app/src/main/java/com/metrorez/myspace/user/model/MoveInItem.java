@@ -1,5 +1,8 @@
 package com.metrorez.myspace.user.model;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import java.io.Serializable;
 
 public class MoveInItem implements Serializable {
@@ -8,6 +11,7 @@ public class MoveInItem implements Serializable {
     private String userId;
     private String date;
     private String imageUrl;
+    private Uri imageBitmap;
 
     public MoveInItem() {
     }
@@ -29,6 +33,7 @@ public class MoveInItem implements Serializable {
     public String getItemId() {
         return itemId;
     }
+
     public String getItemName() {
         return itemName;
     }
@@ -43,6 +48,10 @@ public class MoveInItem implements Serializable {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Uri getImageBitmap() {
+        return imageBitmap;
     }
 
     public void setItemId(String itemId) {
@@ -63,5 +72,9 @@ public class MoveInItem implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void setImageBitmap(Uri imageBitmap) {
+        this.imageBitmap = imageBitmap;
     }
 }

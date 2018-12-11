@@ -43,8 +43,7 @@ public class ExtrasFragment extends Fragment {
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
-
-    DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
+    private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -137,7 +136,6 @@ public class ExtrasFragment extends Fragment {
             }
         });
 
-
     }
 
     private void setupUI() {
@@ -156,15 +154,12 @@ public class ExtrasFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 extras.clear();
                 if (dataSnapshot.exists()) {
-
-
                     for (DataSnapshot extrasSnapShot : dataSnapshot.getChildren()) {
                         Request request = extrasSnapShot.getValue(Request.class);
 
                         for (Extra extra : request.getExtras()) {
                             extras.add(extra);
                         }
-
                     }
                     mAdapter = new MyExtrasListAdapter(getActivity(), extras);
                     recyclerView.setAdapter(mAdapter);
@@ -189,8 +184,6 @@ public class ExtrasFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
-
-
     }
 
 }

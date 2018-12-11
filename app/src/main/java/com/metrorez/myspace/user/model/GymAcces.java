@@ -2,7 +2,7 @@ package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
 
-public class GymAcces implements Serializable{
+public class GymAcces implements Serializable {
     private String userId;
     private String userGender;
     private String branch;
@@ -10,11 +10,12 @@ public class GymAcces implements Serializable{
     private String contactEmail;
     private String city;
     private String date;
+    private String userName;
 
     public GymAcces() {
     }
 
-    public GymAcces(String userId, String userGender, String branch, String accessId, String contactEmail, String city, String date) {
+    public GymAcces(String userId, String userGender, String branch, String accessId, String contactEmail, String city, String date, String userName) {
         this.userId = userId;
         this.userGender = userGender;
         this.branch = branch;
@@ -22,6 +23,7 @@ public class GymAcces implements Serializable{
         this.contactEmail = contactEmail;
         this.city = city;
         this.date = date;
+        this.userName = userName;
     }
 
     public String getUserId() {
@@ -50,5 +52,9 @@ public class GymAcces implements Serializable{
 
     public String getDate() {
         return date;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

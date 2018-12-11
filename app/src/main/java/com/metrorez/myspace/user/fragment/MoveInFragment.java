@@ -1,6 +1,8 @@
 package com.metrorez.myspace.user.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,10 +26,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.user.MoveInActivity;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.ProfileActivity;
 import com.metrorez.myspace.user.ViewMoveInActivity;
 import com.metrorez.myspace.user.adapter.MoveInListAdapter;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.MoveIn;
+import com.metrorez.myspace.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +48,8 @@ public class MoveInFragment extends Fragment {
     private FirebaseAuth mAuth;
 
     private DatabaseReference moveInReference;
+    private String userRoom, residenceName;
+    private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,15 +58,20 @@ public class MoveInFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment__move_in, container, false);
         mAuth = FirebaseAuth.getInstance();
         moveInReference = FirebaseDatabase.getInstance().getReference().child("moveIns");
-        //getMoveIns();
         setupUI();
+        getUserInfo();
 
         addMoveIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MoveInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+
+                if (validateRoomNo() && validateResidence()) {
+                    Intent intent = new Intent(getActivity(), MoveInActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                } else {
+                    showDialog();
+                }
             }
         });
 
@@ -78,7 +89,6 @@ public class MoveInFragment extends Fragment {
         super.onAttach(context);
         //getMoveIns();
     }
-
     private void setupUI() {
         moveIns = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -91,7 +101,6 @@ public class MoveInFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         getMoveIns();
     }
-
     private void getMoveIns() {
 
         if (moveInReference != null) {
@@ -129,7 +138,6 @@ public class MoveInFragment extends Fragment {
                     });
 
                     progressBar.setVisibility(View.GONE);
-
                 }
 
                 @Override
@@ -143,14 +151,55 @@ public class MoveInFragment extends Fragment {
 
     @Override
     public void onResume() {
-        // mAdapter.notifyDataSetChanged();
         super.onResume();
     }
 
     @Override
     public void onStart() {
-        //getMoveIns();
         super.onStart();
+    }
+    private boolean validateResidence() {
+        if (residenceName == null) {
+            return false;
+        }
+        return true;
+    }
+    private boolean validateRoomNo() {
+        if (userRoom == null) {
+            return false;
+        }
+        return true;
+    }
+    private void getUserInfo() {
+        usersReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                residenceName = user != null ? user.getUserResidence() : null;
+                userRoom = user != null ? user.getUserRoom() : null;
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.movein_error_message)
+                .setTitle(R.string.update_profile).setIcon(R.drawable.ic_error);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                startActivity(new Intent(getActivity(), ProfileActivity.class));
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -2,17 +2,15 @@ package com.metrorez.myspace.admin;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -110,7 +107,7 @@ public class ResponseActivity extends AppCompatActivity {
         listview.requestFocus();
         registerForContextMenu(listview);
         // for system bar in lollipop
-        Tools.systemBarLolipop(this);
+        Tools.adminSystemBarLollipop(this);
     }
 
     public void initToolbar() {
@@ -226,8 +223,8 @@ public class ResponseActivity extends AppCompatActivity {
         String id = notificationsReference.push().getKey();
         String typeId = notificationsReference.push().getKey();
 
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, "ADMIN", type, typeId, false);
-        notificationsReference.child(userId).child(id).setValue(notification);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, "ADMIN", type, typeId, userId, false);
+        notificationsReference.child(id).setValue(notification);
     }
 
     @Override

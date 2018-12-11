@@ -13,28 +13,31 @@ public class Complaint implements Serializable {
     private String complaintRoom;
     private String userId;
     private String imagePath;
+    private String userName;
 
     public Complaint() {
     }
 
-    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String imagePath) {
+    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String imagePath, String userName) {
         this.complaintId = complaintId;
         this.complaintCategory = complaintCategory;
         this.complaintComment = complaintComment;
         this.complaintDate = complaintDate;
         this.imagePath = imagePath;
         this.userId = userId;
+        this.userName = userName;
     }
 
-    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate) {
+    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String userName) {
         this.complaintId = complaintId;
         this.complaintCategory = complaintCategory;
         this.complaintComment = complaintComment;
         this.complaintDate = complaintDate;
         this.userId = userId;
+        this.userName = userName;
     }
 
-    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String complaintCity, String complaintResidence, String complaintRoom, String imagePath) {
+    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String complaintCity, String complaintResidence, String complaintRoom, String imagePath, String userName) {
         this.complaintId = complaintId;
         this.complaintCategory = complaintCategory;
         this.complaintComment = complaintComment;
@@ -44,9 +47,10 @@ public class Complaint implements Serializable {
         this.complaintRoom = complaintRoom;
         this.userId = userId;
         this.imagePath = imagePath;
+        this.userName = userName;
     }
 
-    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String complaintCity, String complaintResidence, String complaintRoom) {
+    public Complaint(String userId, String complaintId, String complaintCategory, String complaintComment, String complaintDate, String complaintCity, String complaintResidence, String complaintRoom, String userName) {
         this.complaintId = complaintId;
         this.complaintCategory = complaintCategory;
         this.complaintComment = complaintComment;
@@ -55,6 +59,7 @@ public class Complaint implements Serializable {
         this.complaintResidence = complaintResidence;
         this.complaintRoom = complaintRoom;
         this.userId = userId;
+        this.userName = userName;
     }
 
     public String getComplaintId() {
@@ -91,5 +96,9 @@ public class Complaint implements Serializable {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

@@ -13,12 +13,10 @@ import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.AdminActivity;
-import com.metrorez.myspace.admin.CheckinDetailsActivity;
 import com.metrorez.myspace.admin.RequestsActivityDetails;
 import com.metrorez.myspace.admin.adapter.RequestsGridAdapter;
 import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.admin.model.City;
-import com.metrorez.myspace.admin.model.Request;
 import com.metrorez.myspace.user.data.Tools;
 
 import java.util.ArrayList;

@@ -11,21 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <!--
-                <android.support.design.widget.AppBarLayout
-                    android:id="@+id/appbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-                    <android.support.design.widget.TabLayout
-                        android:id="@+id/tabs"
-                        style="@style/MyCustomTabLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:background="@color/colorPrimary" />
-
-                </android.support.design.widget.AppBarLayout>-->
+        <TextView
+            android:id="@+id/complaint_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:gravity="center"
+            android:paddingBottom="@dimen/spacing_large"
+            android:text="@string/str_complaint_text"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -45,70 +42,6 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_xlarge">
 
-                <TextView
-                    android:id="@+id/complaint_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:paddingBottom="@dimen/spacing_large"
-                    android:text="@string/str_complaint_text"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/spacing_mlarge"
-                    android:paddingBottom="@dimen/spacing_mlarge">
-
-                    <Spinner
-                        android:id="@+id/spinner_city"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:spinnerMode="dialog" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/spacing_mlarge"
-                    android:paddingBottom="@dimen/spacing_mlarge">
-
-                    <Spinner
-
-                        android:id="@+id/spinner_residence"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:spinnerMode="dialog" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:layout_marginBottom="@dimen/spacing_medium"
-                    android:orientation="horizontal">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_room_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/txtRoomName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="@string/str_room_no"
-                            android:inputType="textPersonName" />
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -126,19 +59,22 @@
                             android:layout_height="100dp"
                             android:ems="10"
                             android:hint="@string/str_comment"
-                            android:inputType="textMultiLine" />
+                            android:inputType="textMultiLine"
+                            android:maxLength="180"
+                            android:maxHeight="300dp"
+                            android:maxLines="5" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/imageTaken"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="wrap_content"
                         android:visibility="gone" />
 
                 </LinearLayout>

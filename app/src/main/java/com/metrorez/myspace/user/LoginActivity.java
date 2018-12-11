@@ -59,8 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private View parent_view;
 
-
-    FirebaseAuth mAuth;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference roleReference = FirebaseDatabase.getInstance().getReference("roles");
     DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -68,16 +67,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
             getWindow().setExitTransition(new Fade());
         } else {
             // Swap without transition
         }
-
-        mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -173,15 +168,12 @@ public class LoginActivity extends AppCompatActivity {
         if (!validatePassword()) {
             return;
         }
-
         login();
-        //new AttempLoginTask().execute("");
     }
 
     private void login() {
         String userEmailString = inputEmail.getText().toString().trim();
         String userPasswordString = inputPassword.getText().toString().trim();
-
 
         if (!TextUtils.isEmpty(userEmailString) && !TextUtils.isEmpty(userPasswordString)) {
             progressBar.setVisibility(View.VISIBLE);
@@ -202,11 +194,8 @@ public class LoginActivity extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 getRole();
                                 progressBar.setVisibility(View.GONE);
-                                //finish();
                             }
                         });
-
-
                     } else {
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(parent_view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
@@ -240,7 +229,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             inputLayoutEmail.setErrorEnabled(false);
         }
-
         return true;
     }
 
@@ -297,7 +285,6 @@ public class LoginActivity extends AppCompatActivity {
             //finish();
             super.onPostExecute(s);
         }
-
     }
 
     @Override
@@ -314,7 +301,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getRole() {
         progressBar.setVisibility(View.VISIBLE);
-
         roleReference.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -337,7 +323,6 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-
             }
 
             @Override
@@ -345,7 +330,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
         progressBar.setVisibility(View.GONE);
     }
 }

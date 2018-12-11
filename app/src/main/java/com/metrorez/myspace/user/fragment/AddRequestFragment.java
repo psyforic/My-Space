@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.ProfileActivity;
 import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.adapter.ExtraListAdapter;
 import com.metrorez.myspace.user.data.Constants;
@@ -53,12 +54,13 @@ public class AddRequestFragment extends Fragment {
     private FirebaseAuth mAuth;
     private GlobalVariable global;
     private ProgressBar progressBar;
-    private String userRoom;
-    private String residenceName;
-    private String userCity;
+    private String userRoom = "";
+    private String residenceName = "";
+    private String userCity = "";
     private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference().child("extras");
     private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
     private DatabaseReference notificationsReference;
+    private String userName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,29 +105,33 @@ public class AddRequestFragment extends Fragment {
         btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selected.size() != 0) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    // LayoutInflater inflater = getActivity().getLayoutInflater();
+                if (validateResidence() && validateRoomNo()) {
+                    if (selected.size() != 0) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        // LayoutInflater inflater = getActivity().getLayoutInflater();
 
-                    builder.setMessage(R.string.request_message)
-                            .setTitle(R.string.request_title);
-                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            addRequest();
-                            Toast.makeText(getContext(), R.string.request_success, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else
+                        builder.setMessage(R.string.request_message)
+                                .setTitle(R.string.request_title);
+                        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                addRequest();
+                                Toast.makeText(getContext(), R.string.request_success, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    } else
 
-                {
-                    Snackbar.make(view, getString(R.string.nothing_selected), Snackbar.LENGTH_SHORT).show();
+                    {
+                        Snackbar.make(view, getString(R.string.nothing_selected), Snackbar.LENGTH_SHORT).show();
+                    }
+                } else {
+                    showDialog();
                 }
             }
 
@@ -148,8 +154,7 @@ public class AddRequestFragment extends Fragment {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date today = Calendar.getInstance().getTime();
         String date = dateFormat.format(today);
-        Constants constants = new Constants();
-        Request newRequest = new Request(id, date, userId, selected, userCity, residenceName, userRoom);
+        Request newRequest = new Request(id, date, userId, selected, userCity, residenceName, userRoom, userName);
         extrasReference.child(userId).child(id).setValue(newRequest).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -179,8 +184,9 @@ public class AddRequestFragment extends Fragment {
         String id = notificationsReference.push().getKey();
         String typeId = extrasReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
-        notificationsReference.child(userId).child(id).setValue(notification);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, Constants.ADMIN_USER_ID,
+                false);
+        notificationsReference.child(id).setValue(notification);
     }
 
     private void getUserInfo() {
@@ -188,9 +194,10 @@ public class AddRequestFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                residenceName = user != null ? user.getUserResidence() : "";
-                userRoom = user != null ? user.getUserRoom() : "";
-                userCity = user != null ? user.getUserCity() : "";
+                residenceName = user != null ? user.getUserResidence() : null;
+                userRoom = user != null ? user.getUserRoom() : null;
+                userCity = user != null ? user.getUserCity() : null;
+                userName = user != null ? user.getUserFirstName() + " " + user.getUserLastName() : null;
             }
 
             @Override
@@ -200,4 +207,37 @@ public class AddRequestFragment extends Fragment {
         });
     }
 
+    private boolean validateResidence() {
+        if (residenceName == null) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateRoomNo() {
+        if (userRoom == null) {
+            return false;
+        }
+        return true;
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        builder.setMessage(R.string.error_message)
+                .setTitle(R.string.update_profile).setIcon(R.drawable.ic_error);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                startActivity(new Intent(getActivity(), ProfileActivity.class));
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }

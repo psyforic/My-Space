@@ -64,7 +64,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         initToolbar();
         initComponent();
         getData();
-        Tools.systemBarLolipop(this);
+        Tools.adminSystemBarLollipop(this);
     }
 
     public static void navigate(AppCompatActivity activity, View transitionImage, City obj) {

@@ -53,17 +53,6 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/delete_btn"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="end"
-                        android:layout_marginRight="@dimen/spacing_large"
-                        android:background="@drawable/ic_trash"
-                        android:backgroundTint="@color/colorAccent"
-                        android:clickable="true"
-                        android:focusable="true"/>
-
-                    <ImageButton
                         android:id="@+id/camera_btn"
                         android:layout_width="30dp"
                         android:layout_height="30dp"

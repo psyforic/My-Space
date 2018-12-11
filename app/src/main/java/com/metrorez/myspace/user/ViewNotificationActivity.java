@@ -40,7 +40,7 @@ public class ViewNotificationActivity extends AppCompatActivity {
 
     private void loadData() {
 
-        switch (type) {
+        /*switch (type) {
             case Constants.MOVEIN_TYPE:
                 databaseReference = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("moveIns").addValueEventListener(valueEventListener);
                 break;
@@ -49,7 +49,9 @@ public class ViewNotificationActivity extends AppCompatActivity {
             case Constants.REQUEST_TYPE:
                 databaseReference = FirebaseDatabase.getInstance().getReference().child("request");
                 break;
-        }
+        }*/
+
+
     }
 
     ValueEventListener valueEventListener = new ValueEventListener() {

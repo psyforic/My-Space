@@ -313,8 +313,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 if (user.getUserRoom() != null) {
                     editTextRoom.setText(user.getUserRoom());
                 }
-
-
+                if (user.getUserResidence() != null) {
+                    spinnerResidence.setSelection(getIndex(spinnerResidence, user.getUserResidence()));
+                }
             }
 
             @Override
@@ -322,7 +323,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
     }
 
     private void editButtonsClickListeners() {
@@ -387,7 +387,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 disableEdittexts();
             }
         });
-
     }
 
     private int getIndex(Spinner spinner, String myString) {

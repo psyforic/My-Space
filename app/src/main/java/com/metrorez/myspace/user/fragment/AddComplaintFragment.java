@@ -2,8 +2,10 @@ package com.metrorez.myspace.user.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -26,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -44,16 +45,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.ProfileActivity;
 import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Notification;
+import com.metrorez.myspace.user.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,8 +75,8 @@ import java.util.Objects;
 public class AddComplaintFragment extends Fragment {
 
     DatabaseReference databaseReference;
-    private Spinner residences, cities, priority;
-    private EditText roomNo, editTextComplaint;
+    private Spinner priority;
+    private EditText editTextComplaint;
     private Button fileComplaint;
     private CheckBox attachImage;
     private ImageView complaintImage;
@@ -78,11 +84,13 @@ public class AddComplaintFragment extends Fragment {
     private Uri imageUri = null;
     private FirebaseAuth mAuth;
     private View view;
-    String imagePath;
+    private String imagePath;
+    private String userRoom, userCity, residenceName, userName;
     private ProgressBar progressBar;
     private DatabaseReference notificationsReference;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private StorageReference storageReference;
+    private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +101,7 @@ public class AddComplaintFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("complaints");
         notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
         setupUI();
-
+        getUserInfo();
         fileComplaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +119,6 @@ public class AddComplaintFragment extends Fragment {
                 }
             }
         });
-
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +126,6 @@ public class AddComplaintFragment extends Fragment {
             }
         });
         return view;
-
     }
 
     private void setupUI() {
@@ -130,66 +136,51 @@ public class AddComplaintFragment extends Fragment {
         attachImage = (CheckBox) view.findViewById(R.id.checkbox_attach);
         cameraButton = (ImageButton) view.findViewById(R.id.camera_btn);
         progressBar = view.findViewById(R.id.progressBar);
-        roomNo = (EditText) view.findViewById(R.id.txtRoomName);
         editTextComplaint = (EditText) view.findViewById(R.id.txtComment);
-
     }
 
     private void addComplaint() {
-        String residence = residences.getSelectedItem().toString();
-        String city = cities.getSelectedItem().toString();
-        String room = roomNo.getText().toString().trim();
         String category = priority.getSelectedItem().toString();
         String complainTxt = editTextComplaint.getText().toString().trim();
         String id = databaseReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
+        if (validateResidence() && validateRoomNo()) {
 
-
-        if (validateRoom() && validateComplaint()) {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date today = Calendar.getInstance().getTime();
-            String date = dateFormat.format(today);
-            Complaint complaint;
-            if (imageUri != null && attachImage.isChecked()) {
-                complaint = new Complaint(mAuth.getCurrentUser().getUid(), id, category, complainTxt, date, city, residence, room, imagePath);
-            } else {
-                complaint = new Complaint(mAuth.getCurrentUser().getUid(), id, category, complainTxt, date, city, residence, room);
-            }
-            progressBar.setVisibility(View.VISIBLE);
-            databaseReference.child(userId).child(id).setValue(complaint).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    progressBar.setVisibility(View.GONE);
-                    sendNotification("Complaint", Constants.COMPLAINT_TYPE);
-                    progressBar.setVisibility(View.GONE);
-
-                    Intent intent = new Intent(getActivity(), SuccessActivity.class);
-                    intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_complaint_message));
-                    startActivity(intent);
+            if (validateComplaint()) {
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                Date today = Calendar.getInstance().getTime();
+                String date = dateFormat.format(today);
+                Complaint complaint;
+                if (imageUri != null && attachImage.isChecked()) {
+                    complaint = new Complaint(mAuth.getCurrentUser().getUid(), id, category, complainTxt, date, userCity, residenceName, userRoom, imagePath, userName);
+                } else {
+                    complaint = new Complaint(mAuth.getCurrentUser().getUid(), id, category, complainTxt, date, userCity, residenceName, userRoom, userName);
                 }
-            });
+                progressBar.setVisibility(View.VISIBLE);
+                databaseReference.child(userId).child(id).setValue(complaint).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        progressBar.setVisibility(View.GONE);
+                        sendNotification("Complaint", Constants.COMPLAINT_TYPE);
+                        progressBar.setVisibility(View.GONE);
 
+                        Intent intent = new Intent(getActivity(), SuccessActivity.class);
+                        intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_complaint_message));
+                        startActivity(intent);
+                    }
+                });
+
+            } else {
+                progressBar.setVisibility(View.GONE);
+                Snackbar.make(view, "Please Review the Errors", Snackbar.LENGTH_LONG).show();
+            }
         } else {
-            progressBar.setVisibility(View.GONE);
-            Snackbar.make(view, "Please Review the Errors", Snackbar.LENGTH_LONG).show();
+            showDialog();
         }
-    }
-
-    private boolean validateRoom() {
-        if (roomNo.getText().toString().trim().isEmpty()) {
-            //inputLayoutName.setError(getString(R.string.err_msg_name));
-            Snackbar.make(view, getString(R.string.err_msg_room), Snackbar.LENGTH_SHORT).show();
-            requestFocus(roomNo);
-            roomNo.setError("this field cannot be empty");
-            return false;
-        }
-        return true;
     }
 
     private boolean validateComplaint() {
         if (editTextComplaint.getText().toString().trim().isEmpty()) {
-            //inputLayoutName.setError(getString(R.string.err_msg_name));
-            Snackbar.make(view, getString(R.string.err_msg_complaint), Snackbar.LENGTH_SHORT).show();
             requestFocus(editTextComplaint);
             editTextComplaint.setError("this field cannot be empty");
             return false;
@@ -211,105 +202,11 @@ public class AddComplaintFragment extends Fragment {
         String id = notificationsReference.push().getKey();
         String typeId = databaseReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
-        notificationsReference.child(userId).child(id).setValue(notification);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, Constants.ADMIN_USER_ID, false);
+        notificationsReference.child(id).setValue(notification);
     }
 
     private void setupDropdowns() {
-        /**
-         * Cities Dropdown
-         */
-        cities = (Spinner) view.findViewById(R.id.spinner_city);
-        final List<String> cityList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.city)));
-        final ArrayAdapter<String> cityArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, cityList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View spinnerCityView = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) spinnerCityView;
-                if (position == 0) {
-                    textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
-                }
-                return spinnerCityView;
-            }
-        };
-
-        cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        cities.setAdapter(cityArrayAdapter);
-
-        /**
-         * Residences Dynamic Dropdown
-         */
-        residences = (Spinner) view.findViewById(R.id.spinner_residence);
-        final int[] array = new int[1];
-        array[0] = R.array.PortElizabethResidences;
-        final ArrayAdapter<String> spinnerArrayAdapter;
-        cities.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                switch (cities.getSelectedItemPosition()) {
-                    case 1:
-                        array[0] = R.array.PortElizabethResidences;
-                        break;
-
-                    case 2:
-                        array[0] = R.array.EastLondonResidences;
-                        break;
-                    case 3:
-                        array[0] = R.array.QueenstownResidences;
-                        break;
-                    default:
-                        array[0] = R.array.PortElizabethResidences;
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        final List<String> residenceList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(array[0])));
-        spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, residenceList) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View spinnerView = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) spinnerView;
-                if (position == 0) {
-                    textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
-                }
-                return spinnerView;
-            }
-        };
-        spinnerArrayAdapter.notifyDataSetChanged();
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        residences.setAdapter(spinnerArrayAdapter);
-        /**
-         * Priority List Dropdown
-         */
         priority = (Spinner) view.findViewById(R.id.spinner_priority);
         final List<String> priorityList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.priorities)));
         final ArrayAdapter<String> priorityArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, priorityList) {
@@ -336,7 +233,6 @@ public class AddComplaintFragment extends Fragment {
         };
         priorityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         priority.setAdapter(priorityArrayAdapter);
-
     }
 
     private void takeImage() {
@@ -347,7 +243,6 @@ public class AddComplaintFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         }
-
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
         String imageFilename = "JPEG_" + timeStamp + "_";
@@ -451,13 +346,62 @@ public class AddComplaintFragment extends Fragment {
                         }
                     }
                 });
-                progressBar.setVisibility(View.GONE);
-            } catch (Exception e) {
 
+            } catch (Exception e) {
+                progressBar.setVisibility(View.GONE);
             }
-        }
-        else{
+        } else {
             addComplaint();
         }
+    }
+
+    private void getUserInfo() {
+        usersReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                residenceName = user != null ? user.getUserResidence() : null;
+                userRoom = user != null ? user.getUserRoom() : null;
+                userCity = user != null ? user.getUserCity() : null;
+                userName = user != null ? user.getUserFirstName() + " " + user.getUserLastName() : null;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private boolean validateResidence() {
+        if (residenceName == null) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateRoomNo() {
+        if (userRoom == null) {
+            return false;
+        }
+        return true;
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.error_message)
+                .setTitle(R.string.update_profile).setIcon(R.drawable.ic_error);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                startActivity(new Intent(getActivity(), ProfileActivity.class));
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

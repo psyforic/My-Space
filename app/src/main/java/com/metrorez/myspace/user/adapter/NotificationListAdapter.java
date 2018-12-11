@@ -125,17 +125,18 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                         });
                         break;
                     case Constants.REQUEST_TYPE:
-                        reference.child("extras").child(n.getFromUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        reference.child("extras").child(n.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Request request = dataSnapshot.getValue(Request.class);
-                                int size = request.getExtras().size();
-                                List<String> items = new ArrayList<>();
-                                for (Extra item : request.getExtras()) {
-                                    items.add(item.getExtraName());
-                                }
-                                snippet.append(request.getCity() + "\n" + size + " Items" + "\n" + items + "\n");
+                                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                                    Request request = requestSnapshot.getValue(Request.class);
 
+                                    List<String> items = new ArrayList<>();
+                                    for (Extra item : request.getExtras()) {
+                                        items.add(item.getExtraName());
+                                    }
+                                    snippet.append(request.getCity() + "\n" + items.size() + " Items" + "\n" + items + "\n");
+                                }
                             }
 
                             @Override
@@ -144,7 +145,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                             }
                         });
                         break;
-
                 }
             }
 

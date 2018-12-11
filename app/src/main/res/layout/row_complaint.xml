@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/spacing_large"
-        android:layout_marginRight="@dimen/spacing_large"
         android:layout_marginTop="@dimen/spacing_large"
+        android:layout_marginRight="@dimen/spacing_large"
         android:padding="25dp"
         app:cardCornerRadius="@dimen/spacing_medium"
         app:cardElevation="@dimen/spacing_xsmall"
@@ -37,6 +37,7 @@
                     android:id="@+id/text_complaint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                   android:maxLines="3"
                     android:text="@string/lorem_ipsum" />
 
                 <TextView

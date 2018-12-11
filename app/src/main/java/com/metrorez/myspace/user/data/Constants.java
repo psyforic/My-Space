@@ -27,6 +27,7 @@ public class Constants {
     public static final String COMPLAINT_EXTRA = "COMPLAINT_EXTRA";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String NORMAL_USER = "NORMAL_USER";
+    public static final String ADMIN_USER_ID = "vqvgYhDSvsX25fWWCrQD2Kgmz5B3";
     private static User[] users;
 
     private static FirebaseAuth mAuth = FirebaseAuth.getInstance();

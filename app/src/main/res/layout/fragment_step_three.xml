@@ -9,11 +9,11 @@
         layout="@layout/toolbar" />
 
     <android.support.design.widget.TextInputLayout
-        android:padding="@dimen/spacing_medium"
         android:id="@+id/input_layout_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:padding="@dimen/spacing_medium">
 
 
         <EditText
@@ -21,9 +21,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_comments"
-            android:textSize="18sp"
+            android:inputType="textMultiLine"
             android:lines="5"
-            android:inputType="textMultiLine" />
+            android:maxLength="180"
+            android:maxHeight="300dp"
+            android:maxLines="5"
+            android:textSize="18sp" />
     </android.support.design.widget.TextInputLayout>
 
     <ProgressBar

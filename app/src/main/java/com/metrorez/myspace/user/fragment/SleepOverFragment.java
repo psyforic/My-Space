@@ -4,11 +4,13 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,6 +25,7 @@ public class SleepOverFragment extends Fragment {
     private View view;
     private EditText friendName, friendLastName, fromDate, toDate;
     private Spinner friendGender;
+    private Button submitButton;
     private final Calendar myCalendar = Calendar.getInstance();
 
     @Override
@@ -33,6 +36,12 @@ public class SleepOverFragment extends Fragment {
         setupUI();
         dateFromClicked();
         dateToClicked();
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Coming Soon", Snackbar.LENGTH_LONG).show();
+            }
+        });
         return view;
     }
 
@@ -42,6 +51,7 @@ public class SleepOverFragment extends Fragment {
         fromDate = view.findViewById(R.id.fromDate);
         toDate = view.findViewById(R.id.toDate);
         friendGender = view.findViewById(R.id.spinnerGender);
+        submitButton = view.findViewById(R.id.btn_request);
     }
 
     private void submit() {

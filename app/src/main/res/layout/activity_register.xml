@@ -217,8 +217,10 @@
                         android:layout_height="@dimen/spacing_xxlarge"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
+                        android:ems="10"
                         android:hint="@string/hint_studentNo"
-                        android:inputType="text"
+                        android:inputType="number"
+                        android:maxLength="10"
                         android:singleLine="true" />
 
                     <ImageView
@@ -233,6 +235,7 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/colorAccent" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

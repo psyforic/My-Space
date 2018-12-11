@@ -65,7 +65,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         initToolbar();
         initComponent();
         populateAdapter();
-        Tools.systemBarLolipop(this);
+        Tools.adminSystemBarLollipop(this);
     }
 
     public static void navigate(AppCompatActivity activity, View transitionImage, City obj) {

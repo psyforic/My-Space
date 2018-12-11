@@ -35,9 +35,8 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
     private ItemFilter itemFilter = new ItemFilter();
 
     private Context context;
-    private DatabaseReference complainsRefence = FirebaseDatabase.getInstance().getReference().child("complaints");
+    private DatabaseReference complaintsRefence = FirebaseDatabase.getInstance().getReference().child("complaints");
     private OnItemClickListener mOnItemClickListener;
-    private boolean clicked = false;
 
     public interface OnItemClickListener {
         void onItemClick(View view, City obj, int position);
@@ -61,17 +60,17 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
     public void onBindViewHolder(final @NonNull ViewHolder holder, final int position) {
         final City city = filtered_items.get(position);
         final List<Complaint> complaintList = new ArrayList<>();
-        complainsRefence.addValueEventListener(new ValueEventListener() {
+        complaintsRefence.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 complaintList.clear();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                   for(DataSnapshot complaintSnapShot: userSnapshot.getChildren()){
-                       Complaint complaint = complaintSnapShot.getValue(Complaint.class);
-                       if(complaint.getComplaintCity().equals(city.getName())){
-                           complaintList.add(complaint);
-                       }
-                   }
+                    for (DataSnapshot complaintSnapShot : userSnapshot.getChildren()) {
+                        Complaint complaint = complaintSnapShot.getValue(Complaint.class);
+                        if (complaint.getComplaintCity().equals(city.getName())) {
+                            complaintList.add(complaint);
+                        }
+                    }
                     holder.complaints.setText(String.valueOf(complaintList.size()));
                 }
             }
@@ -81,24 +80,7 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
 
             }
         });
-       /* Query complaintsQuery = complainsRefence.orderByChild("complaintCity").equalTo(city.getName());
-        complaintsQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot complaintSnapShot : dataSnapshot.getChildren()) {
-                    Complaint complaint = complaintSnapShot.getValue(Complaint.class);
-                    complaintList.add(complaint);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
-
         holder.title.setText(city.getName());
-
         Picasso.with(context).load(city.getPhoto()).resize(100, 100).transform(new CircleTransform()).into(holder.image);
 
         // Here you apply the animation when the view is bound
@@ -114,8 +96,6 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
                 }
             }
         });
-
-        //clicked = false;
     }
 
     private int lastPosition = -1;
@@ -162,7 +142,6 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
         }
     }
 
-
     private class ItemFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -178,10 +157,8 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
                     result_list.add(list.get(i));
                 }
             }
-
             results.values = result_list;
             results.count = result_list.size();
-
             return results;
         }
 
@@ -191,6 +168,5 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
             filtered_items = (List<City>) results.values;
             notifyDataSetChanged();
         }
-
     }
 }

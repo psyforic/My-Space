@@ -93,14 +93,14 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mOnItemClickListener != null ) {
-                   // clicked = true;
+                if (mOnItemClickListener != null) {
+                    // clicked = true;
                     mOnItemClickListener.onItemClick(view, complaint, position);
                 }
 
             }
         });
-       // clicked = false;
+        // clicked = false;
     }
 
     private Complaint getComplaint(int position) {
@@ -155,7 +155,7 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
             final List<Complaint> result_list = new ArrayList<>(list.size());
 
             for (int i = 0; i < list.size(); i++) {
-                String str_title = list.get(i).getComplaintCity();
+                String str_title = list.get(i).getUserName();
                 if (str_title.toLowerCase().contains(query)) {
                     result_list.add(list.get(i));
                 }

@@ -147,7 +147,7 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
             final List<MoveIn> result_list = new ArrayList<>(list.size());
 
             for (int i = 0; i < list.size(); i++) {
-                String str_title = list.get(i).getUserId();
+                String str_title = list.get(i).getUserName();
                 if (str_title.toLowerCase().contains(query)) {
                     result_list.add(list.get(i));
                 }

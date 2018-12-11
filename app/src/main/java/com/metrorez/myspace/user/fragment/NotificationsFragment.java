@@ -54,17 +54,17 @@ public class NotificationsFragment extends Fragment {
         setHasOptionsMenu(true);
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
-        lyt_not_found = view.findViewById(R.id.lyt_not_found);
+        setupUI();
         getNotifications();
+        return view;
+    }
+
+    private void setupUI() {
+        lyt_not_found = view.findViewById(R.id.lyt_not_found);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new NotificationListAdapter(getActivity(), notifications);
-        recyclerView.setAdapter(mAdapter);
-        //set data and list adapter
-
-        return view;
     }
 
     private void getNotifications() {
@@ -81,7 +81,8 @@ public class NotificationsFragment extends Fragment {
                 Notification notification = notifSnapShot.getValue(Notification.class);
                 notifications.add(notification);
             }
-            mAdapter.notifyDataSetChanged();
+            mAdapter = new NotificationListAdapter(getActivity(), notifications);
+            recyclerView.setAdapter(mAdapter);
 
             if (notifications.size() == 0) {
                 lyt_not_found.setVisibility(View.VISIBLE);
@@ -101,7 +102,6 @@ public class NotificationsFragment extends Fragment {
         inflater.inflate(R.menu.menu_fragment_notif, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

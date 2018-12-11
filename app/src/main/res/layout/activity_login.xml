@@ -47,8 +47,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_medium"
                     android:layout_marginTop="@dimen/spacing_medium"
+                    android:layout_marginBottom="@dimen/spacing_medium"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -77,8 +77,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_large"
                     android:layout_marginTop="@dimen/spacing_medium"
+                    android:layout_marginBottom="@dimen/spacing_large"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -159,8 +159,7 @@
                         android:padding="@dimen/spacing_medium"
                         android:text="@string/btn_forgot_password"
                         android:textAlignment="textStart"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold" />
+                        android:textColor="@color/colorPrimary" />
 
                     <Button
                         android:id="@+id/btn_register"
@@ -174,8 +173,7 @@
                         android:padding="@dimen/spacing_medium"
                         android:text="@string/btn_register"
                         android:textAlignment="textEnd"
-                        android:textColor="@color/colorAccent"
-                        android:textStyle="bold" />
+                        android:textColor="@color/colorAccent" />
 
                 </LinearLayout>
 

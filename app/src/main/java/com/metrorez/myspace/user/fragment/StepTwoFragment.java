@@ -88,6 +88,7 @@ public class StepTwoFragment extends BaseFragment {
     private String userResidence;
     private String userRoom;
     private String userCity;
+    private String userName;
 
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
@@ -208,8 +209,8 @@ public class StepTwoFragment extends BaseFragment {
                         selectedImage = Uri.parse(realPath);
                         Toast.makeText(getActivity(), selectedImage.toString(),
                                 Toast.LENGTH_LONG).show();
-                        uploadImageToFirebaseStorage("image");
-                        mAdapter.setImageInView(position, bitmap, profileImageUrl);
+                        uploadImageToFirebaseStorage();
+                        mAdapter.setImageInView(position, imageUri);
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), "Failed to load", Toast.LENGTH_SHORT)
                                 .show();
@@ -243,7 +244,6 @@ public class StepTwoFragment extends BaseFragment {
 
     public void upload() {
         if (urls.size() != 0) {
-//            uploadImageToFirebaseStorage("image");
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date today = Calendar.getInstance().getTime();
             String date = dateFormat.format(today);
@@ -258,7 +258,7 @@ public class StepTwoFragment extends BaseFragment {
         }
     }
 
-    private void uploadImageToFirebaseStorage(final String name) {
+    private void uploadImageToFirebaseStorage() {
         imageReference = FirebaseStorage.getInstance().getReference("checkinPics/" + System.currentTimeMillis() + ".jpg");
 
         if (imageUri != null) {
@@ -303,7 +303,7 @@ public class StepTwoFragment extends BaseFragment {
     private void saveCheckinInfo(List<String> url, String userId, String date) {
         String Id = mAuth.getCurrentUser().getUid();
         String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(userId, key, date, url, userCity, userResidence, userRoom, items);
+        MoveIn moveIn = new MoveIn(userId, key, date, url, userCity, userResidence, userRoom, items, userName);
         checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -325,7 +325,7 @@ public class StepTwoFragment extends BaseFragment {
         String id = notificationsReference.push().getKey();
         String typeId = checkinReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(userId, id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, false);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, Constants.ADMIN_USER_ID, false);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
 
@@ -343,6 +343,7 @@ public class StepTwoFragment extends BaseFragment {
                 userResidence = user != null ? user.getUserResidence() : "";
                 userRoom = user != null ? user.getUserRoom() : "";
                 userCity = user != null ? user.getUserCity() : "";
+                userName = user != null ? user.getUserFirstName() + " " + user.getUserLastName() : "";
             }
 
             @Override

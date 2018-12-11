@@ -37,6 +37,17 @@ public class Tools {
         }
     }
 
+    public static void adminSystemBarLollipop(Activity activity) {
+        if (getAPIVerison() >= 5.0) {
+            Window window = activity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.setStatusBarColor(activity.getResources().getColor(R.color.colorPrimaryDarkAdmin));
+            }
+        }
+    }
+
     public static int getGridSpanCount(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();

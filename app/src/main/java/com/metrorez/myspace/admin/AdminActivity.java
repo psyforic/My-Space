@@ -58,7 +58,6 @@ public class AdminActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private DrawerLayout drawerLayout;
     private TabLayout tabLayout;
-    //public FloatingActionButton fab;
     private Toolbar searchToolbar;
     private ViewPager viewPager;
     private AdminNotificationFragment f_notifications;
@@ -101,56 +100,13 @@ public class AdminActivity extends AppCompatActivity {
         initAction();
         setupTabIcons();
         // for system bar in lollipop
-        Tools.systemBarLolipop(this);
+        Tools.adminSystemBarLollipop(this);
     }
 
 
     private void initAction() {
-       /* fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (viewPager.getCurrentItem()) {
-                    case 0:
-                        Snackbar.make(parent_view, "Add Check-in City Clicked", Snackbar.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        Intent i = new Intent(getApplicationContext(), UsersActivity.class);
-                        startActivity(i);
-                        break;
-                    case 2:
-                        Snackbar.make(parent_view, "Add Requests City Clicked", Snackbar.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });*/
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        /*tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                closeSearch();
-                viewPager.setCurrentItem(tab.getPosition());
-                switch (tab.getPosition()) {
-                    case 0:
-                        fab.setVisibility(GONE);
-                        break;
-                    case 1:
-                        fab.setVisibility(GONE);
-                        break;
-                    case 2:
-                        fab.setVisibility(GONE);
-                        break;
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });*/
         viewPager.setCurrentItem(0);
     }
 
@@ -203,18 +159,6 @@ public class AdminActivity extends AppCompatActivity {
             settingDrawer();
         }
     }
-/*
-    public void setVisibilityAppBar(boolean visible) {
-        CoordinatorLayout.LayoutParams layout_visible = new CoordinatorLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        CoordinatorLayout.LayoutParams layout_invisible = new CoordinatorLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
-       *//* if (visible) {
-            appBarLayout.setLayoutParams(layout_visible);
-            fab.show();
-        } else {
-            appBarLayout.setLayoutParams(layout_invisible);
-            fab.hide();
-        }*//*
-    }*/
 
     private void settingDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -252,13 +196,7 @@ public class AdminActivity extends AppCompatActivity {
                         Snackbar.make(parent_view, menuItem.getTitle() + " Coming Soon ", Snackbar.LENGTH_SHORT).show();
                         break;
                 }
-              /*  if (menuItem.getItemId() == R.id.nav_logout) {
 
-
-                } else {
-                    Snackbar.make(parent_view, menuItem.getTitle() + " Coming Soon ", Snackbar.LENGTH_SHORT).show();
-                }
-*/
                 return true;
             }
         });
@@ -372,7 +310,6 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 
-
     private long exitTime = 0;
 
     public void doExitApp() {
@@ -389,13 +326,9 @@ public class AdminActivity extends AppCompatActivity {
         doExitApp();
     }
 
-
     private void logout() {
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(AdminActivity.this);
         builder.setMessage(R.string.logout_message);
-
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 mAuth.getInstance().signOut();
@@ -413,7 +346,6 @@ public class AdminActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 
     private void loadUserInfo() {
         FirebaseUser user = mAuth.getCurrentUser();

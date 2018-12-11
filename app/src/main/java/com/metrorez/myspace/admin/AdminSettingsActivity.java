@@ -1,10 +1,9 @@
 package com.metrorez.myspace.admin;
 
-import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.transition.Slide;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.MainActivity;
 
 public class AdminSettingsActivity extends AppCompatActivity {
 
