@@ -223,7 +223,7 @@ public class ResponseActivity extends AppCompatActivity {
         String id = notificationsReference.push().getKey();
         String typeId = notificationsReference.push().getKey();
 
-        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, "ADMIN", type, typeId, userId, false);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, "ADMIN", type, typeId, userId, userId, false);
         notificationsReference.child(id).setValue(notification);
     }
 

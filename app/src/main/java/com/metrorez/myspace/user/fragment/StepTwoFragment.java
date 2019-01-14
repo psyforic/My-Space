@@ -93,7 +93,7 @@ public class StepTwoFragment extends BaseFragment {
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
     private ActionBar actionBar;
-    int position;
+    private int position;
     List<String> urls = new ArrayList<>();
     public MoveInItemsGridAdapter mAdapter;
 
@@ -209,8 +209,9 @@ public class StepTwoFragment extends BaseFragment {
                         selectedImage = Uri.parse(realPath);
                         Toast.makeText(getActivity(), selectedImage.toString(),
                                 Toast.LENGTH_LONG).show();
-                        uploadImageToFirebaseStorage();
-                        mAdapter.setImageInView(position, imageUri);
+                        uploadImageToFirebaseStorage("image");
+                        mAdapter.setImageInView(position, selected);
+
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), "Failed to load", Toast.LENGTH_SHORT)
                                 .show();
@@ -244,6 +245,7 @@ public class StepTwoFragment extends BaseFragment {
 
     public void upload() {
         if (urls.size() != 0) {
+//            uploadImageToFirebaseStorage("image");
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date today = Calendar.getInstance().getTime();
             String date = dateFormat.format(today);
@@ -258,14 +260,14 @@ public class StepTwoFragment extends BaseFragment {
         }
     }
 
-    private void uploadImageToFirebaseStorage() {
+    private void uploadImageToFirebaseStorage(final String name) {
         imageReference = FirebaseStorage.getInstance().getReference("checkinPics/" + System.currentTimeMillis() + ".jpg");
 
         if (imageUri != null) {
             progressBar.setVisibility(View.VISIBLE);
             ContentResolver cr = getActivity().getContentResolver();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(cr, imageUri);
+                final Bitmap bitmap = MediaStore.Images.Media.getBitmap(cr, imageUri);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                 byte[] data = baos.toByteArray();
@@ -283,17 +285,18 @@ public class StepTwoFragment extends BaseFragment {
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-                        progressBar.setVisibility(View.GONE);
+
                         if (task.isSuccessful()) {
                             profileImageUrl = task.getResult().toString();
                             urls.add(profileImageUrl);
-
+                            mAdapter.setImageInView(position, bitmap, profileImageUrl);
+                            progressBar.setVisibility(View.GONE);
                         } else {
+                            progressBar.setVisibility(View.GONE);
                             Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
-                progressBar.setVisibility(View.GONE);
             } catch (Exception e) {
 
             }
@@ -325,7 +328,7 @@ public class StepTwoFragment extends BaseFragment {
         String id = notificationsReference.push().getKey();
         String typeId = checkinReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, Constants.ADMIN_USER_ID, false);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, userId, false);
         notificationsReference.child(userId).child(id).setValue(notification);
     }
 

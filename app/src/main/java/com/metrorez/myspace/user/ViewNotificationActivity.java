@@ -1,20 +1,20 @@
 package com.metrorez.myspace.user;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.AdminActivity;
 import com.metrorez.myspace.user.adapter.NotificationListAdapter;
 import com.metrorez.myspace.user.data.Constants;
-import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Complaint;
+import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Request;
 
 import java.util.List;
@@ -51,7 +51,21 @@ public class ViewNotificationActivity extends AppCompatActivity {
                 break;
         }*/
 
-
+      /*  switch (type) {
+            case Constants.MOVEIN_TYPE:
+                startActivity(new Intent(ViewNotificationActivity.this, MainActivity.class));
+                break;
+            case Constants.COMPLAINT_TYPE:
+                startActivity(new Intent(ViewNotificationActivity.this, MainActivity.class));
+                break;
+            case Constants.REQUEST_TYPE:
+                startActivity(new Intent(ViewNotificationActivity.this, MainActivity.class));
+                break;
+            default:
+                startActivity(new Intent(ViewNotificationActivity.this, AdminActivity.class));
+                break;
+        }*/
+        startActivity(new Intent(ViewNotificationActivity.this, MainActivity.class));
     }
 
     ValueEventListener valueEventListener = new ValueEventListener() {

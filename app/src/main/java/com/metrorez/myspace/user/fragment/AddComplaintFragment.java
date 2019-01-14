@@ -34,6 +34,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -89,6 +90,7 @@ public class AddComplaintFragment extends Fragment {
     private ProgressBar progressBar;
     private DatabaseReference notificationsReference;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private LinearLayout imageLinear;
     private StorageReference storageReference;
     private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
@@ -137,6 +139,7 @@ public class AddComplaintFragment extends Fragment {
         cameraButton = (ImageButton) view.findViewById(R.id.camera_btn);
         progressBar = view.findViewById(R.id.progressBar);
         editTextComplaint = (EditText) view.findViewById(R.id.txtComment);
+        imageLinear = view.findViewById(R.id.lyt_image);
     }
 
     private void addComplaint() {
@@ -302,7 +305,9 @@ public class AddComplaintFragment extends Fragment {
                         selectedImage = Uri.parse(realPath);
                         Toast.makeText(getActivity(), selectedImage.toString(), Toast.LENGTH_LONG).show();
                         if (bitmap != null) {
+                            imageLinear.setVisibility(View.VISIBLE);
                             complaintImage.setVisibility(View.VISIBLE);
+
                             complaintImage.setImageBitmap(bitmap);
                         }
                     } catch (Exception e) {

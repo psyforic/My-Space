@@ -20,10 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="3dp"
             android:paddingLeft="10dp"
-            android:paddingTop="3dp"
             android:paddingRight="10dp"
-            android:paddingBottom="3dp">
+            android:paddingTop="3dp">
 
             <TextView
                 android:id="@+id/text_content"

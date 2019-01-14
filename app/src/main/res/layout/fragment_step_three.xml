@@ -25,6 +25,7 @@
             android:lines="5"
             android:maxLength="180"
             android:maxHeight="300dp"
+
             android:maxLines="5"
             android:textSize="18sp" />
     </android.support.design.widget.TextInputLayout>

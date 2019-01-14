@@ -67,8 +67,11 @@ public class ComplaintsGridAdapter extends RecyclerView.Adapter<ComplaintsGridAd
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot complaintSnapShot : userSnapshot.getChildren()) {
                         Complaint complaint = complaintSnapShot.getValue(Complaint.class);
-                        if (complaint.getComplaintCity().equals(city.getName())) {
-                            complaintList.add(complaint);
+                        assert complaint != null;
+                        if (complaint.getComplaintCity() != null) {
+                            if (complaint.getComplaintCity().equals(city.getName())) {
+                                complaintList.add(complaint);
+                            }
                         }
                     }
                     holder.complaints.setText(String.valueOf(complaintList.size()));

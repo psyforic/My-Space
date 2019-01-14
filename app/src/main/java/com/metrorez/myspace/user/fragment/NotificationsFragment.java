@@ -69,7 +69,7 @@ public class NotificationsFragment extends Fragment {
 
     private void getNotifications() {
 
-        Query query = noticationReference.orderByChild("fromUserId").equalTo(userId);
+        Query query = noticationReference.orderByChild("toUserId").equalTo(userId);
         query.addValueEventListener(valueEventListener);
     }
 

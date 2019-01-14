@@ -1,13 +1,14 @@
 package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Request implements Serializable {
     private String id;
     private String requestDate;
     private String userId;
-    private List<Extra> extras;
+    private List<Extra> extras = new ArrayList<>();
     private String city;
     private String roomNo;
     private String residenceName;

@@ -125,4 +125,5 @@ public class StepOneFragment extends BaseFragment {
         getActivity().finish();
         return true;
     }
+
 }

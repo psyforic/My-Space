@@ -96,7 +96,7 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
             @Override
             public void onClick(View view) {
                 if (mOnItemClickListener != null) {
-                   // clicked = true;
+                    // clicked = true;
                     mOnItemClickListener.onItemClick(view, moveIn, position);
                 }
             }
@@ -143,7 +143,7 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
             String query = constraint.toString().toLowerCase();
 
             FilterResults results = new FilterResults();
-            final List<MoveIn> list = moveIns;
+            final List<MoveIn> list = filtered_items;
             final List<MoveIn> result_list = new ArrayList<>(list.size());
 
             for (int i = 0; i < list.size(); i++) {

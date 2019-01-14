@@ -166,11 +166,10 @@ public class AdminNotificationFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 notifications.clear();
                 for (DataSnapshot notifSnapShot : dataSnapshot.getChildren()) {
-                    Iterable<DataSnapshot> children = notifSnapShot.getChildren();
-                    for (DataSnapshot snapshot : children) {
-                        Notification notification = snapshot.getValue(Notification.class);
-                        notifications.add(notification);
-                    }
+                    //Iterable<DataSnapshot> children = notifSnapShot.getChildren();
+                    Notification notification = notifSnapShot.getValue(Notification.class);
+                    notifications.add(notification);
+
 
                 }
                 recyclerView.setAdapter(mAdapter);

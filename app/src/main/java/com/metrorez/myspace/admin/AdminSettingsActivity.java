@@ -1,5 +1,6 @@
 package com.metrorez.myspace.admin;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.ResetPasswordActivity;
 
 public class AdminSettingsActivity extends AppCompatActivity {
 
@@ -57,15 +59,10 @@ public class AdminSettingsActivity extends AppCompatActivity {
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(parent_view,"Coming Soon", Snackbar.LENGTH_LONG ).show();
+                startActivity(new Intent(AdminSettingsActivity.this, ResetPasswordActivity.class));
             }
         });
-        txtPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
     }
 
     @Override

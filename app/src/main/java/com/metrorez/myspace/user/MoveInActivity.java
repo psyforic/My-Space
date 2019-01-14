@@ -39,13 +39,26 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
     private StepOneFragment f_stepOne;
     private StepTwoFragment f_stepTwo;
     private StepThreeFragment f_stepThree;
+    private static final String MY_FRAG = "MY_FRAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_in);
         initToolbar();
+
         setupUI();
+        /*String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
+        if (savedInstanceState == null) {
+            f_stepTwo = StepTwoFragment.newInstance();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_two, f_stepTwo, tag)
+                    .commit();
+        } else {
+            f_stepTwo = (StepTwoFragment) getSupportFragmentManager()
+                    .findFragmentByTag(tag);
+        }*/
         onClickListeners();
 
         Tools.systemBarLolipop(this);
@@ -79,18 +92,21 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
         final StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment.isAdded()) {
-            new Thread(new Runnable() {
+          /*   new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         Thread.sleep(1000);
-                        fragment.upload();
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }).start();
 
+        }*/
+
+            fragment.upload();
         }
     }
 
@@ -115,6 +131,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         tempList = new ArrayList<>();
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+        viewPager.setOffscreenPageLimit(2);
         setupViewPager(viewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
@@ -218,4 +235,9 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         return true;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, MY_FRAG, f_stepTwo);
+    }
 }
