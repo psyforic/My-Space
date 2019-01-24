@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.ComplaintsDetailsActivity;
 import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Complaint;
 
 public class ViewComplaintActivity extends AppCompatActivity {
@@ -44,6 +45,7 @@ public class ViewComplaintActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("View Complaint");
+        Tools.systemBarLolipop(this);
     }
 
     private void setupUi() {

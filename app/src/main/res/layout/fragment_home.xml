@@ -56,7 +56,7 @@
                         android:layout_below="@id/company_heading"
                         android:gravity="center"
                         android:paddingTop="8dp"
-                        android:text="@string/lorem_ipsum" />
+                        android:text="@string/str_about_text" />
                 </RelativeLayout>
 
             </LinearLayout>

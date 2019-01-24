@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.data.Tools;
 
 public class EmailSentActivity extends AppCompatActivity {
 
@@ -30,6 +31,7 @@ public class EmailSentActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_email_sent);
         initToolbar();
+        Tools.systemBarLolipop(this);
     }
 
     private void initToolbar() {

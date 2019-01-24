@@ -28,7 +28,7 @@
     <string-array name="jobs">
         <item>Select Job Type</item>
         <item>Rez Office</item>
-        <item>Print</item>
+        <item>Print Office</item>
         <item>Gym</item>
     </string-array>
     <string-array name="branch">

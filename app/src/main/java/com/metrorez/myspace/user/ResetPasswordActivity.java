@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.data.Tools;
 
 public class ResetPasswordActivity extends AppCompatActivity {
     private Toolbar mToolbar;
@@ -64,6 +65,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 }
             }
         });
+        Tools.systemBarLolipop(this);
     }
 
     private void initToolbar() {
@@ -73,8 +75,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("Reset Password");
-        inputLayoutEmail = findViewById(R.id.input_layout_email);
-        progressBar = findViewById(R.id.progressBar);
+
     }
 
     private void setupUI() {
@@ -82,6 +83,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.input_email);
         inputEmail.addTextChangedListener(new MyTextWatcher(inputEmail));
         sendLink = findViewById(R.id.btn_reset);
+        inputLayoutEmail = findViewById(R.id.input_layout_email);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     @Override

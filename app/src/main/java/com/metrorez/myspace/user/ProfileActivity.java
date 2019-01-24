@@ -37,6 +37,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -96,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             loadUserInfo();
             loadExtraInfo();
         }
-
+        Tools.systemBarLolipop(this);
     }
 
     private void saveUserInformation() {

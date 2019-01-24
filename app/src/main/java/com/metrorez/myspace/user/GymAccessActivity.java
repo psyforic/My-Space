@@ -1,4 +1,4 @@
-package com.metrorez.myspace.user.fragment;
+package com.metrorez.myspace.user;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -6,17 +6,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -36,8 +36,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.SuccessActivity;
 import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.fragment.GymAccessFragment;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.Request;
@@ -45,19 +46,16 @@ import com.metrorez.myspace.user.model.User;
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
+public class GymAccessActivity extends AppCompatActivity {
 
-public class GymAccessFragment extends Fragment {
-    private View view;
     private Spinner spinnerGender, spinnerBranch;
     private EditText editEmail, editIdNumber;
     private List<Extra> extra;
@@ -75,10 +73,11 @@ public class GymAccessFragment extends Fragment {
     private static final String TAG = "GymAccess";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_gym_access, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gym_access);
+        initToolbar();
+
         mAuth = FirebaseAuth.getInstance();
         setupUI();
         setupDropdowns();
@@ -87,7 +86,7 @@ public class GymAccessFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (validateEmail() && validateIdNumber()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(GymAccessActivity.this);
                     // LayoutInflater inflater = getActivity().getLayoutInflater();
 
                     builder.setMessage(R.string.request_gym_message)
@@ -95,7 +94,7 @@ public class GymAccessFragment extends Fragment {
                     builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             requestAccess();
-                            Toast.makeText(getContext(), R.string.request_success, Toast.LENGTH_LONG).show();
+                            Toast.makeText(GymAccessActivity.this, R.string.request_success, Toast.LENGTH_LONG).show();
                         }
                     });
                     builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -110,26 +109,34 @@ public class GymAccessFragment extends Fragment {
                 }
             }
         });
-        return view;
+        Tools.systemBarLolipop(this);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Request Gym Access");
     }
 
     private void setupUI() {
-        editEmail = view.findViewById(R.id.input_email);
-        progressBar = view.findViewById(R.id.progressBar);
-        editIdNumber = view.findViewById(R.id.input_idNo);
-        spinnerBranch = view.findViewById(R.id.spinner_branch);
-        spinnerGender = view.findViewById(R.id.spinner_gender);
-        inputLayoutEmail = view.findViewById(R.id.input_layout_email);
+        editEmail = findViewById(R.id.input_email);
+        progressBar = findViewById(R.id.progressBar);
+        editIdNumber = findViewById(R.id.input_idNo);
+        spinnerBranch = findViewById(R.id.spinner_branch);
+        spinnerGender = findViewById(R.id.spinner_gender);
+        inputLayoutEmail = findViewById(R.id.input_layout_email);
         editEmail.addTextChangedListener(new MyTextWatcher(editEmail));
-        inputLayoutIdNo = view.findViewById(R.id.input_layout_idNo);
-        btnRequest = view.findViewById(R.id.btn_request);
+        inputLayoutIdNo = findViewById(R.id.input_layout_idNo);
+        btnRequest = findViewById(R.id.btn_request);
     }
 
     private void requestAccess() {
         if (validateEmail() && validateIdNumber()) {
             String id = extrasReference.push().getKey();
             extra = new ArrayList<>();
-            extra.add(new Extra("Gym Access", 0.00, true));
+            extra.add(new Extra("Gym Access", 1000, true));
             Request request = new Request(id, Constants.getToday(), mAuth.getCurrentUser().getUid(), extra, userCity, userResidence, userRoom, userName);
 
             // TODO: Fix later
@@ -138,7 +145,7 @@ public class GymAccessFragment extends Fragment {
                 public void onSuccess(Void aVoid) {
                     sendNotification("Request", Constants.REQUEST_TYPE);
                     sendEmail();
-                    Intent intent = new Intent(getActivity(), SuccessActivity.class);
+                    Intent intent = new Intent(GymAccessActivity.this, SuccessActivity.class);
                     intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_extra_message));
                     startActivity(intent);
                 }
@@ -158,7 +165,7 @@ public class GymAccessFragment extends Fragment {
 
     private void requestFocus(View view) {
         if (view.requestFocus()) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
@@ -217,8 +224,8 @@ public class GymAccessFragment extends Fragment {
         /**
          * gender dropdown
          */
-        final List<String> genderList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.gender)));
-        final ArrayAdapter<String> genderArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, genderList) {
+        final List<String> genderList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.gender)));
+        final ArrayAdapter<String> genderArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, genderList) {
             @Override
             public boolean isEnabled(int position) {
                 if (position == 0) {
@@ -247,8 +254,8 @@ public class GymAccessFragment extends Fragment {
         /**
          * Branch Dropdown
          */
-        final List<String> branchList = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.branch)));
-        final ArrayAdapter<String> branchArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, branchList) {
+        final List<String> branchList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.branch)));
+        final ArrayAdapter<String> branchArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, branchList) {
             @Override
             public boolean isEnabled(int position) {
                 if (position == 0) {
@@ -320,7 +327,7 @@ public class GymAccessFragment extends Fragment {
             String date = dateFormat.format(today);
             String messageBody = getString(R.string.str_message_body, userName, gender,
                     idNumber, fromMail, branch, userCity, userResidence, userRoom, date);
-            SendEmailAsyncTask task = new SendEmailAsyncTask(getActivity(), toEmail, fromMail, subject, messageBody);
+            SendEmailAsyncTask task = new SendEmailAsyncTask(this, toEmail, fromMail, subject, messageBody);
             task.execute();
         }
 
@@ -369,5 +376,16 @@ public class GymAccessFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

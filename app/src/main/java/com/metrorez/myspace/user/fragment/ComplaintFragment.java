@@ -1,5 +1,6 @@
 package com.metrorez.myspace.user.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.AddComplaintActivity;
 import com.metrorez.myspace.user.MainActivity;
 import com.metrorez.myspace.user.ViewComplaintActivity;
 import com.metrorez.myspace.user.adapter.ComplaintListAdapter;
@@ -58,16 +60,18 @@ public class ComplaintFragment extends Fragment {
         addComplaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new AddComplaintFragment();
-                Bundle bundle = new Bundle();
-                fragment.setArguments(bundle);
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_content, fragment);
-                    fragmentTransaction.commit();
+//                fragment = new AddComplaintFragment();
+//                Bundle bundle = new Bundle();
+//                fragment.setArguments(bundle);
+//                if (fragment != null) {
+//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragmentTransaction.replace(R.id.frame_content, fragment);
+//                    fragmentTransaction.commit();
+//
+//                }
 
-                }
+                startActivity(new Intent(getActivity(), AddComplaintActivity.class));
             }
         });
 

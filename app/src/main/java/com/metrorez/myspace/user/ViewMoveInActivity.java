@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.adapter.MoveInItemAdapter;
 import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.MoveInItem;
 
@@ -52,6 +53,7 @@ public class ViewMoveInActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("View Check-in");
+        Tools.systemBarLolipop(this);
     }
 
     private void setupUi() {

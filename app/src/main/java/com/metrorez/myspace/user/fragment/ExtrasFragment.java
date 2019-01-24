@@ -1,5 +1,6 @@
 package com.metrorez.myspace.user.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.GymAccessActivity;
+import com.metrorez.myspace.user.ItemRequestActivity;
+import com.metrorez.myspace.user.JobRequestActivity;
+import com.metrorez.myspace.user.SleepoverRequestActivity;
 import com.metrorez.myspace.user.adapter.MyExtrasListAdapter;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Request;
@@ -77,62 +82,29 @@ public class ExtrasFragment extends Fragment {
         addReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new AddRequestFragment();
-                Bundle bundle = new Bundle();
-                fragment.setArguments(bundle);
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_content, fragment);
-                    fragmentTransaction.commit();
-                    dialog.dismiss();
-                }
+                startActivity(new Intent(getActivity(), ItemRequestActivity.class));
+                dialog.dismiss();
             }
         });
         addGym.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new GymAccessFragment();
-                Bundle bundle = new Bundle();
-                fragment.setArguments(bundle);
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_content, fragment);
-                    fragmentTransaction.commit();
-                    dialog.dismiss();
-                }
+                startActivity(new Intent(getActivity(), GymAccessActivity.class));
+                dialog.dismiss();
             }
         });
         addSleepover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new SleepOverFragment();
-                Bundle bundle = new Bundle();
-                fragment.setArguments(bundle);
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_content, fragment);
-                    fragmentTransaction.commit();
-                    dialog.dismiss();
-
-                }
+                startActivity(new Intent(getActivity(), SleepoverRequestActivity.class));
+                dialog.dismiss();
             }
         });
         addWeekendJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new WeekendJobFragment();
-                Bundle bundle = new Bundle();
-                fragment.setArguments(bundle);
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_content, fragment);
-                    fragmentTransaction.commit();
-                    dialog.dismiss();
-                }
+                startActivity(new Intent(getActivity(), JobRequestActivity.class));
+                dialog.dismiss();
             }
         });
 

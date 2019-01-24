@@ -28,6 +28,10 @@ public class Constants {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String NORMAL_USER = "NORMAL_USER";
     public static final String ADMIN_USER_ID = "vqvgYhDSvsX25fWWCrQD2Kgmz5B3";
+    public static final String SENDGRID_TO_EMAIL = "mapundu17@gmail.com";
+    public static final String EMAIL_SUBJECT = "New Gym Access Request *";
+    public static final String SLEEPOVER_EMAIL_SUBJECT = "New Sleepover Request *";
+    public static final String JOB_EMAIL_SUBJECT = "New Job Request *";
     private static User[] users;
 
     private static FirebaseAuth mAuth = FirebaseAuth.getInstance();

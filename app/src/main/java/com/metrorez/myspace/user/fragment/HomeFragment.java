@@ -1,13 +1,18 @@
 package com.metrorez.myspace.user.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.AddComplaintActivity;
+import com.metrorez.myspace.user.GymAccessActivity;
+import com.metrorez.myspace.user.ItemRequestActivity;
+import com.metrorez.myspace.user.JobRequestActivity;
+import com.metrorez.myspace.user.SleepoverRequestActivity;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Request;
 
@@ -32,6 +42,9 @@ public class HomeFragment extends Fragment {
     private TextView txtComplaints, txtRequests;
     private FirebaseAuth mAuth;
     private Button requestBtn, complaintBtn;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private Fragment fragment = null;
     private DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints");
     private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference("extras");
 
@@ -42,7 +55,7 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         mAuth = FirebaseAuth.getInstance();
         bindData();
-
+        buttonListeners();
         return view;
     }
 
@@ -83,6 +96,65 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+    }
+
+    private void buttonListeners() {
+        complaintBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), AddComplaintActivity.class));
+            }
+        });
+        requestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createPopup();
+            }
+        });
+    }
+
+    private void createPopup() {
+        dialogBuilder = new AlertDialog.Builder(getContext());
+        View view = getLayoutInflater().inflate(R.layout.request_popup, null);
+        LinearLayout addReq, addGym, addSleepover, addWeekendJob;
+        addReq = view.findViewById(R.id.linear_req_extra);
+        addGym = view.findViewById(R.id.linear_req_gym);
+        addSleepover = view.findViewById(R.id.linear_req_sleepover);
+        addWeekendJob = view.findViewById(R.id.linear_req_job);
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        addReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(getActivity(), ItemRequestActivity.class));
+                dialog.dismiss();
+            }
+        });
+        addGym.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), GymAccessActivity.class));
+                dialog.dismiss();
+            }
+        });
+        addSleepover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), SleepoverRequestActivity.class));
+                dialog.dismiss();
+            }
+        });
+        addWeekendJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), JobRequestActivity.class));
+                dialog.dismiss();
             }
         });
 

@@ -13,6 +13,7 @@ import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.AdminActivity;
 import com.metrorez.myspace.user.adapter.NotificationListAdapter;
 import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Request;
@@ -36,6 +37,7 @@ public class ViewNotificationActivity extends AppCompatActivity {
         userId = intent.getStringExtra(NotificationListAdapter.USER_ID);
         type = intent.getStringExtra(NotificationListAdapter.TYPE);
         loadData();
+        Tools.systemBarLolipop(this);
     }
 
     private void loadData() {

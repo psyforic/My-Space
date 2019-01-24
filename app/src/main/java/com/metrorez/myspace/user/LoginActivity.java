@@ -149,9 +149,6 @@ public class LoginActivity extends AppCompatActivity {
                 case R.id.input_email:
                     validateEmail();
                     break;
-                case R.id.input_password:
-                    validatePassword();
-                    break;
             }
         }
     }
@@ -235,10 +232,6 @@ public class LoginActivity extends AppCompatActivity {
     private boolean validatePassword() {
         if (inputPassword.getText().toString().trim().isEmpty()) {
             inputLayoutPassword.setError(getString(R.string.err_msg_password));
-            requestFocus(inputPassword);
-            return false;
-        } else if (inputPassword.getText().length() < 8) {
-            inputLayoutPassword.setError(getString(R.string.inv_msg_password));
             requestFocus(inputPassword);
             return false;
         } else {

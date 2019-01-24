@@ -105,7 +105,7 @@
                     android:id="@+id/txt_add_job"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Weekend Job"
+                    android:text="Job"
                     android:textAllCaps="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Menu"
                     android:textColor="@color/colorPrimary"
