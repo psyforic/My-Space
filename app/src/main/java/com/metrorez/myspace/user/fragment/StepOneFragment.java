@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.MoveInActivity;
+import com.metrorez.myspace.user.activity.MoveInActivity;
 import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.model.Inventory;
 

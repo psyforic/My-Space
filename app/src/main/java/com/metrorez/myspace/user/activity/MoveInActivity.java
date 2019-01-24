@@ -1,4 +1,4 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

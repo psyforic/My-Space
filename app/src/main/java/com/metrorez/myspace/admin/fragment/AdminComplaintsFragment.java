@@ -1,8 +1,5 @@
 package com.metrorez.myspace.admin.fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.ComplaintsDetailsActivity;
+import com.metrorez.myspace.admin.activity.ComplaintsDetailsActivity;
 import com.metrorez.myspace.admin.adapter.ComplaintsGridAdapter;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
-import com.metrorez.myspace.user.model.Complaint;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,21 +24,21 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".user.ItemRequestActivity"></activity>
-        <activity android:name=".user.SleepoverRequestActivity" />
-        <activity android:name=".user.JobRequestActivity" />
-        <activity android:name=".user.GymAccessActivity" />
-        <activity android:name=".user.AddComplaintActivity" />
+        <activity android:name=".user.activity.ItemRequestActivity"></activity>
+        <activity android:name=".user.activity.SleepoverRequestActivity" />
+        <activity android:name=".user.activity.JobRequestActivity" />
+        <activity android:name=".user.activity.GymAccessActivity" />
+        <activity android:name=".user.activity.AddComplaintActivity" />
         <activity
-            android:name=".user.LoginActivity"
+            android:name=".user.activity.LoginActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".user.MainActivity" />
+        <activity android:name=".user.activity.MainActivity" />
         <activity
-            android:name=".user.RegisterActivity"
+            android:name=".user.activity.RegisterActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".user.ProfileActivity" />
+        <activity android:name=".user.activity.ProfileActivity" />
         <activity
-            android:name=".user.SplashActivity"
+            android:name=".user.activity.SplashActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,27 +46,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".user.SuccessActivity" />
-        <activity android:name=".user.MoveInActivity" />
+        <activity android:name=".user.activity.SuccessActivity" />
+        <activity android:name=".user.activity.MoveInActivity" />
         <activity
-            android:name=".admin.AdminActivity"
+            android:name=".admin.activity.AdminActivity"
             android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />
         <activity
-            android:name=".admin.UsersActivity"
+            android:name=".admin.activity.UsersActivity"
             android:theme="@style/AdminTheme" />
         <activity
-            android:name=".admin.ComplaintsDetailsActivity"
+            android:name=".admin.activity.ComplaintsDetailsActivity"
             android:theme="@style/AdminTheme" />
         <activity
-            android:name=".admin.RequestsActivityDetails"
+            android:name=".admin.activity.RequestsActivityDetails"
             android:theme="@style/AdminTheme" />
         <activity
-            android:name=".admin.UserDetailsActivity"
+            android:name=".admin.activity.UserDetailsActivity"
             android:theme="@style/AdminTheme" />
         <activity
-            android:name=".admin.CheckinDetailsActivity"
+            android:name=".admin.activity.CheckinDetailsActivity"
             android:theme="@style/AdminTheme" />
-        <activity android:name=".user.ViewNotificationActivity">
+        <activity android:name=".user.activity.ViewNotificationActivity">
             <intent-filter>
                 <action android:name="myspace.metrorez.NOTIFICATIONS" />
 
@@ -80,13 +80,13 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".user.BillingActivity" />
-        <activity android:name=".user.ViewComplaintActivity" />
-        <activity android:name=".user.ViewMoveInActivity" />
-        <activity android:name=".admin.ResponseActivity" />
-        <activity android:name=".admin.AdminSettingsActivity" />
-        <activity android:name=".user.ResetPasswordActivity" />
-        <activity android:name=".user.EmailSentActivity" />
+        <activity android:name=".user.activity.BillingActivity" />
+        <activity android:name=".user.activity.ViewComplaintActivity" />
+        <activity android:name=".user.activity.ViewMoveInActivity" />
+        <activity android:name=".admin.activity.ResponseActivity" />
+        <activity android:name=".admin.activity.AdminSettingsActivity" />
+        <activity android:name=".user.activity.ResetPasswordActivity" />
+        <activity android:name=".user.activity.EmailSentActivity" />
     </application>
 
 </manifest>

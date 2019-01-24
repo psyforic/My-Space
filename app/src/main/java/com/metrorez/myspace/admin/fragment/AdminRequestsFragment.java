@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.AdminActivity;
-import com.metrorez.myspace.admin.RequestsActivityDetails;
+import com.metrorez.myspace.admin.activity.AdminActivity;
+import com.metrorez.myspace.admin.activity.RequestsActivityDetails;
 import com.metrorez.myspace.admin.adapter.RequestsGridAdapter;
 import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.admin.model.City;

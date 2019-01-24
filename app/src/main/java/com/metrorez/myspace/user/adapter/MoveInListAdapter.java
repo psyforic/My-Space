@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
@@ -56,7 +57,7 @@ public class MoveInListAdapter extends RecyclerView.Adapter<MoveInListAdapter.Vi
         holder.card_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ( mOnItemClickListener != null) {
+                if (mOnItemClickListener != null) {
                     //clicked = true;
                     mOnItemClickListener.onItemClick(view, moveIn, position);
                 }
@@ -89,7 +90,7 @@ public class MoveInListAdapter extends RecyclerView.Adapter<MoveInListAdapter.Vi
         public TextView content;
         public TextView time;
         public ImageView image;
-        public CardView card_parent;
+        public LinearLayout card_parent;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -97,7 +98,7 @@ public class MoveInListAdapter extends RecyclerView.Adapter<MoveInListAdapter.Vi
             content = (TextView) itemView.findViewById(R.id.content);
             time = (TextView) itemView.findViewById(R.id.time);
             image = (ImageView) itemView.findViewById(R.id.image);
-            card_parent = (CardView) itemView.findViewById(R.id.cardParent);
+            card_parent = (LinearLayout) itemView.findViewById(R.id.cardParent);
         }
     }
 

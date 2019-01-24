@@ -24,10 +24,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.metrorez.myspace.user.MoveInActivity;
+import com.metrorez.myspace.user.activity.MoveInActivity;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.ProfileActivity;
-import com.metrorez.myspace.user.ViewMoveInActivity;
+import com.metrorez.myspace.user.activity.ProfileActivity;
+import com.metrorez.myspace.user.activity.ViewMoveInActivity;
 import com.metrorez.myspace.user.adapter.MoveInListAdapter;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.MoveIn;
@@ -38,7 +38,7 @@ import java.util.List;
 
 public class MoveInFragment extends Fragment {
 
-    FloatingActionButton addMoveIn;
+    private FloatingActionButton addMoveIn;
     private RecyclerView recyclerView;
     public MoveInListAdapter mAdapter;
     private ProgressBar progressBar;
@@ -89,6 +89,7 @@ public class MoveInFragment extends Fragment {
         super.onAttach(context);
         //getMoveIns();
     }
+
     private void setupUI() {
         moveIns = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -101,6 +102,7 @@ public class MoveInFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         getMoveIns();
     }
+
     private void getMoveIns() {
 
         if (moveInReference != null) {
@@ -158,18 +160,21 @@ public class MoveInFragment extends Fragment {
     public void onStart() {
         super.onStart();
     }
+
     private boolean validateResidence() {
         if (residenceName == null) {
             return false;
         }
         return true;
     }
+
     private boolean validateRoomNo() {
         if (userRoom == null) {
             return false;
         }
         return true;
     }
+
     private void getUserInfo() {
         usersReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -185,6 +190,7 @@ public class MoveInFragment extends Fragment {
             }
         });
     }
+
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage(R.string.movein_error_message)

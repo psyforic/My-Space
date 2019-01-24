@@ -1,7 +1,5 @@
 package com.metrorez.myspace.admin.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.AdminActivity;
 import com.metrorez.myspace.admin.adapter.AdminUserListAdapter;
 import com.metrorez.myspace.admin.model.AdminUser;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;

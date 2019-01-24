@@ -16,8 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.MainActivity;
-import com.metrorez.myspace.user.ProfileActivity;
+import com.metrorez.myspace.user.activity.MainActivity;
+import com.metrorez.myspace.user.activity.ProfileActivity;
 import com.metrorez.myspace.user.model.User;
 
 public class ProfileFragment extends Fragment {

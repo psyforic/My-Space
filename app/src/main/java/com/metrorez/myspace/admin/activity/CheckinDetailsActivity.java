@@ -1,4 +1,4 @@
-package com.metrorez.myspace.admin;
+package com.metrorez.myspace.admin.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -30,7 +30,6 @@ import com.metrorez.myspace.admin.adapter.AdminCheckinListAdapter;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.MoveIn;
-import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.MoveInItem;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
@@ -149,7 +148,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                             for (MoveInItem item : obj.getItemList()) {
                                 items.add(item.getItemName());
                             }
-                            String checkin = obj.getCity()+ "\n" + obj.getUserResidence() + "\n" + obj.getUserRoom() + "\n" + "ITEMS CHECKED IN " + "\n" + items.toString();
+                            String checkin = obj.getCity() + "\n" + obj.getUserResidence() + "\n" + obj.getUserRoom() + "\n" + "ITEMS CHECKED IN " + "\n" + items.toString();
                             ResponseActivity.navigate(CheckinDetailsActivity.this, view, sendTo.get(0), checkin, obj.getDate());
                         }
 
@@ -204,9 +203,9 @@ public class CheckinDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            /*case android.R.id.home:
                 finish();
-                return true;
+                return true;*/
             case R.id.action_search: {
 
                 supportInvalidateOptionsMenu();
@@ -214,5 +213,16 @@ public class CheckinDetailsActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

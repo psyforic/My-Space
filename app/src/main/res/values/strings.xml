@@ -60,7 +60,7 @@
     <string name="err_msg_complaint">Please Enter Complaint</string>
     <string name="str_extra_price">R 1000</string>
     <string name="str_extra_name">Extra Name</string>
-    <string name="str_version">Version 1.1.0</string>
+    <string name="str_version">Version 1.0.7</string>
     <string name="hint_phone">Cellphone</string>
     <string name="hint_room_number">Room Number</string>
     <string name="btn_update_profile">Update Profile</string>
@@ -142,15 +142,24 @@
     <string name="movein_error_message">Please Update Residence Information Under Profile In Order to Move In.</string>
     <string name="str_gym_request">Gym Access Request Successful, we\'ll get back to you</string>
 
-    <string name="str_message_body"><h1>Gym Access Request</h1>\n \n<b>From:</b> %1$s \n<b>Gender:</b> %2$s
-        \n<b>Id Number: </b>%3$s \n<b>Email: </b>%4$s \n<b>Branch: </b>%5$s \n<b>City: </b>%6$s
-        \n<b>Residence: </b>%7$s \n<b>Room: </b>%8$s \n<b>Date:</b> %9$s </string>
+    <string name="str_message_body"><h1>Gym Access Request</h1>\n \n <b>From:</b> %1$s \n <b>Gender:</b> %2$s
+        \n <b>Id Number:</b> %3$s \n <b>Email:</b> %4$s \n <b>Branch:</b> %5$s \n <b>City:</b> %6$s
+        \n <b>Residence:</b> %7$s \n <b>Room:</b> %8$s \n <b>Date:</b> %9$s </string>
 
     <string name="str_sleepover_msg_body">
-        <h1>Sleepover Request</h1>\n \n<b>From:</b> %1$s \n <b>For: </b>%2$s \n <b>Friend Gender:</b> %3$s
-        \n<b>City: </b>%4$s \n<b>Residence: </b>%5$s \n<b>Room: </b>%6$s \n<b>From Date:</b> %7$s  \n<b>To Date:</b> %8$s
+        <h1>Sleepover Request</h1> \n \n <b>From:</b> %1$s \n <b>For: </b>%2$s \n <b>Friend Gender:</b> %3$s
+        \n<b>City:</b> %4$s \n <b>Residence:</b> %5$s \n <b>Room:</b> %6$s \n <b>From Date:</b> %7$s  \n <b>To Date:</b> %8$s
     </string>
+
+    <string name="str_job_request_msg_body">
+        <h1>Job Request</h1>\n \n <b>From:</b> %1$s \n <b>Job Type:</b> %2$s \n <b>City:</b> %3$s
+        \n <b>Residence:</b> %4$s \n <b>Room:</b> %5$s \n <b>Date:</b> %6$s
+    </string>
+
     <string name="request_gym_title">Request Gym Access</string>
     <string name="request_gym_message">Are you sure you want to request gym access?</string>
     <string name="str_about_text">Welcome to MetroRez student accommodation. we know students want the best so we are always a step ahead</string>
+    <string name="str_no_moveins_added">No MoveIns Added</string>
+    <string name="request_sleepover_message">Are you sure you want to request sleepover, for a friend?</string>
+    <string name="request_job_request_message">Are you sure you want to request a job?</string>
 </resources>

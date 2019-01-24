@@ -1,4 +1,4 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -38,7 +38,7 @@ public class ViewMoveInActivity extends AppCompatActivity {
     private List<MoveInItem> items = new ArrayList<>();
     private RecyclerView recyclerView;
     private MoveInItemAdapter mAdapter;
-    private DatabaseReference checkinsReference = FirebaseDatabase.getInstance().getReference("checkins");
+    private DatabaseReference checkinsReference = FirebaseDatabase.getInstance().getReference("moveIns");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class ViewMoveInActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("View Check-in");
+        getSupportActionBar().setTitle("View Move-in");
         Tools.systemBarLolipop(this);
     }
 
@@ -67,18 +67,16 @@ public class ViewMoveInActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        checkinsReference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        checkinsReference.child(mAuth.getCurrentUser().getUid()).child(checkinId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot checkinSnapshot : dataSnapshot.getChildren()) {
-                        MoveIn moveIn = checkinSnapshot.getValue(MoveIn.class);
-                        items.addAll(moveIn.getItemList());
-                        date.setText(moveIn.getDate());
-                        mAdapter = new MoveInItemAdapter(ViewMoveInActivity.this, items);
-                        recyclerView.setAdapter(mAdapter);
-                    }
+                    MoveIn moveIn = dataSnapshot.getValue(MoveIn.class);
+                    items.addAll(moveIn.getItemList());
+                    date.setText(moveIn.getDate());
+                    mAdapter = new MoveInItemAdapter(ViewMoveInActivity.this, items);
+                    recyclerView.setAdapter(mAdapter);
                 }
             }
 
@@ -96,7 +94,7 @@ public class ViewMoveInActivity extends AppCompatActivity {
     }
 
     public static void navigate(AppCompatActivity activity, View transitionImage, MoveIn obj) {
-        Intent intent = new Intent(activity, ViewComplaintActivity.class);
+        Intent intent = new Intent(activity, ViewMoveInActivity.class);
         intent.putExtra(Constants.MOVEIN_EXTRA, obj);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, Constants.MOVEIN_EXTRA);
         ActivityCompat.startActivity(activity, intent, options.toBundle());

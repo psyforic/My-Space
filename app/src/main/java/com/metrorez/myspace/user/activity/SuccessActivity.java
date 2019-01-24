@@ -1,10 +1,9 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.view.Window;

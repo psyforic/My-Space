@@ -86,7 +86,7 @@ public class ExtraListAdapter extends RecyclerView.Adapter<ExtraListAdapter.View
         private TextView txtExtraName;
         private TextView txtExtraPrice;
         //public LinearLayout lyt_parent;
-        public CheckBox isAdded;
+        private CheckBox isAdded;
 
         public ViewHolder(View itemView) {
             super(itemView);

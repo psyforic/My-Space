@@ -49,7 +49,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.SuccessActivity;
+import com.metrorez.myspace.user.activity.SuccessActivity;
 import com.metrorez.myspace.user.adapter.MoveInItemsGridAdapter;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;

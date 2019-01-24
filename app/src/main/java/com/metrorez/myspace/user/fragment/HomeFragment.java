@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +19,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.AddComplaintActivity;
-import com.metrorez.myspace.user.GymAccessActivity;
-import com.metrorez.myspace.user.ItemRequestActivity;
-import com.metrorez.myspace.user.JobRequestActivity;
-import com.metrorez.myspace.user.SleepoverRequestActivity;
+import com.metrorez.myspace.user.activity.AddComplaintActivity;
+import com.metrorez.myspace.user.activity.GymAccessActivity;
+import com.metrorez.myspace.user.activity.ItemRequestActivity;
+import com.metrorez.myspace.user.activity.JobRequestActivity;
+import com.metrorez.myspace.user.activity.SleepoverRequestActivity;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Request;
 
@@ -35,16 +32,12 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    public static final String ADD_FRAGMENT = "ADD_FRAGMENT";
-    RecyclerView recyclerView;
-    //public HomeGridAdapter mAdater;
     private View view;
     private TextView txtComplaints, txtRequests;
     private FirebaseAuth mAuth;
     private Button requestBtn, complaintBtn;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    private Fragment fragment = null;
     private DatabaseReference complaintsReference = FirebaseDatabase.getInstance().getReference("complaints");
     private DatabaseReference extrasReference = FirebaseDatabase.getInstance().getReference("extras");
 

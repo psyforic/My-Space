@@ -52,7 +52,7 @@ public class MoveInItemAdapter extends RecyclerView.Adapter<MoveInItemAdapter.Vi
 
         public ViewHolder(View itemView) {
             super(itemView);
-            txtName = itemView.findViewById(R.id.item_name);
+            txtName = itemView.findViewById(R.id.name);
 
         }
 

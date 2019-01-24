@@ -1,4 +1,4 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.AdminActivity;
 import com.metrorez.myspace.user.adapter.NotificationListAdapter;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;

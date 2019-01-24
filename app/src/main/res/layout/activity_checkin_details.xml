@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".admin.ComplaintsDetailsActivity">
+    tools:context=".admin.activity.ComplaintsDetailsActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No MoveIns Added"
+            android:text="@string/str_no_moveins_added"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
     </LinearLayout>
 

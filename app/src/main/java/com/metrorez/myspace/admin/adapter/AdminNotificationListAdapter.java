@@ -1,9 +1,7 @@
 package com.metrorez.myspace.admin.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -18,11 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.model.AdminNotif;
-import com.metrorez.myspace.user.ViewNotificationActivity;
-import com.metrorez.myspace.user.adapter.NotificationListAdapter;
 import com.metrorez.myspace.user.model.Notification;
-import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 

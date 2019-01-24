@@ -1,4 +1,4 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -17,7 +17,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.ComplaintsDetailsActivity;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Complaint;

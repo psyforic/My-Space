@@ -1,4 +1,4 @@
-package com.metrorez.myspace.admin;
+package com.metrorez.myspace.admin.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -25,12 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.adapter.AdminComplaintListAdapter;
 import com.metrorez.myspace.admin.adapter.AdminRequestsListAdapter;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.model.Request;
 import com.metrorez.myspace.user.data.Tools;
-import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;

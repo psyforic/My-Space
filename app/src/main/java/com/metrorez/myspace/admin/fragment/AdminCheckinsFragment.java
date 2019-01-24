@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.CheckinDetailsActivity;
+import com.metrorez.myspace.admin.activity.CheckinDetailsActivity;
 import com.metrorez.myspace.admin.adapter.CheckinsGridAdapter;
 import com.metrorez.myspace.admin.data.Constants;
 import com.metrorez.myspace.admin.model.City;

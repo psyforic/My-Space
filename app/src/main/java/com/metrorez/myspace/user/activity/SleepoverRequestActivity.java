@@ -1,9 +1,10 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +35,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
+import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Notification;
+import com.metrorez.myspace.user.model.Request;
+import com.metrorez.myspace.user.model.Sleepover;
 import com.metrorez.myspace.user.model.User;
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
@@ -51,6 +56,7 @@ public class SleepoverRequestActivity extends AppCompatActivity {
     private EditText friendName, friendLastName, fromDate, toDate;
     private Spinner friendGender;
     private Button submitButton;
+    private View parentView;
     private final Calendar myCalendar = Calendar.getInstance();
 
     private String userResidence, userRoom, userCity, userName, userEmail;
@@ -61,7 +67,7 @@ public class SleepoverRequestActivity extends AppCompatActivity {
 
     private static final String SENDGRID_USERNAME = "myspaceMailer";
     private static final String SENDGRID_PASSWORD = "#MySpace@2018";
-    private static final String TAG = "GymAccess";
+    private static final String TAG = "SleepoverRequest";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,33 +79,9 @@ public class SleepoverRequestActivity extends AppCompatActivity {
         setupUI();
         setupDropdowns();
         getUserInfo();
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validateName() && validateDate()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SleepoverRequestActivity.this);
-                    // LayoutInflater inflater = getActivity().getLayoutInflater();
-
-                    builder.setMessage(R.string.request_gym_message)
-                            .setTitle(R.string.request_gym_title);
-                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //requestAccess();
-                            Toast.makeText(SleepoverRequestActivity.this, R.string.request_success, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else {
-                    Snackbar.make(view, "Fill all the required information", Snackbar.LENGTH_LONG).show();
-                }
-            }
-        });
+        dateFromClicked();
+        dateToClicked();
+        submit();
 
         Tools.systemBarLolipop(this);
     }
@@ -117,12 +99,59 @@ public class SleepoverRequestActivity extends AppCompatActivity {
         friendLastName = findViewById(R.id.input_friend_lastname);
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
+        parentView = findViewById(android.R.id.content);
         friendGender = findViewById(R.id.spinnerGender);
         submitButton = findViewById(R.id.btn_request);
     }
 
     private void submit() {
-        //TODO: implement method
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (validateName() && validateDate()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SleepoverRequestActivity.this);
+                    // LayoutInflater inflater = getActivity().getLayoutInflater();
+
+                    builder.setMessage(R.string.request_sleepover_message)
+                            .setTitle(R.string.request_gym_title);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            requestSleepover();
+                            Toast.makeText(SleepoverRequestActivity.this, R.string.request_success, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    Snackbar.make(view, "Fill all the required information", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void requestSleepover() {
+
+        String id = extrasReference.push().getKey();
+        List<Extra> extra = new ArrayList<>();
+        extra.add(new Extra("Sleepover Request", 150.0, true));
+        Request request = new Request(id, Constants.getToday(), mAuth.getCurrentUser().getUid(), extra, userCity, userResidence, userRoom, userName);
+
+        extrasReference.child(mAuth.getCurrentUser().getUid()).child(id).setValue(request).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                sendNotification("Sleepover Request", Constants.REQUEST_TYPE);
+                sendEmail();
+                Intent intent = new Intent(SleepoverRequestActivity.this, SuccessActivity.class);
+                intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_extra_message));
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void dateFromClicked() {
@@ -131,7 +160,6 @@ public class SleepoverRequestActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -143,7 +171,6 @@ public class SleepoverRequestActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 hideKeyboard();
                 new DatePickerDialog(SleepoverRequestActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -158,7 +185,6 @@ public class SleepoverRequestActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -171,7 +197,6 @@ public class SleepoverRequestActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 hideKeyboard();
                 new DatePickerDialog(SleepoverRequestActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -273,11 +298,12 @@ public class SleepoverRequestActivity extends AppCompatActivity {
         if (validateName() && validateDate()) {
             String toEmail = Constants.SENDGRID_TO_EMAIL;
             String fromMail = userEmail;
-            String subject = Constants.EMAIL_SUBJECT;
+            String subject = Constants.SLEEPOVER_EMAIL_SUBJECT;
             String gender = friendGender.getSelectedItem().toString();
             String date = dateFormat.format(today);
-            String messageBody = getString(R.string.str_sleepover_msg_body, userName, gender,
-                    userCity, userResidence, userRoom, userCity, fromDate, toDate);
+            String friend = friendName.getText().toString() + " " + friendLastName.getText().toString();
+            String messageBody = getString(R.string.str_sleepover_msg_body, userName, friend,gender
+                    ,userCity, userResidence, userRoom, fromDate.getText().toString(), toDate.getText().toString());
             SendEmailAsyncTask task = new SendEmailAsyncTask(this, toEmail, fromMail, subject, messageBody);
             task.execute();
         }
@@ -285,14 +311,25 @@ public class SleepoverRequestActivity extends AppCompatActivity {
     }
 
     private boolean validateDate() {
-        return false;
+        if (!fromDate.getText().toString().isEmpty() && !fromDate.getText().toString().isEmpty()) {
+            return true;
+        } else {
+            Snackbar.make(parentView, "Please Fix Dates", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+
     }
 
     private boolean validateName() {
-        return false;
+        if (!friendName.getText().toString().isEmpty()) {
+            return true;
+        } else {
+            friendName.setError("Field Cannot Be Empty");
+            return false;
+        }
     }
 
-    private class SendEmailAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class SendEmailAsyncTask extends AsyncTask<Void, Void, Void> {
         private Context mContext;
         private String mMsgResponse;
 

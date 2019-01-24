@@ -36,7 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.SuccessActivity;
+import com.metrorez.myspace.user.activity.SuccessActivity;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Notification;
@@ -45,14 +45,12 @@ import com.metrorez.myspace.user.model.User;
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
 

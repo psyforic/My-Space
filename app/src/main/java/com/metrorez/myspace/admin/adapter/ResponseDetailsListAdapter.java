@@ -3,7 +3,6 @@ package com.metrorez.myspace.admin.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,14 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.admin.ResponseActivity;
 import com.metrorez.myspace.admin.model.ResponseDetails;
 import com.metrorez.myspace.user.model.User;
-import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
 
                 } else {
-                    //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+
                 }
             }
         };

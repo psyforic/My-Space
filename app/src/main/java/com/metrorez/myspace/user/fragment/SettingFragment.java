@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.metrorez.myspace.R;
-import com.metrorez.myspace.user.ResetPasswordActivity;
+import com.metrorez.myspace.user.activity.ResetPasswordActivity;
 
 
 public class SettingFragment extends Fragment {

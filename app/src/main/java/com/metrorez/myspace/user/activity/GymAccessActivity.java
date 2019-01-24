@@ -1,4 +1,4 @@
-package com.metrorez.myspace.user;
+package com.metrorez.myspace.user.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -38,7 +38,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
-import com.metrorez.myspace.user.fragment.GymAccessFragment;
 import com.metrorez.myspace.user.model.Extra;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.Request;
@@ -58,7 +57,6 @@ public class GymAccessActivity extends AppCompatActivity {
 
     private Spinner spinnerGender, spinnerBranch;
     private EditText editEmail, editIdNumber;
-    private List<Extra> extra;
     private ProgressBar progressBar;
     private TextInputLayout inputLayoutEmail, inputLayoutIdNo;
     private Button btnRequest;
@@ -135,7 +133,7 @@ public class GymAccessActivity extends AppCompatActivity {
     private void requestAccess() {
         if (validateEmail() && validateIdNumber()) {
             String id = extrasReference.push().getKey();
-            extra = new ArrayList<>();
+            List<Extra> extra = new ArrayList<>();
             extra.add(new Extra("Gym Access", 1000, true));
             Request request = new Request(id, Constants.getToday(), mAuth.getCurrentUser().getUid(), extra, userCity, userResidence, userRoom, userName);
 
@@ -333,8 +331,8 @@ public class GymAccessActivity extends AppCompatActivity {
 
     }
 
-    private class SendEmailAsyncTask extends AsyncTask<Void, Void, Void> {
-        private Context mContext;
+    private static class SendEmailAsyncTask extends AsyncTask<Void, Void, Void> {
+        Context mContext;
         private String mMsgResponse;
 
         private String mTo;

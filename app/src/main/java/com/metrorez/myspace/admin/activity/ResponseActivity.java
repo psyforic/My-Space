@@ -1,4 +1,4 @@
-package com.metrorez.myspace.admin;
+package com.metrorez.myspace.admin.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -191,6 +191,12 @@ public class ResponseActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
@@ -230,5 +236,12 @@ public class ResponseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportActionBar().setTitle(user.getUserFirstName() + " " + user.getUserLastName());
+
     }
 }
