@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -42,6 +44,8 @@ public class AdminNotificationFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private View view;
+    private Button bt_hide_text, bt_hide_input;
+    private ImageButton bt_toggle_text;
     public AdminNotificationListAdapter mAdapter;
     private List<Notification> notifications = new ArrayList<>();
     //private String userId;

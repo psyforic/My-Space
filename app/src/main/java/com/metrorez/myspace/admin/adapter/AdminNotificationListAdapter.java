@@ -2,6 +2,7 @@ package com.metrorez.myspace.admin.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -9,13 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.data.ViewAnimation;
+import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -29,7 +34,7 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     private List<Notification> original_items = new ArrayList<>();
     private List<Notification> filtered_items = new ArrayList<>();
     private ItemFilter mFilter = new ItemFilter();
-//    public static final String USER_ID = "USER_ID";
+    //    public static final String USER_ID = "USER_ID";
 //    public static final String TYPE = "TYPE";
     private OnItemClickListener mOnItemClickListener;
 
@@ -51,7 +56,7 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_notif, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_new_notif, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -70,10 +75,11 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Notification n = filtered_items.get(position);
         holder.content.setText(Html.fromHtml(n.getContent()));
-        holder.date.setText(n.getDate());
+        holder.header.setText(n.getUserName());
+        /*holder.date.setText(n.getDate());
         Picasso.with(context).load(R.drawable.ic_bell)
                 .placeholder(R.drawable.ic_bell)
                 .resize(60, 60)
@@ -89,7 +95,23 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
                     mOnItemClickListener.onItemClick(view, n, position);
                 }
             }
+        });*/
+
+
+        holder.bt_toggle_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.toggleSectionText(holder.bt_toggle_text);
+            }
         });
+
+        holder.bt_hide_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.toggleSectionText(holder.bt_toggle_text);
+            }
+        });
+
     }
 
     @Override
@@ -103,17 +125,54 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView content;
-        public TextView date;
-        public ImageView image;
-        public LinearLayout lyt_parent;
+        /* public TextView content;
+         public TextView date;
+         public ImageView image;
+         public LinearLayout lyt_parent;
+         */
+        public TextView content, header;
+        private Button bt_hide_text, bt_hide_input;
+        private ImageButton bt_toggle_text;
+        private View lyt_expand_text;
+        private NestedScrollView nested_scroll_view;
 
         public ViewHolder(View v) {
             super(v);
+            header = (TextView) v.findViewById(R.id.header);
             content = (TextView) v.findViewById(R.id.content);
-            date = (TextView) v.findViewById(R.id.date);
+            bt_toggle_text = (ImageButton) v.findViewById(R.id.bt_toggle_text);
+            bt_hide_text = (Button) v.findViewById(R.id.bt_hide_text);
+            lyt_expand_text = (View) v.findViewById(R.id.lyt_expand_text);
+            lyt_expand_text.setVisibility(View.GONE);
+            nested_scroll_view = (NestedScrollView) v.findViewById(R.id.nested_scroll_view);
+
+           /* date = (TextView) v.findViewById(R.id.date);
             image = (ImageView) v.findViewById(R.id.image);
-            lyt_parent = (LinearLayout) v.findViewById(R.id.lyt_parent);
+            lyt_parent = (LinearLayout) v.findViewById(R.id.lyt_parent);*/
+        }
+
+        private void toggleSectionText(View view) {
+            boolean show = toggleArrow(view);
+            if (show) {
+                ViewAnimation.expand(lyt_expand_text, new ViewAnimation.AnimListener() {
+                    @Override
+                    public void onFinish() {
+                        Tools.nestedScrollTo(nested_scroll_view, lyt_expand_text);
+                    }
+                });
+            } else {
+                ViewAnimation.collapse(lyt_expand_text);
+            }
+        }
+
+        public boolean toggleArrow(View view) {
+            if (view.getRotation() == 0) {
+                view.animate().setDuration(200).rotation(180);
+                return true;
+            } else {
+                view.animate().setDuration(200).rotation(0);
+                return false;
+            }
         }
     }
 

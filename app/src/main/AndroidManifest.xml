@@ -24,7 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".user.activity.ItemRequestActivity"></activity>
+        <activity android:name=".admin.activity.ImageViewActivity"></activity>
+        <activity android:name=".admin.activity.ViewUserMoveInActivity" />
+        <activity android:name=".user.activity.ItemRequestActivity" />
         <activity android:name=".user.activity.SleepoverRequestActivity" />
         <activity android:name=".user.activity.JobRequestActivity" />
         <activity android:name=".user.activity.GymAccessActivity" />

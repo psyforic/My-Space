@@ -162,4 +162,7 @@
     <string name="str_no_moveins_added">No MoveIns Added</string>
     <string name="request_sleepover_message">Are you sure you want to request sleepover, for a friend?</string>
     <string name="request_job_request_message">Are you sure you want to request a job?</string>
+    <string name="str_image_placeholder">image_placeholder</string>
+    <string name="str_move_in_date">MoveIn Date:</string>
+    <string name="str_hide">HIDE</string>
 </resources>
