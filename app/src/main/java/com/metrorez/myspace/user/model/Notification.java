@@ -1,6 +1,9 @@
 package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Notification implements Serializable {
 
@@ -14,6 +17,7 @@ public class Notification implements Serializable {
     private String userId;
     private String toUserId;
     private boolean isRead;
+    private Date realDate = new Date();
 
     public Notification() {
     }
@@ -66,9 +70,9 @@ public class Notification implements Serializable {
     }
 
     public String getContent() {
-        return content + " from " + userName;
-        //return content;
+        return this.content + " from " + this.userName;
     }
+
     public String getUserName() {
         return userName;
     }
@@ -91,5 +95,17 @@ public class Notification implements Serializable {
 
     public String getToUserId() {
         return toUserId;
+    }
+
+    public Date getRealDate() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            if (getDate() != null) realDate = sdf.parse((this.getDate()));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return realDate;
     }
 }

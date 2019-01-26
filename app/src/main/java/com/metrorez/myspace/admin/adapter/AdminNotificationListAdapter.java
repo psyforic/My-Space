@@ -34,8 +34,7 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     private List<Notification> original_items = new ArrayList<>();
     private List<Notification> filtered_items = new ArrayList<>();
     private ItemFilter mFilter = new ItemFilter();
-    //    public static final String USER_ID = "USER_ID";
-//    public static final String TYPE = "TYPE";
+
     private OnItemClickListener mOnItemClickListener;
 
     public AdminNotificationListAdapter(Context context, List<Notification> notifications) {
@@ -55,9 +54,8 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // create a new view
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_new_notif, parent, false);
-        // set the view's size, margins, paddings and layout parameters
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -78,7 +76,10 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Notification n = filtered_items.get(position);
         holder.content.setText(Html.fromHtml(n.getContent()));
-        holder.header.setText(n.getUserName());
+        holder.header.setText(n.getType() + " from " + n.getUserName());
+        holder.date.setText(n.getDate());
+
+        setAnimation(holder.itemView, position);
         /*holder.date.setText(n.getDate());
         Picasso.with(context).load(R.drawable.ic_bell)
                 .placeholder(R.drawable.ic_bell)
@@ -130,16 +131,18 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
          public ImageView image;
          public LinearLayout lyt_parent;
          */
-        public TextView content, header;
-        private Button bt_hide_text, bt_hide_input;
+        private TextView content, header;
+        private Button bt_hide_text;
         private ImageButton bt_toggle_text;
         private View lyt_expand_text;
+        private TextView date;
         private NestedScrollView nested_scroll_view;
 
         public ViewHolder(View v) {
             super(v);
             header = (TextView) v.findViewById(R.id.header);
             content = (TextView) v.findViewById(R.id.content);
+            date = (TextView) v.findViewById(R.id.date);
             bt_toggle_text = (ImageButton) v.findViewById(R.id.bt_toggle_text);
             bt_hide_text = (Button) v.findViewById(R.id.bt_hide_text);
             lyt_expand_text = (View) v.findViewById(R.id.lyt_expand_text);
@@ -165,7 +168,7 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
             }
         }
 
-        public boolean toggleArrow(View view) {
+        private boolean toggleArrow(View view) {
             if (view.getRotation() == 0) {
                 view.animate().setDuration(200).rotation(180);
                 return true;
@@ -187,14 +190,13 @@ public class AdminNotificationListAdapter extends RecyclerView.Adapter<AdminNoti
 
             for (int i = 0; i < list.size(); i++) {
                 String str_title = list.get(i).getUserName();
-                if (str_title.toLowerCase().contains(query)) {
+                if (str_title.toLowerCase().contains(query) || list.get(i).getType().toLowerCase().contains(query)) {
                     result_list.add(list.get(i));
                 }
             }
 
             results.values = result_list;
             results.count = result_list.size();
-
             return results;
         }
 

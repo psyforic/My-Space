@@ -315,7 +315,7 @@ public class StepTwoFragment extends BaseFragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
     }

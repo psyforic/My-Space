@@ -2,6 +2,9 @@ package com.metrorez.myspace.user.model;
 
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Complaint implements Serializable {
     private String complaintId;
@@ -14,6 +17,7 @@ public class Complaint implements Serializable {
     private String userId;
     private String imagePath;
     private String userName;
+    private Date realDate = new Date();
 
     public Complaint() {
     }
@@ -100,5 +104,17 @@ public class Complaint implements Serializable {
 
     public String getUserName() {
         return userName;
+    }
+
+    public Date getRealDate() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            if (getComplaintDate() != null) realDate = sdf.parse((this.getComplaintDate()));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return realDate;
     }
 }

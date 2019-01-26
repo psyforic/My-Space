@@ -89,7 +89,6 @@ public class AdminActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         initAction();
         setupTabIcons();
-        // for system bar in lollipop
         Tools.adminSystemBarLollipop(this);
     }
 
@@ -280,6 +279,10 @@ public class AdminActivity extends AppCompatActivity {
             }
             case android.R.id.home:
                 closeSearch();
+                return true;
+
+            case R.id.action_refresh:
+                f_notifications.getNotifications();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

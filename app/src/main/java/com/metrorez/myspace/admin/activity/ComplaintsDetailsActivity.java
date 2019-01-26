@@ -27,6 +27,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.AdminComplaintListAdapter;
+import com.metrorez.myspace.admin.data.Utils;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Complaint;
@@ -34,6 +35,7 @@ import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ComplaintsDetailsActivity extends AppCompatActivity {
@@ -125,6 +127,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
                                     Complaint complaint = complaintSnapShot.getValue(Complaint.class);
                                     complaints.add(complaint);
                                 }
+                                Collections.sort(complaints, new Utils.ComplaintComparator());
                                 mAdapter = new AdminComplaintListAdapter(ComplaintsDetailsActivity.this, complaints, users);
                                 recyclerView.setAdapter(mAdapter);
                             }
@@ -155,6 +158,7 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        Collections.sort(complaints, new Utils.ComplaintComparator());
         mAdapter = new AdminComplaintListAdapter(ComplaintsDetailsActivity.this, complaints, users);
     }
 

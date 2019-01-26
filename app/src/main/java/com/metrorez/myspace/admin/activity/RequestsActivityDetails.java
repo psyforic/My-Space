@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.AdminRequestsListAdapter;
+import com.metrorez.myspace.admin.data.Utils;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.model.Request;
 import com.metrorez.myspace.user.data.Tools;
@@ -34,6 +35,7 @@ import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RequestsActivityDetails extends AppCompatActivity {
@@ -81,6 +83,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        Collections.sort(requests, new Utils.RequestComparator());
         mAdapter = new AdminRequestsListAdapter(RequestsActivityDetails.this, requests, users);
 
     }
@@ -107,6 +110,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
                                     Request request = requestSnapshot.getValue(Request.class);
                                     requests.add(request);
                                 }
+                                Collections.sort(requests, new Utils.RequestComparator());
                                 mAdapter = new AdminRequestsListAdapter(RequestsActivityDetails.this, requests, users);
                                 recyclerView.setAdapter(mAdapter);
                             }

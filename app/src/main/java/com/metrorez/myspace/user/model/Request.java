@@ -1,7 +1,10 @@
 package com.metrorez.myspace.user.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Request implements Serializable {
@@ -13,6 +16,8 @@ public class Request implements Serializable {
     private String roomNo;
     private String residenceName;
     private String userName;
+
+    private Date realDate = new Date();
 
     public Request() {
     }
@@ -58,5 +63,17 @@ public class Request implements Serializable {
 
     public String getUserName() {
         return userName;
+    }
+
+    public Date getRealDate() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            if (getRequestDate() != null) realDate = sdf.parse((this.getRequestDate()));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return realDate;
     }
 }

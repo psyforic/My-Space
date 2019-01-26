@@ -58,7 +58,7 @@
                             android:layout_weight="1"
                             android:text="Text"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/grey_bg" />
+                            android:textColor="@android:color/black" />
 
                         <ImageButton
                             android:id="@+id/bt_toggle_text"
@@ -83,6 +83,14 @@
                             android:padding="@dimen/spacing_large"
                             android:text="@string/lorem_ipsum" />
 
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/spacing_large"
+                            android:text="@string/date" />
+
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
@@ -93,6 +101,16 @@
                             android:layout_height="wrap_content"
                             android:gravity="end"
                             android:orientation="horizontal">
+
+                            <ImageButton
+                                android:id="@+id/bt_delete_notif"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:src="@drawable/ic_delete"
+                                android:layout_marginRight="@dimen/spacing_small"
+                                android:tint="@color/colorPrimaryAdmin" />
 
                             <Button
                                 android:id="@+id/bt_hide_text"

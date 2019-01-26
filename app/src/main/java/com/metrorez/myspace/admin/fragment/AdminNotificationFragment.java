@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.activity.ResponseActivity;
 import com.metrorez.myspace.admin.adapter.AdminNotificationListAdapter;
+import com.metrorez.myspace.admin.data.Utils;
 import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Complaint;
@@ -37,6 +38,7 @@ import com.metrorez.myspace.user.model.Request;
 import com.metrorez.myspace.user.model.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AdminNotificationFragment extends Fragment {
@@ -44,8 +46,6 @@ public class AdminNotificationFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private View view;
-    private Button bt_hide_text, bt_hide_input;
-    private ImageButton bt_toggle_text;
     public AdminNotificationListAdapter mAdapter;
     private List<Notification> notifications = new ArrayList<>();
     //private String userId;
@@ -74,6 +74,7 @@ public class AdminNotificationFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        Collections.sort(notifications, new Utils.NotificationComparator());
         mAdapter = new AdminNotificationListAdapter(getActivity(), notifications);
         getNotifications();
         mAdapter.setOnItemClickListener(new AdminNotificationListAdapter.OnItemClickListener() {
@@ -162,7 +163,7 @@ public class AdminNotificationFragment extends Fragment {
         return view;
     }
 
-    private void getNotifications() {
+    public void getNotifications() {
         progressBar.setVisibility(View.VISIBLE);
         noticationReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -171,10 +172,14 @@ public class AdminNotificationFragment extends Fragment {
                 for (DataSnapshot notifSnapShot : dataSnapshot.getChildren()) {
                     //Iterable<DataSnapshot> children = notifSnapShot.getChildren();
                     Notification notification = notifSnapShot.getValue(Notification.class);
-                    notifications.add(notification);
+                    if (notification != null && (!notification.getFromUserId().equals(mAuth.getCurrentUser().getUid()))) {
+                        notifications.add(notification);
+                    }
 
 
+                    Collections.sort(notifications, new Utils.NotificationComparator());
                 }
+
                 recyclerView.setAdapter(mAdapter);
                 progressBar.setVisibility(View.GONE);
                 if (notifications.size() == 0) {

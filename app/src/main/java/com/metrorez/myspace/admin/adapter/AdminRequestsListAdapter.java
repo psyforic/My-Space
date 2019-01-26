@@ -81,7 +81,8 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
         }
         holder.name.setText(user.getUserFirstName().concat(" ").concat(user.getUserLastName()));
         holder.city.setText(request.getCity());
-        Picasso.with(context).load(R.drawable.unknown_avatar).resize(100, 100)
+        Picasso.with(context).load(R.drawable.unknown_avatar)
+                .resize(100, 100)
                 .placeholder(R.drawable.unknown_avatar)
                 .transform(new CircleTransform())
                 .into(holder.image);
@@ -162,6 +163,7 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
 
             return results;
         }
+
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {

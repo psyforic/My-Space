@@ -27,6 +27,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.AdminCheckinListAdapter;
+import com.metrorez.myspace.admin.data.Utils;
 import com.metrorez.myspace.admin.model.City;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.MoveIn;
@@ -35,6 +36,7 @@ import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CheckinDetailsActivity extends AppCompatActivity {
@@ -83,6 +85,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        Collections.sort(moveIns, new Utils.MoveInComparator());
         mAdapter = new AdminCheckinListAdapter(this, moveIns, users);
 
     }
@@ -108,7 +111,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                                     MoveIn moveIn = checkinSnapshot.getValue(MoveIn.class);
                                     moveIns.add(moveIn);
                                 }
-
+                                Collections.sort(moveIns, new Utils.MoveInComparator());
                                 mAdapter = new AdminCheckinListAdapter(CheckinDetailsActivity.this, moveIns, users);
                                 recyclerView.setAdapter(mAdapter);
                             }
