@@ -152,7 +152,7 @@ public class AddComplaintActivity extends AppCompatActivity {
 
     private void addComplaint() {
         String category = priority.getSelectedItem().toString();
-        String complainTxt = editTextComplaint.getText().toString().trim();
+        final String complainTxt = editTextComplaint.getText().toString().trim();
         String id = databaseReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
         if (validateResidence() && validateRoomNo()) {
@@ -172,7 +172,7 @@ public class AddComplaintActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         progressBar.setVisibility(View.GONE);
-                        sendNotification("Complaint", Constants.COMPLAINT_TYPE);
+                        sendNotification(complainTxt, Constants.COMPLAINT_TYPE);
                         progressBar.setVisibility(View.GONE);
 
                         Intent intent = new Intent(AddComplaintActivity.this, SuccessActivity.class);

@@ -141,7 +141,9 @@ public class GymAccessActivity extends AppCompatActivity {
             extrasReference.child(mAuth.getCurrentUser().getUid()).child(id).setValue(request).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    sendNotification("Request", Constants.REQUEST_TYPE);
+
+                    String messageBody = userCity + "\n" + userResidence + "\n" + userRoom;
+                    sendNotification("Gym Access Request" + "\n" + messageBody, Constants.REQUEST_TYPE);
                     sendEmail();
                     Intent intent = new Intent(GymAccessActivity.this, SuccessActivity.class);
                     intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_extra_message));

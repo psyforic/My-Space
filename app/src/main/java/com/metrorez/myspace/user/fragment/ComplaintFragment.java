@@ -38,7 +38,6 @@ public class ComplaintFragment extends Fragment {
     private ComplaintListAdapter mAdapter;
     private View view;
     private List<Complaint> complaints;
-    private Fragment fragment = null;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private LinearLayout lyt_not_found;
@@ -58,17 +57,6 @@ public class ComplaintFragment extends Fragment {
         addComplaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                fragment = new AddComplaintFragment();
-//                Bundle bundle = new Bundle();
-//                fragment.setArguments(bundle);
-//                if (fragment != null) {
-//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                    fragmentTransaction.replace(R.id.frame_content, fragment);
-//                    fragmentTransaction.commit();
-//
-//                }
-
                 startActivity(new Intent(getActivity(), AddComplaintActivity.class));
             }
         });

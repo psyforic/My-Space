@@ -93,7 +93,8 @@ public class JobRequestActivity extends AppCompatActivity {
             extrasReference.child(mAuth.getCurrentUser().getUid()).child(id).setValue(request).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    sendNotification("Job Request", Constants.REQUEST_TYPE);
+                    sendNotification("Job Request..." + "\n" +
+                            jobDescription.getText().toString(), Constants.REQUEST_TYPE);
                     sendEmail();
                     Intent intent = new Intent(JobRequestActivity.this, SuccessActivity.class);
                     intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_extra_message));

@@ -70,7 +70,7 @@ public class Notification implements Serializable {
     }
 
     public String getContent() {
-        return this.content + " from " + this.userName;
+        return this.content;
     }
 
     public String getUserName() {

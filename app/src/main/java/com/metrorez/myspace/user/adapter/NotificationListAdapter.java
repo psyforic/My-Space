@@ -1,7 +1,11 @@
 package com.metrorez.myspace.user.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -10,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,10 +26,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.activity.ResponseActivity;
+import com.metrorez.myspace.admin.data.ViewAnimation;
 import com.metrorez.myspace.user.data.Constants;
+import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.Complaint;
 import com.metrorez.myspace.user.model.Extra;
@@ -45,8 +54,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     private ItemFilter mFilter = new ItemFilter();
     public static final String USER_ID = "USER_ID";
     public static final String TYPE = "TYPE";
-    private DatabaseReference userRefence = FirebaseDatabase.getInstance().getReference().child("users");
-    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+    private DatabaseReference notificationsReference = FirebaseDatabase.getInstance().getReference("notifications");
 
     public NotificationListAdapter(Context context, List<Notification> notifications) {
 
@@ -59,7 +68,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_notif, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_user_notif, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -79,92 +88,32 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Notification n = filtered_items.get(position);
-        final List<User> user = new ArrayList<>();
-        final StringBuilder snippet = new StringBuilder("");
-        userRefence.child(n.getFromUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User newUser = dataSnapshot.getValue(User.class);
-                user.add(newUser);
-
-                switch (n.getType()) {
-                    case Constants.COMPLAINT_TYPE:
-                        reference.child("complaints").child(n.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Complaint complaint = dataSnapshot.getValue(Complaint.class);
-                                snippet.append(complaint.getComplaintComment() + "\n" + "PRIORITY: " + complaint.getComplaintCategory() + "\n" + complaint.getComplaintResidence() + "\n"
-                                        + "ROOM NO. : " + complaint.getComplaintRoom());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                        break;
-                    case Constants.MOVEIN_TYPE:
-                        reference.child("checkins").child(n.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                MoveIn moveIn = dataSnapshot.getValue(MoveIn.class);
-                                List<String> items = new ArrayList<>();
-                                for (MoveInItem item : moveIn.getItemList()) {
-                                    items.add(item.getItemName());
-                                }
-                                snippet.append("ITEMS CHECKED IN " + "\n" + items.toString());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                        break;
-                    case Constants.REQUEST_TYPE:
-                        reference.child("extras").child(n.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                                    Request request = requestSnapshot.getValue(Request.class);
-
-                                    List<String> items = new ArrayList<>();
-                                    for (Extra item : request.getExtras()) {
-                                        items.add(item.getExtraName());
-                                    }
-                                    snippet.append(request.getCity() + "\n" + items.size() + " Items" + "\n" + items + "\n");
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                        break;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        holder.content.setText(Html.fromHtml(n.getContent()));
+        holder.content.setText(n.getContent());
+        holder.header.setText(n.getType() + " from " + n.getUserName());
         holder.date.setText(n.getDate());
-        Picasso.with(context).load(R.drawable.ic_bell)
-                .placeholder(R.drawable.ic_bell)
-                .resize(60, 60)
-                .transform(new CircleTransform())
-                .into(holder.image);
+
         setAnimation(holder.itemView, position);
-        // view detail message conversation
-        holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
+
+        holder.bt_toggle_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ResponseActivity.navigate((AppCompatActivity) context, view.findViewById(R.id.lyt_parent), user.get(0), snippet.toString(), n.getDate());
+                holder.toggleSectionText(holder.bt_toggle_text);
+            }
+        });
+
+        holder.bt_hide_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.toggleSectionText(holder.bt_toggle_text);
+            }
+        });
+
+        holder.btn_delete_notif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onDeleteButtonClick(view, position);
             }
         });
     }
@@ -180,19 +129,88 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView content;
-        public TextView date;
-        public ImageView image;
-        public LinearLayout lyt_parent;
+        private TextView content, header;
+        private Button bt_hide_text;
+        private ImageButton bt_toggle_text;
+        private View lyt_expand_text;
+        private TextView date;
+        private NestedScrollView nested_scroll_view;
+        private ImageButton btn_delete_notif;
 
         public ViewHolder(View v) {
             super(v);
+            header = (TextView) v.findViewById(R.id.header);
             content = (TextView) v.findViewById(R.id.content);
             date = (TextView) v.findViewById(R.id.date);
-            image = (ImageView) v.findViewById(R.id.image);
-            lyt_parent = (LinearLayout) v.findViewById(R.id.lyt_parent);
+            bt_toggle_text = (ImageButton) v.findViewById(R.id.bt_toggle_text);
+            bt_hide_text = (Button) v.findViewById(R.id.bt_hide_text);
+            lyt_expand_text = (View) v.findViewById(R.id.lyt_expand_text);
+            lyt_expand_text.setVisibility(View.GONE);
+            nested_scroll_view = (NestedScrollView) v.findViewById(R.id.nested_scroll_view);
+            btn_delete_notif = (ImageButton) v.findViewById(R.id.btn_delete_notif);
+
+
         }
+
+        private void toggleSectionText(View view) {
+            boolean show = toggleArrow(view);
+            if (show) {
+                ViewAnimation.expand(lyt_expand_text, new ViewAnimation.AnimListener() {
+                    @Override
+                    public void onFinish() {
+                        Tools.nestedScrollTo(nested_scroll_view, lyt_expand_text);
+                    }
+                });
+            } else {
+                ViewAnimation.collapse(lyt_expand_text);
+            }
+        }
+
+        private boolean toggleArrow(View view) {
+            if (view.getRotation() == 0) {
+                view.animate().setDuration(200).rotation(180);
+                return true;
+            } else {
+                view.animate().setDuration(200).rotation(0);
+                return false;
+            }
+        }
+    }
+
+    private void onDeleteButtonClick(final View view, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.notif_dialog_message)
+                .setTitle(R.string.del_notif_dialog_title);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String notifId = filtered_items.get(position).getNotif_id();
+                Query complaintsQuery = notificationsReference.orderByChild("notif_id").equalTo(notifId);
+                complaintsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot notifSnapshot : dataSnapshot.getChildren()) {
+                            notifSnapshot.getRef().removeValue();
+                            notifyDataSetChanged();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //complaint_list.remove(complaint);
+                Snackbar.make(view, R.string.notif_delete_success, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private class ItemFilter extends Filter {

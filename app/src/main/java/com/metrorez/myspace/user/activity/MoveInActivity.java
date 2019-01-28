@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.user.adapter.InventoryListAdapter;
 import com.metrorez.myspace.user.adapter.PageFragmentAdapter;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.fragment.StepOneFragment;
@@ -39,26 +40,16 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
     private StepOneFragment f_stepOne;
     private StepTwoFragment f_stepTwo;
     private StepThreeFragment f_stepThree;
-    private static final String MY_FRAG = "MY_FRAG";
+
+    private InventoryListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_in);
         initToolbar();
-
         setupUI();
-        /*String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
-        if (savedInstanceState == null) {
-            f_stepTwo = StepTwoFragment.newInstance();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragment_two, f_stepTwo, tag)
-                    .commit();
-        } else {
-            f_stepTwo = (StepTwoFragment) getSupportFragmentManager()
-                    .findFragmentByTag(tag);
-        }*/
+
         onClickListeners();
 
         Tools.systemBarLolipop(this);
@@ -75,8 +66,11 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // checking for last page
+                // if last page home screen will be launched
                 int current = getItem(+1);
                 if (current < layouts.length) {
+                    // move to next screen
                     viewPager.setCurrentItem(current);
 
                 } else if (current == layouts.length) {
@@ -90,24 +84,11 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
 
     private void submitMoveIn() {
         String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
-        final StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment.isAdded()) {
-          /*   new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(1000);
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
-        }*/
-
             fragment.upload();
         }
+
     }
 
     private void launchHomeScreen() {
@@ -131,7 +112,6 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         tempList = new ArrayList<>();
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-        viewPager.setOffscreenPageLimit(2);
         setupViewPager(viewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
@@ -141,7 +121,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
 
         parentView = findViewById(android.R.id.content);
         // layouts of all welcome sliders
-
+        // add few more layouts if you want
         layouts = new int[]{
                 R.layout.fragment_step_one,
                 R.layout.fragment_step_two,
@@ -154,6 +134,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         adapter = new PageFragmentAdapter(getSupportFragmentManager());
         if (f_stepOne == null) {
             f_stepOne = new StepOneFragment();
+
         }
         if (f_stepTwo == null) {
             f_stepTwo = new StepTwoFragment();
@@ -235,9 +216,4 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
         return true;
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, MY_FRAG, f_stepTwo);
-    }
 }

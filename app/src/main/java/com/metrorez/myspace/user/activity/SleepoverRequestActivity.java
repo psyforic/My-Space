@@ -144,7 +144,10 @@ public class SleepoverRequestActivity extends AppCompatActivity {
         extrasReference.child(mAuth.getCurrentUser().getUid()).child(id).setValue(request).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendNotification("Sleepover Request", Constants.REQUEST_TYPE);
+
+                String messageBody = userCity + "\n" + userResidence + "\n" + userRoom + "From " + fromDate.getText().toString() + " to " +
+                        toDate.getText().toString() + "for " + friendName.getText().toString();
+                sendNotification("Sleepover Request" + "\n" + messageBody, Constants.REQUEST_TYPE);
                 sendEmail();
                 Intent intent = new Intent(SleepoverRequestActivity.this, SuccessActivity.class);
                 intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_extra_message));
@@ -250,7 +253,6 @@ public class SleepoverRequestActivity extends AppCompatActivity {
                 userCity = user != null ? user.getUserCity() : "";
                 userName = user != null ? user.getUserFirstName() + " " + user.getUserLastName() : null;
                 userEmail = user != null ? user.getUserEmail() : null;
-
             }
 
             @Override
@@ -302,8 +304,8 @@ public class SleepoverRequestActivity extends AppCompatActivity {
             String gender = friendGender.getSelectedItem().toString();
             String date = dateFormat.format(today);
             String friend = friendName.getText().toString() + " " + friendLastName.getText().toString();
-            String messageBody = getString(R.string.str_sleepover_msg_body, userName, friend,gender
-                    ,userCity, userResidence, userRoom, fromDate.getText().toString(), toDate.getText().toString());
+            String messageBody = getString(R.string.str_sleepover_msg_body, userName, friend, gender
+                    , userCity, userResidence, userRoom, fromDate.getText().toString(), toDate.getText().toString());
             SendEmailAsyncTask task = new SendEmailAsyncTask(this, toEmail, fromMail, subject, messageBody);
             task.execute();
         }
