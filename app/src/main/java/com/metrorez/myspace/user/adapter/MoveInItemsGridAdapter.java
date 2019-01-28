@@ -53,10 +53,7 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
         holder.camera_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // fragment.takePhoto(position);
-
-                if (fragment.isAdded())
-                    fragment.getActivity().startActivityForResult(fragment.getPickImageChooserIntent(position), fragment.IMAGE_RESULT);
+                fragment.takePhoto(position);
             }
         });
     }

@@ -1,23 +1,17 @@
 package com.metrorez.myspace.user.fragment;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -26,7 +20,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -37,7 +30,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -77,10 +69,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
 public class StepTwoFragment extends BaseFragment {
 
     private View view;
@@ -90,12 +78,7 @@ public class StepTwoFragment extends BaseFragment {
     private String profileImageUrl;
     private ListView listView;
 
-    private ArrayList<String> permissionsToRequest;
-    private ArrayList<String> permissionsRejected = new ArrayList<>();
-    private ArrayList<String> permissions = new ArrayList<>();
-
-    public final static int ALL_PERMISSIONS_RESULT = 107;
-    public final static int IMAGE_RESULT = 200;
+    //private List<String> items = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private List<Inventory> inventoryList = new ArrayList<>();
@@ -128,74 +111,7 @@ public class StepTwoFragment extends BaseFragment {
         getUserInfo();
         initToolbar();
         notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
-
-        permissions.add(CAMERA);
-        permissions.add(WRITE_EXTERNAL_STORAGE);
-        permissions.add(READ_EXTERNAL_STORAGE);
-        permissionsToRequest = findUnAskedPermissions(permissions);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-
-            if (permissionsToRequest.size() > 0)
-                requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
-        }
-
         return view;
-    }
-
-    public Intent getPickImageChooserIntent(int pos) {
-        position = pos;
-        Uri outputFileUri = getCaptureImageOutputUri();
-        imageUri = getCaptureImageOutputUri();
-        List<Intent> allIntents = new ArrayList<>();
-        PackageManager packageManager = getActivity().getPackageManager();
-
-        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCam) {
-            Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            if (outputFileUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            }
-            allIntents.add(intent);
-        }
-
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-        for (ResolveInfo res : listGallery) {
-            Intent intent = new Intent(galleryIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            allIntents.add(intent);
-        }
-
-        Intent mainIntent = allIntents.get(allIntents.size() - 1);
-        for (Intent intent : allIntents) {
-            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-                mainIntent = intent;
-                break;
-            }
-        }
-        allIntents.remove(mainIntent);
-
-        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
-
-        return chooserIntent;
-    }
-
-    private Uri getCaptureImageOutputUri() {
-        //Uri outputFileUri = null;
-        File getImage = getActivity().getExternalFilesDir("");
-        if (getImage != null) {
-            //outputFileUri = Uri.fromFile(new File(getImage.getPath(), "image.png"));
-            imageUri = Uri.fromFile(new File(getImage.getPath(), "image.png"));
-        }
-        return imageUri;
     }
 
     @Override
@@ -247,165 +163,28 @@ public class StepTwoFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    /* public void takePhoto(int pos) {
-         position = pos;
-         if (Build.VERSION.SDK_INT >= 23) {
-             int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-             }
-         }
-         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-         String imageFilename = "JPEG_" + timeStamp + "_";
-         File photo = new File(Environment.getExternalStorageDirectory(), imageFilename + ".jpg");
-         takePicture.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-         imageUri = Uri.fromFile(photo);
-
-         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-         StrictMode.setVmPolicy(builder.build());
-         StepTwoFragment.this.startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
-
-     }*/
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
-        if (resultCode == Activity.RESULT_OK) {
-
-
-            if (requestCode == IMAGE_RESULT) {
-
-                String filePath = getImageFilePath(data);
-                if (filePath != null) {
-                    Bitmap selectedImage = BitmapFactory.decodeFile(filePath);
-                    try {
-                        uploadImageToFirebaseStorage();
-                    }catch (Exception e){
-                        Toast.makeText(getActivity(),"Failed To Load", Toast.LENGTH_LONG).show();
-                    }
-                    mAdapter.setImageInView(position, imageUri);
-                }
-            }else{
-                Toast.makeText(getActivity(),"Error Request Code", Toast.LENGTH_LONG).show();
-            }
-
-        }else{
-            Toast.makeText(getActivity(),"Error Result Code", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    private String getImageFromFilePath(Intent data) {
-        boolean isCamera = data == null || data.getData() == null;
-
-        if (isCamera) return getCaptureImageOutputUri().getPath();
-        else return getPathFromURI(data.getData());
-
-    }
-
-    public String getImageFilePath(Intent data) {
-        return getImageFromFilePath(data);
-    }
-
-    private String getPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Audio.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable("imageUri", imageUri);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (imageUri != null)
-            imageUri = savedInstanceState.getParcelable("imageUri");
-
-    }
-
-
-    private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
-        ArrayList<String> result = new ArrayList<String>();
-
-        for (String perm : wanted) {
-            if (!hasPermission(perm)) {
-                result.add(perm);
+    public void takePhoto(int pos) {
+        position = pos;
+        if (Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         }
+        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+        String imageFilename = "JPEG_" + timeStamp + "_";
+        File photo = new File(Environment.getExternalStorageDirectory(), imageFilename + ".jpg");
+        takePicture.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+        imageUri = Uri.fromFile(photo);
 
-        return result;
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        StepTwoFragment.this.startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
+
     }
 
-    private boolean hasPermission(String permission) {
-        if (canMakeSmores()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return (getActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
-            }
-        }
-        return true;
-    }
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(getActivity())
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
-    private boolean canMakeSmores() {
-        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        switch (requestCode) {
-
-            case ALL_PERMISSIONS_RESULT:
-                for (String perms : permissionsToRequest) {
-                    if (!hasPermission(perms)) {
-                        permissionsRejected.add(perms);
-                    }
-                }
-
-                if (permissionsRejected.size() > 0) {
-
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-
-                                                requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
-                                            }
-                                        }
-                                    });
-                            return;
-                        }
-                    }
-
-                }
-
-                break;
-        }
-
-    }
-   /* @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -413,7 +192,7 @@ public class StepTwoFragment extends BaseFragment {
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = imageUri;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        Objects.requireNonNull(getContext()).getContentResolver().notifyChange(selectedImage, null);
+                        Objects.requireNonNull(getActivity()).getContentResolver().notifyChange(selectedImage, null);
                     }
                     ContentResolver cr = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
@@ -439,9 +218,9 @@ public class StepTwoFragment extends BaseFragment {
                     }
                 }
         }
-    }*/
+    }
 
-  /*  public Uri getImageUri(Context inContext, Bitmap inImage) {
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
@@ -452,7 +231,7 @@ public class StepTwoFragment extends BaseFragment {
         Cursor cursor = null;
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = getContext().getContentResolver().query(contentUri, proj, null, null, null);
+            cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
@@ -461,7 +240,7 @@ public class StepTwoFragment extends BaseFragment {
                 cursor.close();
             }
         }
-    }*/
+    }
 
     public void upload() {
         if (urls.size() != 0) {
@@ -519,19 +298,16 @@ public class StepTwoFragment extends BaseFragment {
 
             }
         }
-        else{
-            Snackbar.make(view, "Image URI Null", Snackbar.LENGTH_LONG).show();
-        }
     }
 
-    private void saveCheckinInfo(List<String> urls, String userId, String date) {
+    private void saveCheckinInfo(List<String> url, String userId, String date) {
         String Id = mAuth.getCurrentUser().getUid();
         String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(userId, key, date, urls, userCity, userResidence, userRoom, items, userName);
+        MoveIn moveIn = new MoveIn(userId, key, date, url, userCity, userResidence, userRoom, items, userName);
         checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendNotification("New MoveIn", Constants.MOVEIN_TYPE);
+                sendNotification("MoveIn", Constants.MOVEIN_TYPE);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
