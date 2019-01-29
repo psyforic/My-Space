@@ -58,6 +58,7 @@ import com.metrorez.myspace.user.data.Constants;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.model.Inventory;
 import com.metrorez.myspace.user.model.MoveIn;
+import com.metrorez.myspace.user.model.MoveInHolder;
 import com.metrorez.myspace.user.model.MoveInItem;
 import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.User;
@@ -99,6 +100,7 @@ public class StepTwoFragment extends BaseFragment {
     private String userRoom;
     private String userCity;
     private String userName;
+    String key;
 
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
@@ -247,7 +249,7 @@ public class StepTwoFragment extends BaseFragment {
                         Toast.makeText(getActivity(), selectedImage.toString(),
                                 Toast.LENGTH_LONG).show();
                         uploadImageToFirebaseStorage();
-                        mAdapter.setImageInView(position, selected);
+                        //mAdapter.setImageInView(position, selectedImage.toString());
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), "Failed to load", Toast.LENGTH_SHORT)
                                 .show();
@@ -335,7 +337,7 @@ public class StepTwoFragment extends BaseFragment {
                             progressBar.setVisibility(View.GONE);
                             profileImageUrl = task.getResult().toString();
                             urls.add(profileImageUrl);
-                            //mAdapter.setImageInView(position, bitmap, profileImageUrl);
+                            mAdapter.setImageInView(position, profileImageUrl);
 
                         } else {
                             progressBar.setVisibility(View.GONE);
@@ -357,23 +359,13 @@ public class StepTwoFragment extends BaseFragment {
 
     private void saveCheckinInfo(List<String> url, String date) {
         String Id = mAuth.getCurrentUser().getUid();
-        String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(Id, key, date, url, userCity, userResidence, userRoom, items, userName);
-        Map<String, Object> newMoveIn = new HashMap<>();
-        newMoveIn.put("userId", Id);
-        newMoveIn.put("id", key);
-        newMoveIn.put("date", date);
-        newMoveIn.put("urls", url);
-        newMoveIn.put("city", userCity);
-        newMoveIn.put("userResidence", userResidence);
-        newMoveIn.put("userRoom", userRoom);
-        newMoveIn.put("itemList", items);
-        newMoveIn.put("userName", userName);
 
-        checkinReference.child(key).setValue(newMoveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
+        key = checkinReference.push().getKey();
+        MoveInHolder.MoveInner moveIn = new MoveInHolder.MoveInner(Id, key, date, url, userCity, userResidence, userRoom, items, userName);
+        checkinReference.child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendNotification("New MoveIn" + "\n" + items.toString(), Constants.MOVEIN_TYPE);
+                sendNotification("New MoveIn", Constants.MOVEIN_TYPE);
                 Intent intent = new Intent(getActivity(), SuccessActivity.class);
                 intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_checkin_message));
                 getActivity().startActivity(intent);
@@ -395,7 +387,7 @@ public class StepTwoFragment extends BaseFragment {
         String id = notificationsReference.push().getKey();
         String typeId = checkinReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, userName, type, typeId, userId, false);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, Constants.ADMIN_USER_ID, false);
         notificationsReference.child(id).setValue(notification);
     }
 

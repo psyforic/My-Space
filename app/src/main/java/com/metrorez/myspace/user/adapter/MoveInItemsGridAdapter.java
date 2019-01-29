@@ -46,7 +46,7 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final MoveInItem moveIn = moveInItems.get(position);
         holder.title.setText(moveIn.getItemName());
-        Picasso.with(ctx).load(moveIn.getImageBitmap()).fit()
+        Picasso.with(ctx).load(moveIn.getImageUrl()).fit()
                 .placeholder(R.drawable.ic_item_placeholder)
                 .into(holder.image);
         setAnimation(holder.itemView, position);
@@ -97,9 +97,9 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
         notifyDataSetChanged();
     }
 
-    public void setImageInView(int position, Uri imageUri) {
+    public void setImageInView(int position, String imageUrl) {
         MoveInItem moveIn = (MoveInItem) moveInItems.get(position);
-        moveIn.setImageBitmap(imageUri);
+        moveIn.setImageUrl(imageUrl);
         notifyDataSetChanged();
     }
 }
