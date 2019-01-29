@@ -60,7 +60,7 @@
     <string name="err_msg_complaint">Please Enter Complaint</string>
     <string name="str_extra_price">R 1000</string>
     <string name="str_extra_name">Extra Name</string>
-    <string name="str_version">Version 1.0.7</string>
+    <string name="str_version">Version 1.0.9</string>
     <string name="hint_phone">Cellphone</string>
     <string name="hint_room_number">Room Number</string>
     <string name="btn_update_profile">Update Profile</string>

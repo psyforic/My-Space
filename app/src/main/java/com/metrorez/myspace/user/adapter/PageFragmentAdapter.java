@@ -1,5 +1,7 @@
 package com.metrorez.myspace.user.adapter;
 
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -49,4 +51,19 @@ public class PageFragmentAdapter extends FragmentPagerAdapter implements StepOne
     public void onInventoryDataReceived(ArrayList<Inventory> inventoryData) {
 
     }
+    @Override
+    public Parcelable saveState()
+    {
+        Bundle bundle = (Bundle) super.saveState();
+        if (bundle != null)
+        {
+            // Never maintain any states from the base class, just null it out
+            bundle.putParcelableArray("states", null);
+        } else
+        {
+            // do nothing
+        }
+        return bundle;
+    }
+
 }

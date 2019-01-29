@@ -47,6 +47,7 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_in);
+
         initToolbar();
         setupUI();
 
@@ -84,11 +85,12 @@ public class MoveInActivity extends AppCompatActivity implements StepOneFragment
 
     private void submitMoveIn() {
         String tag = "android:switcher:" + R.id.view_pager + ":" + 1;
-        StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        final StepTwoFragment fragment = (StepTwoFragment) getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment.isAdded()) {
-            fragment.upload();
-        }
 
+            fragment.upload();
+
+        }
     }
 
     private void launchHomeScreen() {

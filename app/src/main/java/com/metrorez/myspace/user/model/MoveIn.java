@@ -3,6 +3,7 @@ package com.metrorez.myspace.user.model;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class MoveIn implements Serializable {
     private List<String> urls;
     private String city;
     private String userId;
-    private List<MoveInItem> itemList;
+    private List<MoveInItem> itemList = new ArrayList<>();
     private String extraComments;
     private String userResidence;
     private String userRoom;

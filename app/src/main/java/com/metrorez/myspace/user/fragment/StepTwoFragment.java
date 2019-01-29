@@ -1,9 +1,11 @@
 package com.metrorez.myspace.user.fragment;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,6 +22,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -66,8 +69,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class StepTwoFragment extends BaseFragment {
 
@@ -75,6 +84,7 @@ public class StepTwoFragment extends BaseFragment {
     private Uri imageUri = null;
     private ProgressBar progressBar;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private final static int ALL_PERMISSIONS_RESULT = 107;
     private String profileImageUrl;
     private ListView listView;
 
@@ -98,9 +108,19 @@ public class StepTwoFragment extends BaseFragment {
     public MoveInItemsGridAdapter mAdapter;
 
     private DatabaseReference notificationsReference;
-    private DatabaseReference checkinReference = FirebaseDatabase.getInstance().getReference("moveIns");
-    private DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference().child("users");
+    private DatabaseReference checkinReference;
+    private DatabaseReference usersReference;
     private StorageReference imageReference;
+
+    private ArrayList<String> permissionsToRequest;
+    private ArrayList<String> permissionsRejected = new ArrayList<>();
+    private ArrayList<String> permissions = new ArrayList<>();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,9 +128,26 @@ public class StepTwoFragment extends BaseFragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_step_two, container, false);
         mAuth = FirebaseAuth.getInstance();
-        getUserInfo();
+
         initToolbar();
+        checkinReference = FirebaseDatabase.getInstance().getReference().child("moveIns").child(mAuth.getCurrentUser().getUid());
+        usersReference = FirebaseDatabase.getInstance().getReference().child("users");
         notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
+
+
+        permissions.add(CAMERA);
+        permissions.add(WRITE_EXTERNAL_STORAGE);
+        permissions.add(READ_EXTERNAL_STORAGE);
+        permissionsToRequest = findUnAskedPermissions(permissions);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+
+            if (permissionsToRequest.size() > 0)
+                requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
+        }
+
+        getUserInfo();
         return view;
     }
 
@@ -171,7 +208,7 @@ public class StepTwoFragment extends BaseFragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         }
-        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
         String imageFilename = "JPEG_" + timeStamp + "_";
         File photo = new File(Environment.getExternalStorageDirectory(), imageFilename + ".jpg");
@@ -191,18 +228,18 @@ public class StepTwoFragment extends BaseFragment {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = imageUri;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        Objects.requireNonNull(getActivity()).getContentResolver().notifyChange(selectedImage, null);
+                   /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                       (getActivity()).getContentResolver().notifyChange(selectedImage, null);
                     }
                     ContentResolver cr = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                        cr = Objects.requireNonNull(getActivity()).getContentResolver();
-                    }
+                        cr = (getActivity()).getContentResolver();
+                    }*/
                     Bitmap bitmap;
 
                     try {
                         bitmap = MediaStore.Images.Media
-                                .getBitmap(cr, selectedImage);
+                                .getBitmap(getActivity().getContentResolver(), selectedImage);
 
                         Uri selected = getImageUri(getActivity(), bitmap);
                         String realPath = getRealPathFromURI(selected);
@@ -210,7 +247,7 @@ public class StepTwoFragment extends BaseFragment {
                         Toast.makeText(getActivity(), selectedImage.toString(),
                                 Toast.LENGTH_LONG).show();
                         uploadImageToFirebaseStorage();
-                        mAdapter.setImageInView(position, imageUri);
+                        mAdapter.setImageInView(position, selected);
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), "Failed to load", Toast.LENGTH_SHORT)
                                 .show();
@@ -242,16 +279,26 @@ public class StepTwoFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("imageUri", imageUri);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (imageUri != null)
+            imageUri = savedInstanceState.getParcelable("imageUri");
+    }
+
     public void upload() {
         if (urls.size() != 0) {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date today = Calendar.getInstance().getTime();
             String date = dateFormat.format(today);
-            saveCheckinInfo(urls, mAuth.getCurrentUser().getUid(), date);
-            Intent intent = new Intent(getActivity(), SuccessActivity.class);
-            intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_checkin_message));
-            getActivity().startActivity(intent);
-            getActivity().finish();
+            saveCheckinInfo(urls, date);
+
 
         } else {
             Snackbar.make(view, "No Images taken", Snackbar.LENGTH_LONG).show();
@@ -265,7 +312,7 @@ public class StepTwoFragment extends BaseFragment {
             progressBar.setVisibility(View.VISIBLE);
             ContentResolver cr = getActivity().getContentResolver();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(cr, imageUri);
+                final Bitmap bitmap = MediaStore.Images.Media.getBitmap(cr, imageUri);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                 byte[] data = baos.toByteArray();
@@ -283,31 +330,54 @@ public class StepTwoFragment extends BaseFragment {
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-                        progressBar.setVisibility(View.GONE);
+
                         if (task.isSuccessful()) {
+                            progressBar.setVisibility(View.GONE);
                             profileImageUrl = task.getResult().toString();
                             urls.add(profileImageUrl);
+                            //mAdapter.setImageInView(position, bitmap, profileImageUrl);
 
                         } else {
+                            progressBar.setVisibility(View.GONE);
                             Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                         }
                     }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                    }
                 });
-                progressBar.setVisibility(View.GONE);
+
             } catch (Exception e) {
 
             }
         }
     }
 
-    private void saveCheckinInfo(List<String> url, String userId, String date) {
+    private void saveCheckinInfo(List<String> url, String date) {
         String Id = mAuth.getCurrentUser().getUid();
         String key = checkinReference.push().getKey();
-        MoveIn moveIn = new MoveIn(userId, key, date, url, userCity, userResidence, userRoom, items, userName);
-        checkinReference.child(Id).child(key).setValue(moveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
+        MoveIn moveIn = new MoveIn(Id, key, date, url, userCity, userResidence, userRoom, items, userName);
+        Map<String, Object> newMoveIn = new HashMap<>();
+        newMoveIn.put("userId", Id);
+        newMoveIn.put("id", key);
+        newMoveIn.put("date", date);
+        newMoveIn.put("urls", url);
+        newMoveIn.put("city", userCity);
+        newMoveIn.put("userResidence", userResidence);
+        newMoveIn.put("userRoom", userRoom);
+        newMoveIn.put("itemList", items);
+        newMoveIn.put("userName", userName);
+
+        checkinReference.child(key).setValue(newMoveIn).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                sendNotification("MoveIn", Constants.MOVEIN_TYPE);
+                sendNotification("New MoveIn" + "\n" + items.toString(), Constants.MOVEIN_TYPE);
+                Intent intent = new Intent(getActivity(), SuccessActivity.class);
+                intent.putExtra(Constants.STRING_EXTRA, getString(R.string.str_checkin_message));
+                getActivity().startActivity(intent);
+                getActivity().finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -325,8 +395,8 @@ public class StepTwoFragment extends BaseFragment {
         String id = notificationsReference.push().getKey();
         String typeId = checkinReference.push().getKey();
         String userId = mAuth.getCurrentUser().getUid();
-        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, mAuth.getCurrentUser().getDisplayName(), type, typeId, userId, Constants.ADMIN_USER_ID, false);
-        notificationsReference.child(userId).child(id).setValue(notification);
+        Notification notification = new Notification(id, mAuth.getCurrentUser().getUid(), date, content, userName, type, typeId, userId, false);
+        notificationsReference.child(id).setValue(notification);
     }
 
     public static StepTwoFragment newInstance() {
@@ -351,5 +421,79 @@ public class StepTwoFragment extends BaseFragment {
 
             }
         });
+    }
+
+
+    private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
+        ArrayList<String> result = new ArrayList<String>();
+
+        for (String perm : wanted) {
+            if (!hasPermission(perm)) {
+                result.add(perm);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean hasPermission(String permission) {
+        if (canMakeSmores()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return (getActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
+            }
+        }
+        return true;
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    private boolean canMakeSmores() {
+        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        switch (requestCode) {
+
+            case ALL_PERMISSIONS_RESULT:
+                for (String perms : permissionsToRequest) {
+                    if (!hasPermission(perms)) {
+                        permissionsRejected.add(perms);
+                    }
+                }
+
+                if (permissionsRejected.size() > 0) {
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
+                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                                                requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
+                                            }
+                                        }
+                                    });
+                            return;
+                        }
+                    }
+
+                }
+
+                break;
+        }
+
     }
 }

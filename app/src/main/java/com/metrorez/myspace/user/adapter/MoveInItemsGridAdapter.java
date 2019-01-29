@@ -1,5 +1,6 @@
 package com.metrorez.myspace.user.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -54,6 +55,7 @@ public class MoveInItemsGridAdapter extends RecyclerView.Adapter<MoveInItemsGrid
             @Override
             public void onClick(View view) {
                 fragment.takePhoto(position);
+                // ((Activity) ctx).startActivityForResult(fragment.getPickImageChooserIntent(position), StepTwoFragment.REQUEST_IMAGE_CAPTURE);
             }
         });
     }
