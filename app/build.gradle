@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
     implementation 'com.bogdwellers:pinchtozoom:0.1'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
+   // implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
     implementation('com.github.danysantiago:sendgrid-android:1') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

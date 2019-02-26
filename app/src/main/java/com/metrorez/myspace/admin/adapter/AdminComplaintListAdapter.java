@@ -45,7 +45,7 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
     //10private boolean clicked = false;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Complaint obj, int position);
+        void onItemClick(View view, Complaint obj, User userObj, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -90,12 +90,13 @@ public class AdminComplaintListAdapter extends RecyclerView.Adapter<AdminComplai
 
         setAnimation(holder.itemView, position);
 
+        final User finalNewUser = newUser;
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mOnItemClickListener != null) {
                     // clicked = true;
-                    mOnItemClickListener.onItemClick(view, complaint, position);
+                    mOnItemClickListener.onItemClick(view, complaint, finalNewUser, position);
                 }
 
             }

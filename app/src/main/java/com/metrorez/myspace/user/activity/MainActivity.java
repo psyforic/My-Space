@@ -32,8 +32,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.data.Utils;
+import com.metrorez.myspace.user.adapter.NotificationListAdapter;
 import com.metrorez.myspace.user.data.GlobalVariable;
 import com.metrorez.myspace.user.data.Tools;
 import com.metrorez.myspace.user.fragment.BillingFragment;
@@ -44,9 +47,14 @@ import com.metrorez.myspace.user.fragment.ExtrasFragment;
 import com.metrorez.myspace.user.fragment.NotificationsFragment;
 import com.metrorez.myspace.user.fragment.ProfileFragment;
 import com.metrorez.myspace.user.fragment.SettingFragment;
+import com.metrorez.myspace.user.model.Notification;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -54,8 +62,11 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private GlobalVariable global;
     FirebaseAuth mAuth;
+    private List<Notification> notifications = new ArrayList<>();
+    private int count;
     FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users");
+    private DatabaseReference notificationsReference = FirebaseDatabase.getInstance().getReference().child("notifications");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         // set home view
         actionBar.setTitle(getString(R.string.str_nav_home));
+        getNotifications();
         displayContentView(R.id.nav_home);
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -144,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateDrawerCounter() {
         //setMenuAdvCounter(R.id.nav_complaint, global.getComplaints().size());
-        setMenuAdvCounter(R.id.nav_notifications, global.getNotifications().size());
+        setMenuAdvCounter(R.id.nav_notifications, count);
     }
 
     //set counter in drawer
@@ -152,6 +164,32 @@ public class MainActivity extends AppCompatActivity {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView().findViewById(R.id.counter);
         view.setText(count > 0 ? String.valueOf(count) : "0");
     }
+
+    private void getNotifications() {
+
+        Query query = notificationsReference.orderByChild("toUserId").equalTo(mAuth.getCurrentUser().getUid());
+        query.addValueEventListener(valueEventListener);
+    }
+
+    ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            notifications.clear();
+
+            for (DataSnapshot notifSnapShot : dataSnapshot.getChildren()) {
+                Notification notification = notifSnapShot.getValue(Notification.class);
+                if (!notification.isRead())
+                    notifications.add(notification);
+            }
+
+            count = notifications.size();
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     //set counter in drawer
     private void setMenuStdCounter(@IdRes int itemId, int count) {
@@ -277,11 +315,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         mAuth.removeAuthStateListener(mAuthListener);
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.default_menu, menu);
-        return true;
-    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

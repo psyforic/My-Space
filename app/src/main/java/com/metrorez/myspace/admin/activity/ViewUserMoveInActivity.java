@@ -2,6 +2,7 @@ package com.metrorez.myspace.admin.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.metrorez.myspace.R;
 import com.metrorez.myspace.admin.adapter.MoveInImageAdapter;
 import com.metrorez.myspace.admin.model.Image;
@@ -32,7 +38,8 @@ public class ViewUserMoveInActivity extends AppCompatActivity {
     private MoveInImageAdapter mAdapter;
     private MoveInItemAdapter itemsAdapter;
     private TextView textCity, textResidence, textRoomNo, textDate;
-    private User user;
+    private User user = new User();
+    private String userId;
     MoveIn moveIn;
     Toolbar mToolbar;
     ActionBar actionBar;
@@ -41,13 +48,16 @@ public class ViewUserMoveInActivity extends AppCompatActivity {
     public static final String KEY_DATA = "DATA";
     public static final String KEY_DATE = "DATE";
 
-    public static void navigate(AppCompatActivity activity, View transitionImage, User obj, MoveIn moveIn) {
+    //private DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users");
+
+    public static void navigate(AppCompatActivity activity, View transitionImage, User userObj, MoveIn moveIn) {
         Intent intent = new Intent(activity, ViewUserMoveInActivity.class);
-        intent.putExtra(KEY_USER, obj);
+        intent.putExtra(KEY_USER, userObj);
         intent.putExtra(KEY_DATA, moveIn);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, KEY_USER);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +77,19 @@ public class ViewUserMoveInActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(mToolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setTitle("");
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle(user.getUserCity());
-        actionBar.setTitle(user.getUserFirstName() + " " + user.getUserLastName());
-    }
+        //actionBar = getSupportActionBar();
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setSubtitle(user.getUserCity());
+        getSupportActionBar().setTitle(user.getUserFirstName() + " " + user.getUserLastName());
 
+    }
     private void setupUI() {
         profileImage = findViewById(R.id.img_profile);
         recyclerView = findViewById(R.id.recyclerView);
         itemRecycler = findViewById(R.id.recyclerItems);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setPadding(2, 2, 2, 2);
         recyclerView.setHasFixedSize(true);
@@ -123,6 +133,7 @@ public class ViewUserMoveInActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
     }
 
     @Override

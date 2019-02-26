@@ -2,6 +2,7 @@ package com.metrorez.myspace.admin.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metrorez.myspace.R;
+import com.metrorez.myspace.admin.activity.ViewUserMoveInActivity;
 import com.metrorez.myspace.user.model.MoveIn;
 import com.metrorez.myspace.user.model.User;
 import com.metrorez.myspace.user.widget.CircleTransform;
@@ -35,8 +37,9 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
     //private boolean clicked = false;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, MoveIn obj, int position);
+        void onItemClick(View view, MoveIn obj, User userObj, int position);
     }
+
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
@@ -92,15 +95,17 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
 
         setAnimation(holder.itemView, position);
 
+        final User finalUser = user;
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mOnItemClickListener != null) {
                     // clicked = true;
-                    mOnItemClickListener.onItemClick(view, moveIn, position);
+                    mOnItemClickListener.onItemClick(view, moveIn, finalUser, position);
                 }
             }
         });
+
         //clicked = false;
     }
 
@@ -164,5 +169,8 @@ public class AdminCheckinListAdapter extends RecyclerView.Adapter<AdminCheckinLi
             filtered_items = (List<MoveIn>) results.values;
             notifyDataSetChanged();
         }
+    }
+    public void refresh(){
+        notifyDataSetChanged();
     }
 }

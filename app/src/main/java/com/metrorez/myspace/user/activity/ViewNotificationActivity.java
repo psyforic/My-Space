@@ -66,7 +66,7 @@ public class ViewNotificationActivity extends AppCompatActivity {
                 startActivity(new Intent(ViewNotificationActivity.this, AdminActivity.class));
                 break;
         }*/
-        startActivity(new Intent(ViewNotificationActivity.this, MainActivity.class));
+        startActivity(new Intent(ViewNotificationActivity.this, LoginActivity.class));
     }
 
     ValueEventListener valueEventListener = new ValueEventListener() {

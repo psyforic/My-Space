@@ -69,6 +69,7 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         Tools.adminSystemBarLollipop(this);
     }
 
+
     public static void navigate(AppCompatActivity activity, View transitionImage, City obj) {
         Intent intent = new Intent(activity, CheckinDetailsActivity.class);
         intent.putExtra(KEY_CITY, obj);
@@ -133,17 +134,18 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         });
+        bindView();
     }
 
     private void bindView() {
         try {
             mAdapter.setOnItemClickListener(new AdminCheckinListAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(final View view, final MoveIn obj, int position) {
+                public void onItemClick(final View view, final MoveIn obj, final User userObj, final int position) {
                     usersReference.child(obj.getUserId()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                            //users.clear();
                             User user = dataSnapshot.getValue(User.class);
                             sendTo.add(user);
 
@@ -152,7 +154,8 @@ public class CheckinDetailsActivity extends AppCompatActivity {
                                 items.add(item.getItemName());
                             }
                             //String checkin = obj.getCity() + "\n" + obj.getUserResidence() + "\n" + obj.getUserRoom() + "\n" + "ITEMS CHECKED IN " + "\n" + items.toString();
-                            ViewUserMoveInActivity.navigate(CheckinDetailsActivity.this, view, sendTo.get(0), obj);
+                            ViewUserMoveInActivity.navigate(CheckinDetailsActivity.this, view, userObj, obj);
+
                         }
 
                         @Override
@@ -218,14 +221,24 @@ public class CheckinDetailsActivity extends AppCompatActivity {
         return false;
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        populateAdapter();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+
         return true;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // populateAdapter();
+    }
+
 }

@@ -257,6 +257,7 @@ public class LoginActivity extends AppCompatActivity {
             return null;
         }
 
+
         @Override
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);

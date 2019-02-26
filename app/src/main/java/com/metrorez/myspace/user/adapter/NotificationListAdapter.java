@@ -44,7 +44,9 @@ import com.metrorez.myspace.user.widget.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.ViewHolder> implements Filterable {
 
@@ -100,6 +102,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             @Override
             public void onClick(View view) {
                 holder.toggleSectionText(holder.bt_toggle_text);
+//                Map<String, Object> isRead = new HashMap<>();
+//                isRead.put("read", true);
+//                notificationsReference.child(n.getNotif_id()).updateChildren(isRead);
             }
         });
 
@@ -107,6 +112,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             @Override
             public void onClick(View view) {
                 holder.toggleSectionText(holder.bt_toggle_text);
+//                Map<String, Object> isRead = new HashMap<>();
+//                isRead.put("read", true);
+//                notificationsReference.child(n.getNotif_id()).updateChildren(isRead);
             }
         });
 

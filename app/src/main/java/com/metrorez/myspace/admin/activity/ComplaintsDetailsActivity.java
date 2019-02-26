@@ -176,11 +176,11 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         return false;
     }
 
-    private void bindView() {
+    public void bindView() {
         try {
             mAdapter.setOnItemClickListener(new AdminComplaintListAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(final View view, final Complaint obj, int position) {
+                public void onItemClick(final View view, final Complaint obj, final User userObj, final int position) {
 
                     usersReference.child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -191,9 +191,9 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
                             String complaint = obj.getComplaintComment() + "\n" + "PRIORITY: " + obj.getComplaintCategory() + "\n" + obj.getComplaintResidence() + "\n"
                                     + "ROOM NO. : " + obj.getComplaintRoom();
                             if (obj.getImagePath() == null) {
-                                ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, sendTo.get(0), complaint, obj.getComplaintDate());
+                                ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, userObj, complaint, obj.getComplaintDate());
                             } else {
-                                ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, sendTo.get(0), complaint, obj.getComplaintDate(), obj.getImagePath());
+                                ResponseActivity.navigate(ComplaintsDetailsActivity.this, view, userObj, complaint, obj.getComplaintDate(), obj.getImagePath());
                             }
                         }
 
@@ -228,13 +228,6 @@ public class ComplaintsDetailsActivity extends AppCompatActivity {
         super.onStart();
 
     }
-
-   /* @Override
-    public boolean onNavigateUp() {
-        onBackPressed();
-        finish();
-        return true;
-    }*/
 
     @Override
     public boolean onSupportNavigateUp() {

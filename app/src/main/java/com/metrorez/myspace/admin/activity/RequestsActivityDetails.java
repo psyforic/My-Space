@@ -136,7 +136,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
         try {
             mAdapter.setOnItemClickListener(new AdminRequestsListAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(final View view, final Request obj, int position) {
+                public void onItemClick(final View view, final Request obj, final User userObj, final int position) {
                     usersReference.child(obj.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -148,7 +148,7 @@ public class RequestsActivityDetails extends AppCompatActivity {
                                 items.add(item.getExtraName());
                             }
                             String request = obj.getCity() + "\n" + obj.getResidenceName() + "\n" + "Room: " + obj.getRoomNo() + "\n" + size + " Item(s)" + "\n" + items + "\n";
-                            ResponseActivity.navigate(RequestsActivityDetails.this, view, sendTo.get(0), request, obj.getRequestDate());
+                            ResponseActivity.navigate(RequestsActivityDetails.this, view, userObj, request, obj.getRequestDate());
                         }
 
                         @Override

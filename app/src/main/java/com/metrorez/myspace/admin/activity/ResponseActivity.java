@@ -116,11 +116,7 @@ public class ResponseActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        //if (user != null) {
         actionBar.setTitle(user.getUserFirstName() + " " + user.getUserLastName());
-        //} else {
-        //actionBar.setTitle("User");
-        // }
     }
 
     public void bindView() {

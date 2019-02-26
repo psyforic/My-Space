@@ -43,7 +43,7 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
     private boolean clicked = false;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Request obj, int position);
+        void onItemClick(View view, Request obj, User userObj, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -89,12 +89,13 @@ public class AdminRequestsListAdapter extends RecyclerView.Adapter<AdminRequests
 
         setAnimation(holder.itemView, position);
 
+        final User finalUser = user;
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mOnItemClickListener != null) {
                     //clicked = true;
-                    mOnItemClickListener.onItemClick(view, request, position);
+                    mOnItemClickListener.onItemClick(view, request, finalUser, position);
                 }
             }
         });
