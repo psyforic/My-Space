@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="Sample"
+                    android:text="City"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="#424242"
                     android:textStyle="bold" />

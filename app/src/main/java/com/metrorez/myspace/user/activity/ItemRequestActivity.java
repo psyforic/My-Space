@@ -159,8 +159,12 @@ public class ItemRequestActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 progressBar.setVisibility(View.GONE);
+                List<String> items = new ArrayList<>();
+                for (Extra item : selected) {
+                    items.add(item.getExtraName());
+                }
                 sendNotification("Requesting the Following Items.." + "\n"
-                        + selected.toString(), Constants.REQUEST_TYPE);
+                        + items, Constants.REQUEST_TYPE);
                 progressBar.setVisibility(View.GONE);
 
                 Intent intent = new Intent(ItemRequestActivity.this, SuccessActivity.class);
